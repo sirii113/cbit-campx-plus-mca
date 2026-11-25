@@ -245,7 +245,7 @@ export const AppProvider = ({ children }) => {
 
   // Register New Account (Faculty or Student)
   const registerAccount = (accountData, autoLogin = false) => {
-    const { role, name, email, rollNo, designation, password, courseCode, primarySkill } = accountData;
+    const { role, name, email, rollNo, designation, password, courseCode, primarySkill, facultyStaffPin } = accountData;
 
     if (!name || (!email && !rollNo)) {
       return { success: false, error: 'Please provide full name and email or roll number.' };
@@ -253,6 +253,18 @@ export const AppProvider = ({ children }) => {
 
     if (!password || password.trim().length < 6) {
       return { success: false, error: 'Password must be at least 6 characters long for security.' };
+    }
+
+    // Faculty Registration Security Gate: require authorized Faculty Staff PIN
+    if (role === 'faculty') {
+      const validPins = ['CBIT-FAC-2025', '1601-FAC', 'MCA-FAC-2025'];
+      const cleanPin = (facultyStaffPin || '').trim().toUpperCase();
+      if (!cleanPin || !validPins.includes(cleanPin)) {
+        return {
+          success: false,
+          error: '⛔ Faculty Registration Blocked: Invalid Faculty Staff Security PIN. Only authorized CBIT MCA department lecturers can register as Faculty.'
+        };
+      }
     }
 
     const cleanPass = password.trim();
@@ -438,6 +450,7 @@ export const AppProvider = ({ children }) => {
   };
 
   const updateSlipTestMark = (courseCode, rollNo, slipKey, value) => {
+    if (currentUser?.role === 'student') return; // Strict RBAC: students cannot edit marks
     const numVal = Math.max(0, Math.min(5, Number(value) || 0));
     setMarksData(prev => {
       const next = { ...prev };
@@ -455,6 +468,7 @@ export const AppProvider = ({ children }) => {
   };
 
   const updateAssignmentR25 = (courseCode, rollNo, assignKey, value) => {
+    if (currentUser?.role === 'student') return; // Strict RBAC
     const numVal = Math.max(0, Math.min(10, Number(value) || 0));
     setMarksData(prev => {
       const next = { ...prev };
@@ -472,6 +486,7 @@ export const AppProvider = ({ children }) => {
   };
 
   const updateDirectMidTotal = (courseCode, rollNo, examType, value) => {
+    if (currentUser?.role === 'student') return;
     const numVal = Math.max(0, Math.min(20, Number(value) || 0));
     setMarksData(prev => {
       const next = { ...prev };
@@ -493,6 +508,7 @@ export const AppProvider = ({ children }) => {
   };
 
   const batchInstantFill = (courseCode, componentKey, fillValue) => {
+    if (currentUser?.role === 'student') return;
     setMarksData(prev => {
       const next = { ...prev };
       if (!next[courseCode]) next[courseCode] = {};
@@ -532,6 +548,7 @@ export const AppProvider = ({ children }) => {
   };
 
   const updateLabInternal = (courseCode, rollNo, labKey, value) => {
+    if (currentUser?.role === 'student') return;
     // labKey: 'lab1' | 'lab2' | 'dayToDay'
     const numVal = labKey === 'dayToDay' 
       ? Math.max(0, Math.min(30, Number(value) || 0))
@@ -574,6 +591,7 @@ export const AppProvider = ({ children }) => {
   };
 
   const updateLabInternalSplit = (courseCode, rollNo, labKey, partKey, value) => {
+    if (currentUser?.role === 'student') return;
     // labKey: 'labInternal1' | 'labInternal2'
     // partKey: 'writeup' (max 5) | 'execution' (max 10) | 'viva' (max 5)
     const maxVal = partKey === 'execution' ? 10 : 5;
@@ -601,6 +619,7 @@ export const AppProvider = ({ children }) => {
   };
 
   const batchFillLabInternals = (courseCode, targetKey, fillValue) => {
+    if (currentUser?.role === 'student') return;
     // targetKey: 'lab1' | 'lab2' | 'dayToDay'
     const maxVal = targetKey === 'dayToDay' ? 30 : 20;
     const numVal = Math.max(0, Math.min(maxVal, Number(fillValue) || 0));
@@ -663,8 +682,8 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // Generate Password via Email for User-Mentioned Email
-  const generatePasswordForEmail = (email, role = 'faculty') => {
+  // Generate Password via Email (STUDENTS ONLY — Public Faculty Passkeys BLOCKED for Security)
+  const generatePasswordForEmail = (email, role = 'student') => {
     const cleanEmail = (email || '').trim().toLowerCase();
     if (!cleanEmail) {
       return { success: false, error: 'User email or roll number is required.' };
@@ -683,35 +702,45 @@ export const AppProvider = ({ children }) => {
       role: cleanEmail.includes('cbit.ac.in') ? 'faculty' : 'student'
     };
 
-    // Generate secure 8-character passkey
+    // STRICT SECURITY GATE: Faculty/Lecturer passkeys CANNOT be generated publicly!
+    const isFaculty = cleanEmail.includes('cbit.ac.in') || targetUser.role === 'faculty' || role === 'faculty';
+    if (isFaculty) {
+      realtimeDb.recordAuthFailure(cleanEmail, 'faculty', 'Public passkey generation blocked for lecturer account');
+      return {
+        success: false,
+        isFacultyBlocked: true,
+        error: '🛡️ Security Block: Faculty accounts have administrative and grading authority. Passkeys cannot be generated publicly for lecturers to protect student marks data. Lecturers must log in with their private password or use Faculty Password Reset with their Staff Security PIN.'
+      };
+    }
+
+    // Student passkey generation (safe, students can only see their own performance)
     const randomDigits = Math.floor(1000 + Math.random() * 9000);
     const newPasskey = `Cbit#${randomDigits}`;
 
     // Update in Realtime DB
     realtimeDb.resetPasswordByEmail(cleanEmail, newPasskey, {
       name: targetUser.name,
-      role: targetUser.role || role,
+      role: 'student',
       rollNo: targetUser.rollNo || (cleanEmail.startsWith('1601') ? cleanEmail : '')
     });
     
-    if (facMatch) facMatch.password = newPasskey;
     if (stdMatch) stdMatch.password = newPasskey;
     if (mcaStdMatch) mcaStdMatch.password = newPasskey;
 
-    showToast(`New secure passkey generated and saved for ${cleanEmail}!`, 'success');
+    showToast(`New student passkey generated and saved for ${cleanEmail}!`, 'success');
 
     return {
       success: true,
       email: cleanEmail,
       userName: targetUser.name,
-      role: targetUser.role || role,
+      role: 'student',
       generatedPassword: newPasskey,
-      message: `A new secure passkey [${newPasskey}] has been generated and updated in the CBIT Security Database.`
+      message: `A new secure student passkey [${newPasskey}] has been generated and updated in the CBIT Security Database.`
     };
   };
 
-  // Reset Password to Custom Chosen Password for User-Mentioned Email
-  const resetCustomPasswordForEmail = (email, newPassword, role = 'student') => {
+  // Reset Password to Custom Chosen Password for User-Mentioned Email (Requires Staff PIN for Faculty)
+  const resetCustomPasswordForEmail = (email, newPassword, role = 'student', facultyStaffPin = '') => {
     const cleanEmail = (email || '').trim().toLowerCase();
     if (!cleanEmail) {
       return { success: false, error: 'User email or roll number is required.' };
@@ -732,10 +761,26 @@ export const AppProvider = ({ children }) => {
       role: cleanEmail.includes('cbit.ac.in') ? 'faculty' : 'student'
     };
 
+    const isFaculty = cleanEmail.includes('cbit.ac.in') || targetUser.role === 'faculty' || role === 'faculty';
+
+    // STRICT FACULTY AUTHENTICATION: Lecturers must supply the confidential Faculty Staff Security PIN!
+    if (isFaculty) {
+      const validPins = ['CBIT-FAC-2025', '1601-FAC', 'MCA-FAC-2025'];
+      const cleanPin = (facultyStaffPin || '').trim().toUpperCase();
+      if (!cleanPin || !validPins.includes(cleanPin)) {
+        realtimeDb.recordAuthFailure(cleanEmail, 'faculty', 'Invalid Faculty Security PIN on password reset attempt');
+        return {
+          success: false,
+          isFacultyBlocked: true,
+          error: '⛔ Access Denied: Invalid Faculty Staff Security PIN. Only authorized CBIT MCA lecturers and Exam Branch staff are permitted to reset faculty credentials.'
+        };
+      }
+    }
+
     // Update in Realtime DB
     realtimeDb.resetPasswordByEmail(cleanEmail, newPassword, {
       name: targetUser.name,
-      role: targetUser.role || role,
+      role: targetUser.role || (isFaculty ? 'faculty' : 'student'),
       rollNo: targetUser.rollNo || (cleanEmail.startsWith('1601') ? cleanEmail : '')
     });
 
@@ -743,19 +788,23 @@ export const AppProvider = ({ children }) => {
     if (stdMatch) stdMatch.password = newPassword;
     if (mcaStdMatch) mcaStdMatch.password = newPassword;
 
-    showToast(`Password successfully reset and saved for ${cleanEmail}!`, 'success');
+    showToast(`Password successfully updated for ${cleanEmail}!`, 'success');
 
     return {
       success: true,
+      isFaculty,
       email: cleanEmail,
       userName: targetUser.name,
-      role: targetUser.role || role,
+      role: targetUser.role || (isFaculty ? 'faculty' : 'student'),
       updatedPassword: newPassword,
-      message: `Password has been successfully updated in Real-Time DB for ${cleanEmail}.`
+      message: isFaculty 
+        ? `Faculty password successfully updated in Central Vault. Your credentials are protected.`
+        : `Student password successfully updated in Central Vault.`
     };
   };
 
   const updateLabRubric = (courseCode, rollNo, criteriaId, value) => {
+    if (currentUser?.role === 'student') return; // Strict RBAC
     setMarksData(prev => {
       const next = { ...prev };
       if (!next[courseCode]) next[courseCode] = {};
@@ -781,6 +830,7 @@ export const AppProvider = ({ children }) => {
   };
 
   const bulkUpdateMarks = (courseCode, examType, parsedRows) => {
+    if (currentUser?.role === 'student') return; // Strict RBAC
     let updatedCount = 0;
     setMarksData(prev => {
       const next = { ...prev };
