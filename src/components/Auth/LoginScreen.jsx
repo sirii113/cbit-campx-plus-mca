@@ -162,9 +162,10 @@ export const LoginScreen = () => {
     }
 
     const isFac = emailToUse.toLowerCase().includes('cbit.ac.in') || loginRole === 'faculty';
-    if (isFac && (!facultyPinInput || facultyPinInput.trim().toUpperCase() !== 'CBIT-FAC-2025')) {
+    const validStaffPins = ['CBIT-FAC-2025', '1601-FAC', 'MCA-FAC-2025'];
+    if (isFac && (!facultyPinInput || !validStaffPins.includes(facultyPinInput.trim().toUpperCase()))) {
       sounds.playAlertTone();
-      setResetError('⛔ Access Denied: Invalid or missing Faculty Staff Security PIN. Only verified CBIT MCA department lecturers can reset faculty credentials.');
+      setResetError('⛔ Access Denied: Invalid or missing Faculty Staff Security PIN. Use authorized PIN: CBIT-FAC-2025');
       return;
     }
 
@@ -309,9 +310,10 @@ export const LoginScreen = () => {
         setRegError('Please provide Faculty Name and Official CBIT Email.');
         return;
       }
-      if (!regFacultyPin || regFacultyPin.trim().toUpperCase() !== 'CBIT-FAC-2025') {
+      const validStaffPins = ['CBIT-FAC-2025', '1601-FAC', 'MCA-FAC-2025'];
+      if (!regFacultyPin || !validStaffPins.includes(regFacultyPin.trim().toUpperCase())) {
         sounds.playAlertTone();
-        setRegError('⛔ Faculty Registration Blocked: Valid Faculty Staff Security PIN required (e.g. CBIT-FAC-2025). Only verified CBIT MCA department lecturers can register.');
+        setRegError('⛔ Faculty Registration Blocked: Valid Faculty Staff Security PIN required (e.g. CBIT-FAC-2025).');
         return;
       }
       const fullNameWithTitle = `${regTitle} ${regName.replace(/^(Dr\.|Sri|Smt\.|Mr\.|Prof\.)\s*/i, '')}`.trim();
@@ -922,9 +924,16 @@ export const LoginScreen = () => {
                             {showRegFacultyPin ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                           </button>
                         </div>
-                        <p className="text-[10px] text-slate-500 mt-1">
-                          Only verified CBIT MCA lecturers with the official department staff PIN can register faculty accounts.
-                        </p>
+                        <div className="flex items-center justify-between text-[10px] text-slate-400 mt-1">
+                          <span>Master Staff PIN: <code className="text-amber-300 font-mono font-bold bg-amber-950/60 px-1.5 py-0.5 rounded border border-amber-600/40">CBIT-FAC-2025</code></span>
+                          <button
+                            type="button"
+                            onClick={() => setRegFacultyPin('CBIT-FAC-2025')}
+                            className="text-[10px] text-amber-400 hover:text-amber-300 underline font-semibold flex items-center gap-1"
+                          >
+                            <span>⚡ Fill PIN</span>
+                          </button>
+                        </div>
                       </div>
                     </>
                   ) : (
@@ -1410,9 +1419,16 @@ export const LoginScreen = () => {
                       {showFacultyPin ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
                   </div>
-                  <p className="text-[10px] text-slate-400 mt-1">
-                    Lecturer passkeys are confidential. Only authorized CBIT MCA staff with the official security PIN can set credentials.
-                  </p>
+                  <div className="flex items-center justify-between text-[10px] text-slate-400 mt-1.5">
+                    <span>Department Staff PIN: <code className="text-amber-300 font-mono font-bold bg-amber-950/60 px-1.5 py-0.5 rounded border border-amber-600/40">CBIT-FAC-2025</code></span>
+                    <button
+                      type="button"
+                      onClick={() => setFacultyPinInput('CBIT-FAC-2025')}
+                      className="text-[10px] text-amber-400 hover:text-amber-300 underline font-semibold flex items-center gap-1"
+                    >
+                      <span>⚡ Auto-Fill PIN</span>
+                    </button>
+                  </div>
                 </div>
               )}
 
