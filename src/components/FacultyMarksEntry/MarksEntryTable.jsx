@@ -33,6 +33,11 @@ export const MarksEntryTable = () => {
     students, 
     selectedCourse, 
     marksData, 
+    courses,
+    allCourses,
+    selectedSemester,
+    setSelectedSemester,
+    cbitSemesters,
     updateQuestionMark, 
     updateSlipTestMark,
     updateAssignmentR25,
@@ -158,17 +163,8 @@ export const MarksEntryTable = () => {
                 R-25 Autonomous Syllabus
               </span>
               <span className="bg-indigo-600/40 text-indigo-200 text-xs px-3 py-1 rounded-full font-mono font-bold border border-indigo-400/30">
-                {selectedCourse.code} · Theory (3 Credits)
+                {selectedCourse.code} · {selectedCourse.semesterName || 'Semester'} ({selectedCourse.credits || 3} Credits)
               </span>
-              <button
-                type="button"
-                onClick={() => { sounds.playTick(); setSelectedCourseCode('25MCC111'); }}
-                className="bg-emerald-600/30 hover:bg-emerald-600/50 text-emerald-300 text-xs px-2.5 py-1 rounded-full font-mono font-bold border border-emerald-400/40 transition-colors flex items-center gap-1.5"
-                title="Switch directly to Practical Lab Internal Marks"
-              >
-                <Zap className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Switch to Lab Internal Marks (25MCC111 - 25MCC115)</span>
-              </button>
               <span className="text-xs text-slate-300">
                 Faculty: <strong className="text-amber-300">{selectedCourse.faculty}</strong>
               </span>
@@ -177,6 +173,31 @@ export const MarksEntryTable = () => {
             <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-white font-sans">
               {selectedCourse.name}
             </h2>
+
+            {/* Semester Filter Tabs inside Marks Entry Table */}
+            <div className="flex flex-wrap items-center gap-1.5 pt-2">
+              <span className="text-xs text-slate-400 font-bold mr-1">Semester Filter:</span>
+              {(cbitSemesters || []).map(sem => (
+                <button
+                  key={sem.id}
+                  onClick={() => {
+                    sounds.playTick();
+                    setSelectedSemester(sem.id);
+                    if (sem.id !== 'all') {
+                      const firstCourse = (allCourses || courses).find(c => c.semesterId === sem.id);
+                      if (firstCourse) setSelectedCourseCode(firstCourse.code);
+                    }
+                  }}
+                  className={`px-3 py-1 rounded-xl text-xs font-bold transition-all ${
+                    selectedSemester === sem.id 
+                      ? 'bg-blue-600 text-white shadow-md' 
+                      : 'bg-slate-800/80 text-slate-400 hover:text-white hover:bg-slate-700'
+                  }`}
+                >
+                  {sem.name}
+                </button>
+              ))}
+            </div>
 
             {/* R25 Scheme Formula Pill */}
             <div className="inline-flex items-center gap-2 p-2 rounded-xl bg-slate-800/80 border border-slate-700 text-xs text-slate-200 font-mono">

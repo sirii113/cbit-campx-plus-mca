@@ -2,11 +2,14 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { 
   MCA_STUDENTS, 
   COURSES, 
+  ALL_COURSES,
+  CBIT_SEMESTERS,
   CBIT_INFO, 
   CBIT_MCA_FACULTY,
   DEMO_USERS, 
   generateInitialMarks, 
-  calculateR25Cie 
+  calculateR25Cie,
+  calculateSemesterSgpa
 } from '../data/mockCbitData';
 import { MCA_REGULATIONS } from '../data/mcaSyllabusCatalog';
 import { realtimeDb } from '../utils/realtimeDb';
@@ -24,7 +27,19 @@ export const AppProvider = ({ children }) => {
     return saved ? JSON.parse(saved) : MCA_STUDENTS;
   });
 
-  const [courses, setCourses] = useState(COURSES);
+  const [selectedSemester, setSelectedSemester] = useState(() => {
+    return localStorage.getItem('cbit_campx_selected_semester') || 'all';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('cbit_campx_selected_semester', selectedSemester);
+  }, [selectedSemester]);
+
+  // Filtered courses based on selected semester
+  const filteredCourses = selectedSemester === 'all'
+    ? COURSES
+    : COURSES.filter(c => c.semesterId === selectedSemester);
+
   const [selectedCourseCode, setSelectedCourseCode] = useState("25MCC101");
   const [activeRole, setActiveRole] = useState(() => currentUser?.role || "faculty");
   const [activeStudentRoll, setActiveStudentRoll] = useState(() => currentUser?.rollNo || "1601-25-862-001");
@@ -407,7 +422,8 @@ export const AppProvider = ({ children }) => {
     setLoginAlert(null);
   };
 
-  const selectedCourse = courses.find(c => c.code === selectedCourseCode) || courses[0];
+  const courses = filteredCourses;
+  const selectedCourse = COURSES.find(c => c.code === selectedCourseCode) || COURSES[0];
   const activeStudent = students.find(s => s.rollNo === activeStudentRoll) || students[0];
 
   const recomputeStudentR25 = (studentMark) => {
@@ -960,6 +976,11 @@ export const AppProvider = ({ children }) => {
         dismissLoginAlert,
         students,
         courses,
+        allCourses: COURSES,
+        selectedSemester,
+        setSelectedSemester,
+        cbitSemesters: CBIT_SEMESTERS,
+        calculateSemesterSgpa,
         selectedCourseCode,
         setSelectedCourseCode,
         selectedCourse,

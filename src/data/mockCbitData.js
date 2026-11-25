@@ -3,6 +3,8 @@
 // Department of Computer Applications (MCA) - R25 Autonomous Syllabus
 // All Courses Start with 25MCC & All Authentic CBIT MCA Faculty (Sirs and Mams)
 
+import { ALL_COURSES, CBIT_SEMESTERS } from './mcaAllCourses';
+
 export const CBIT_INFO = {
   collegeName: "Chaitanya Bharathi Institute of Technology (Autonomous)",
   subHeader: "Affiliated to Osmania University | Accredited by NBA & NAAC (A++)",
@@ -186,329 +188,10 @@ export const PROGRAM_OUTCOMES = [
   { id: "PO7", name: "Life-long Learning & Employability" }
 ];
 
-// All R25 Courses Starting with 25MCC
-export const COURSES = [
-  {
-    code: "25MCC101",
-    name: "Advanced Data Structures and Algorithms with Python",
-    short: "ADSA",
-    type: "Theory",
-    credits: 3,
-    faculty: "Dr. B. Indira (HoD & Associate Professor)",
-    targetAttainmentThreshold: 60,
-    examQuestions: {
-      mid1: [
-        { qNo: "Q1", maxMarks: 4, co: "CO1", bloom: "L2", title: "Asymptotic Complexity & Masters Theorem" },
-        { qNo: "Q2", maxMarks: 4, co: "CO1", bloom: "L3", title: "Amortized Analysis of Dynamic Arrays" },
-        { qNo: "Q3", maxMarks: 4, co: "CO2", bloom: "L3", title: "AVL Trees & Red-Black Tree Balancing" },
-        { qNo: "Q4", maxMarks: 4, co: "CO2", bloom: "L4", title: "B-Trees Indexing Mechanisms" },
-        { qNo: "Q5", maxMarks: 4, co: "CO3", bloom: "L4", title: "Dynamic Programming: Longest Common Subsequence" }
-      ],
-      mid2: [
-        { qNo: "Q1", maxMarks: 4, co: "CO3", bloom: "L3", title: "Greedy Strategy & Huffman Coding" },
-        { qNo: "Q2", maxMarks: 4, co: "CO4", bloom: "L4", title: "Graph Flow & Max-Flow Min-Cut" },
-        { qNo: "Q3", maxMarks: 4, co: "CO4", bloom: "L4", title: "String Matching (KMP & Rabin Karp)" },
-        { qNo: "Q4", maxMarks: 4, co: "CO5", bloom: "L5", title: "NP-Completeness & Approximation" },
-        { qNo: "Q5", maxMarks: 4, co: "CO5", bloom: "L5", title: "Parallel & Distributed Algorithms Design" }
-      ]
-    }
-  },
-  {
-    code: "25MCC102",
-    name: "Full Stack Web Development (MERN & Next.js)",
-    short: "FSWD",
-    type: "Theory",
-    credits: 3,
-    faculty: "Sri B. Srinivas S. P. Kumar & Smt. T. Sravanthi",
-    targetAttainmentThreshold: 65,
-    examQuestions: {
-      mid1: [
-        { qNo: "Q1", maxMarks: 4, co: "CO1", bloom: "L2", title: "Modern ES6+, DOM & Virtual DOM reconciliation" },
-        { qNo: "Q2", maxMarks: 4, co: "CO1", bloom: "L3", title: "State Management & React Hooks (useReducer, Context)" },
-        { qNo: "Q3", maxMarks: 4, co: "CO2", bloom: "L3", title: "Component Lifecycle & Side Effects (useEffect)" },
-        { qNo: "Q4", maxMarks: 4, co: "CO2", bloom: "L4", title: "Node.js Event Loop & Non-blocking I/O" },
-        { qNo: "Q5", maxMarks: 4, co: "CO3", bloom: "L4", title: "Express.js RESTful API & Middleware Pipeline" }
-      ],
-      mid2: [
-        { qNo: "Q1", maxMarks: 4, co: "CO3", bloom: "L3", title: "JWT Authentication & Role-Based Access Control" },
-        { qNo: "Q2", maxMarks: 4, co: "CO4", bloom: "L4", title: "MongoDB Aggregation Pipelines & Mongoose" },
-        { qNo: "Q3", maxMarks: 4, co: "CO4", bloom: "L4", title: "WebSockets & Real-Time Event Communication" },
-        { qNo: "Q4", maxMarks: 4, co: "CO5", bloom: "L5", title: "Docker Containerization & CI/CD Pipelines" },
-        { qNo: "Q5", maxMarks: 4, co: "CO5", bloom: "L6", title: "Microservices Architecture & System Design" }
-      ]
-    }
-  },
-  {
-    code: "25MCC103",
-    name: "Advanced Database Systems & Distributed NoSQL",
-    short: "ADBMS",
-    type: "Theory",
-    credits: 3,
-    faculty: "Dr. G. N. R. Prasad (Assistant Professor & PRO)",
-    targetAttainmentThreshold: 60,
-    examQuestions: {
-      mid1: [
-        { qNo: "Q1", maxMarks: 4, co: "CO1", bloom: "L2", title: "Relational Algebra & Normalization (BCNF, 4NF)" },
-        { qNo: "Q2", maxMarks: 4, co: "CO1", bloom: "L3", title: "Complex SQL Joins, Triggers & Views" },
-        { qNo: "Q3", maxMarks: 4, co: "CO2", bloom: "L3", title: "ACID Properties & Transaction Schedules" },
-        { qNo: "Q4", maxMarks: 4, co: "CO2", bloom: "L4", title: "Concurrency Control & Two-Phase Locking" },
-        { qNo: "Q5", maxMarks: 4, co: "CO3", bloom: "L4", title: "Crash Recovery Protocols & ARIES Algorithm" }
-      ],
-      mid2: [
-        { qNo: "Q1", maxMarks: 4, co: "CO3", bloom: "L3", title: "CAP Theorem & PACELC Trade-offs" },
-        { qNo: "Q2", maxMarks: 4, co: "CO4", bloom: "L4", title: "Document & Key-Value Stores (MongoDB, Redis)" },
-        { qNo: "Q3", maxMarks: 4, co: "CO4", bloom: "L4", title: "Graph Databases & Cypher Queries (Neo4j)" },
-        { qNo: "Q4", maxMarks: 4, co: "CO5", bloom: "L5", title: "Distributed Sharding & Consistency Models" },
-        { qNo: "Q5", maxMarks: 4, co: "CO5", bloom: "L5", title: "Data Warehousing & OLAP Cubes" }
-      ]
-    }
-  },
-  {
-    code: "25MCC104",
-    name: "Software Engineering & Agile DevOps Methodologies",
-    short: "SE-Agile",
-    type: "Theory",
-    credits: 3,
-    faculty: "Sri P. Krishna Prasad (Assistant Professor)",
-    targetAttainmentThreshold: 60,
-    examQuestions: {
-      mid1: [
-        { qNo: "Q1", maxMarks: 4, co: "CO1", bloom: "L2", title: "Agile Scrum Framework & User Stories" },
-        { qNo: "Q2", maxMarks: 4, co: "CO1", bloom: "L3", title: "Software Requirements Engineering & SRS" },
-        { qNo: "Q3", maxMarks: 4, co: "CO2", bloom: "L3", title: "UML Design Models & Architectural Patterns" },
-        { qNo: "Q4", maxMarks: 4, co: "CO2", bloom: "L4", title: "Clean Code Principles & Refactoring" },
-        { qNo: "Q5", maxMarks: 4, co: "CO3", bloom: "L4", title: "Test-Driven Development (TDD) & Unit Testing" }
-      ],
-      mid2: [
-        { qNo: "Q1", maxMarks: 4, co: "CO3", bloom: "L3", title: "DevOps CI/CD Pipelines with GitHub Actions" },
-        { qNo: "Q2", maxMarks: 4, co: "CO4", bloom: "L4", title: "Static Code Analysis (SonarQube) & Security" },
-        { qNo: "Q3", maxMarks: 4, co: "CO4", bloom: "L4", title: "Microservices Design & API Gateways" },
-        { qNo: "Q4", maxMarks: 4, co: "CO5", bloom: "L5", title: "Software Metrics & Defect Tracking" },
-        { qNo: "Q5", maxMarks: 4, co: "CO5", bloom: "L6", title: "Enterprise Software Maintenance & SRE" }
-      ]
-    }
-  },
-  {
-    code: "25MCC105",
-    name: "Cloud Computing & Containerization Infrastructure",
-    short: "Cloud",
-    type: "Theory",
-    credits: 3,
-    faculty: "Dr. M. Ramchander (Assistant Professor)",
-    targetAttainmentThreshold: 60,
-    examQuestions: {
-      mid1: [
-        { qNo: "Q1", maxMarks: 4, co: "CO1", bloom: "L2", title: "Cloud Service Models (IaaS, PaaS, SaaS)" },
-        { qNo: "Q2", maxMarks: 4, co: "CO1", bloom: "L3", title: "Virtualization Techniques & Hypervisors" },
-        { qNo: "Q3", maxMarks: 4, co: "CO2", bloom: "L3", title: "AWS Core Services (EC2, S3, VPC Networking)" },
-        { qNo: "Q4", maxMarks: 4, co: "CO2", bloom: "L4", title: "Serverless Computing & AWS Lambda" },
-        { qNo: "Q5", maxMarks: 4, co: "CO3", bloom: "L4", title: "Cloud Security, IAM Policies & KMS" }
-      ],
-      mid2: [
-        { qNo: "Q1", maxMarks: 4, co: "CO3", bloom: "L3", title: "DevOps Philosophy & Infrastructure as Code (Terraform)" },
-        { qNo: "Q2", maxMarks: 4, co: "CO4", bloom: "L4", title: "Docker Architecture & Multi-Stage Builds" },
-        { qNo: "Q3", maxMarks: 4, co: "CO4", bloom: "L4", title: "Kubernetes Cluster Architecture & Pod Orchestration" },
-        { qNo: "Q4", maxMarks: 4, co: "CO5", bloom: "L5", title: "Site Reliability Engineering (SRE) & Monitoring" },
-        { qNo: "Q5", maxMarks: 4, co: "CO5", bloom: "L6", title: "Zero-Downtime Blue/Green Deployments" }
-      ]
-    }
-  },
-  {
-    code: "25MCC106",
-    name: "Machine Learning & Intelligent Data Systems",
-    short: "ML",
-    type: "Theory",
-    credits: 3,
-    faculty: "Dr. D. Jayaram (Assistant Professor)",
-    targetAttainmentThreshold: 60,
-    examQuestions: {
-      mid1: [
-        { qNo: "Q1", maxMarks: 4, co: "CO1", bloom: "L2", title: "Supervised Learning: Linear & Logistic Regression" },
-        { qNo: "Q2", maxMarks: 4, co: "CO1", bloom: "L3", title: "Decision Trees & Random Forests Ensemble" },
-        { qNo: "Q3", maxMarks: 4, co: "CO2", bloom: "L3", title: "Support Vector Machines (SVM) & Kernel Trick" },
-        { qNo: "Q4", maxMarks: 4, co: "CO2", bloom: "L4", title: "Dimensionality Reduction with PCA" },
-        { qNo: "Q5", maxMarks: 4, co: "CO3", bloom: "L4", title: "Clustering Algorithms (K-Means, DBSCAN)" }
-      ],
-      mid2: [
-        { qNo: "Q1", maxMarks: 4, co: "CO3", bloom: "L3", title: "Neural Networks & Backpropagation Algorithm" },
-        { qNo: "Q2", maxMarks: 4, co: "CO4", bloom: "L4", title: "Convolutional Neural Networks (CNN) for Computer Vision" },
-        { qNo: "Q3", maxMarks: 4, co: "CO4", bloom: "L4", title: "Recurrent Neural Networks (RNN) & LSTM" },
-        { qNo: "Q4", maxMarks: 4, co: "CO5", bloom: "L5", title: "Model Evaluation Metrics (ROC-AUC, F1-Score)" },
-        { qNo: "Q5", maxMarks: 4, co: "CO5", bloom: "L6", title: "Transformers & Attention Mechanism Foundations" }
-      ]
-    }
-  },
-  {
-    code: "25MCC107",
-    name: "Mobile Application Development (Flutter & Android)",
-    short: "MAD",
-    type: "Theory",
-    credits: 3,
-    faculty: "Mr. Rambabu Potabattula (Assistant Professor)",
-    targetAttainmentThreshold: 60,
-    examQuestions: {
-      mid1: [
-        { qNo: "Q1", maxMarks: 4, co: "CO1", bloom: "L2", title: "Dart Programming Language & Object Orientation" },
-        { qNo: "Q2", maxMarks: 4, co: "CO1", bloom: "L3", title: "Flutter Widget Tree & Stateless/Stateful Widgets" },
-        { qNo: "Q3", maxMarks: 4, co: "CO2", bloom: "L3", title: "Responsive UI Layouts & Material Components" },
-        { qNo: "Q4", maxMarks: 4, co: "CO2", bloom: "L4", title: "State Management with Provider and Riverpod" },
-        { qNo: "Q5", maxMarks: 4, co: "CO3", bloom: "L4", title: "RESTful API Integration & JSON Serialization" }
-      ],
-      mid2: [
-        { qNo: "Q1", maxMarks: 4, co: "CO3", bloom: "L3", title: "Local Persistence with SQLite & SharedPreferences" },
-        { qNo: "Q2", maxMarks: 4, co: "CO4", bloom: "L4", title: "Firebase Authentication & Cloud Firestore in Mobile" },
-        { qNo: "Q3", maxMarks: 4, co: "CO4", bloom: "L4", title: "Camera, GPS & Geolocation Native Sensors Access" },
-        { qNo: "Q4", maxMarks: 4, co: "CO5", bloom: "L5", title: "App Performance Optimization & Profiling" },
-        { qNo: "Q5", maxMarks: 4, co: "CO5", bloom: "L6", title: "Deploying Android APK & iOS App Store Compliance" }
-      ]
-    }
-  },
-  {
-    code: "25MCC108",
-    name: "Cyber Security, Cryptography & Network Defense",
-    short: "CyberSec",
-    type: "Theory",
-    credits: 3,
-    faculty: "Mr. Rambabu Potabattula (Assistant Professor)",
-    targetAttainmentThreshold: 60,
-    examQuestions: {
-      mid1: [
-        { qNo: "Q1", maxMarks: 4, co: "CO1", bloom: "L2", title: "Symmetric Encryption (AES, DES) & Block Ciphers" },
-        { qNo: "Q2", maxMarks: 4, co: "CO1", bloom: "L3", title: "Asymmetric Cryptography (RSA, Diffie-Hellman Key Exchange)" },
-        { qNo: "Q3", maxMarks: 4, co: "CO2", bloom: "L3", title: "Hash Functions (SHA-256) & Message Authentication Codes" },
-        { qNo: "Q4", maxMarks: 4, co: "CO2", bloom: "L4", title: "Public Key Infrastructure (PKI) & Digital Certificates" },
-        { qNo: "Q5", maxMarks: 4, co: "CO3", bloom: "L4", title: "OWASP Top 10 Web Application Vulnerabilities (SQLi, XSS)" }
-      ],
-      mid2: [
-        { qNo: "Q1", maxMarks: 4, co: "CO3", bloom: "L3", title: "Firewalls, Intrusion Detection & Prevention (IDS/IPS)" },
-        { qNo: "Q2", maxMarks: 4, co: "CO4", bloom: "L4", title: "Network Sniffing & Penetration Testing Tools (Wireshark, Nmap)" },
-        { qNo: "Q3", maxMarks: 4, co: "CO4", bloom: "L4", title: "Authentication Protocols (OAuth 2.0, OpenID Connect)" },
-        { qNo: "Q4", maxMarks: 4, co: "CO5", bloom: "L5", title: "Cloud & Zero-Trust Security Architectures" },
-        { qNo: "Q5", maxMarks: 4, co: "CO5", bloom: "L6", title: "Incident Response Protocols & Cyber Forensics Analysis" }
-      ]
-    }
-  },
-  {
-    code: "25MCC109",
-    name: "Big Data Analytics & Distributed Spark Processing",
-    short: "BigData",
-    type: "Theory",
-    credits: 3,
-    faculty: "Smt. G. Kavitha (Assistant Professor)",
-    targetAttainmentThreshold: 60,
-    examQuestions: {
-      mid1: [
-        { qNo: "Q1", maxMarks: 4, co: "CO1", bloom: "L2", title: "Hadoop Ecosystem & HDFS Distributed File System Architecture" },
-        { qNo: "Q2", maxMarks: 4, co: "CO1", bloom: "L3", title: "MapReduce Programming Model & Task Trackers" },
-        { qNo: "Q3", maxMarks: 4, co: "CO2", bloom: "L3", title: "YARN Resource Manager & Cluster Scheduling" },
-        { qNo: "Q4", maxMarks: 4, co: "CO2", bloom: "L4", title: "Apache Hive QL & Partitioning Strategies" },
-        { qNo: "Q5", maxMarks: 4, co: "CO3", bloom: "L4", title: "Apache HBase Columnar Store & CRUD Operations" }
-      ],
-      mid2: [
-        { qNo: "Q1", maxMarks: 4, co: "CO3", bloom: "L3", title: "Apache Spark In-Memory Architecture & RDD Transformations" },
-        { qNo: "Q2", maxMarks: 4, co: "CO4", bloom: "L4", title: "Spark DataFrames & Spark SQL Performance Optimizations" },
-        { qNo: "Q3", maxMarks: 4, co: "CO4", bloom: "L4", title: "Real-time Stream Processing with Apache Kafka and Spark Streaming" },
-        { qNo: "Q4", maxMarks: 4, co: "CO5", bloom: "L5", title: "Spark MLlib for Distributed Machine Learning" },
-        { qNo: "Q5", maxMarks: 4, co: "CO5", bloom: "L6", title: "Data Lakehouse Architecture (Delta Lake & Apache Iceberg)" }
-      ]
-    }
-  },
-  {
-    code: "25MCC110",
-    name: "Natural Language Processing & Generative AI",
-    short: "NLP-GenAI",
-    type: "Theory",
-    credits: 3,
-    faculty: "Dr. P. Suresh (Associate Professor)",
-    targetAttainmentThreshold: 60,
-    examQuestions: {
-      mid1: [
-        { qNo: "Q1", maxMarks: 4, co: "CO1", bloom: "L2", title: "Text Preprocessing, Tokenization, Stemming & Lemmatization" },
-        { qNo: "Q2", maxMarks: 4, co: "CO1", bloom: "L3", title: "Word Embeddings (Word2Vec, GloVe, FastText)" },
-        { qNo: "Q3", maxMarks: 4, co: "CO2", bloom: "L3", title: "Part-of-Speech (POS) Tagging & Named Entity Recognition (NER)" },
-        { qNo: "Q4", maxMarks: 4, co: "CO2", bloom: "L4", title: "Sequence-to-Sequence Models & Encoder-Decoder Attention" },
-        { qNo: "Q5", maxMarks: 4, co: "CO3", bloom: "L4", title: "Transformer Self-Attention & Multi-Head Attention Mechanisms" }
-      ],
-      mid2: [
-        { qNo: "Q1", maxMarks: 4, co: "CO3", bloom: "L3", title: "BERT, RoBERTa & Masked Language Modeling" },
-        { qNo: "Q2", maxMarks: 4, co: "CO4", bloom: "L4", title: "Generative Pre-trained Transformers (GPT) & Autoregressive Decoding" },
-        { qNo: "Q3", maxMarks: 4, co: "CO4", bloom: "L4", title: "Retrieval-Augmented Generation (RAG) Architecture & Vector DBs" },
-        { qNo: "Q4", maxMarks: 4, co: "CO5", bloom: "L5", title: "Prompt Engineering, Few-Shot Learning & Fine-Tuning (LoRA)" },
-        { qNo: "Q5", maxMarks: 4, co: "CO5", bloom: "L6", title: "Evaluating LLM Hallucinations & Responsible AI Safety Guardrails" }
-      ]
-    }
-  },
-  {
-    code: "25MCC111",
-    name: "Data Structures and Algorithms Lab",
-    short: "DSA-Lab",
-    type: "Practical",
-    credits: 1.5,
-    faculty: "Dr. B. Indira (HoD & Associate Professor)",
-    rubricCriteria: [
-      { id: "code_correctness", name: "Problem Solving & Test Cases", weight: 35, desc: "Passes optimal time & space constraints" },
-      { id: "code_quality", name: "Data Structure Implementation Elegance", weight: 25, desc: "Proper memory pointers, modular functions" },
-      { id: "viva_voce", name: "Complexity Analysis Viva", weight: 25, desc: "Proof of big-O time/space complexity" },
-      { id: "record_doc", name: "Execution Observation & Record", weight: 15, desc: "Neat outputs with dry run traces" }
-    ]
-  },
-  {
-    code: "25MCC112",
-    name: "Full Stack Web Development Lab",
-    short: "FS-Lab",
-    type: "Practical",
-    credits: 1.5,
-    faculty: "Sri B. Srinivas S. P. Kumar & Smt. T. Sravanthi",
-    rubricCriteria: [
-      { id: "code_correctness", name: "Algorithm & Code Correctness", weight: 30, desc: "Working code, passes edge tests, error handling" },
-      { id: "code_quality", name: "Clean Architecture & Git Workflow", weight: 25, desc: "Modular code, commit conventions, README quality" },
-      { id: "viva_voce", name: "Technical Viva Voce & Concept Defense", weight: 25, desc: "Deep conceptual answering, architectural rationale" },
-      { id: "record_doc", name: "Lab Manual, Swagger / Postman Docs", weight: 20, desc: "Accurate test cases, execution screenshots, documentation" }
-    ]
-  },
-  {
-    code: "25MCC113",
-    name: "Advanced Database Systems & Cloud DevOps Lab",
-    short: "DB-Cloud-Lab",
-    type: "Practical",
-    credits: 1.5,
-    faculty: "Dr. G. N. R. Prasad & Dr. M. Ramchander",
-    rubricCriteria: [
-      { id: "code_correctness", name: "Complex SQL / NoSQL Query Correctness", weight: 30, desc: "Proper indexing, joins, aggregate queries" },
-      { id: "code_quality", name: "Docker & Cloud Deployment Quality", weight: 25, desc: "Clean Dockerfile, compose orchestration" },
-      { id: "viva_voce", name: "Database Concurrency & Cloud Architecture Viva", weight: 25, desc: "ACID explanation, IAM security" },
-      { id: "record_doc", name: "Observation & Query Output Screenshots", weight: 20, desc: "Complete documentation of execution outputs" }
-    ]
-  },
-  {
-    code: "25MCC114",
-    name: "Machine Learning & Intelligent Systems Lab",
-    short: "ML-Lab",
-    type: "Practical",
-    credits: 1.5,
-    faculty: "Dr. D. Jayaram & Smt. G. Kavitha",
-    rubricCriteria: [
-      { id: "code_correctness", name: "Model Accuracy & Hyperparameter Tuning", weight: 35, desc: "Trains cleanly, prevents overfitting" },
-      { id: "code_quality", name: "Feature Engineering & Data Pipeline Cleanliness", weight: 25, desc: "Pandas/NumPy modular data pipelines" },
-      { id: "viva_voce", name: "Mathematical Loss Function Viva", weight: 25, desc: "Calculus behind gradient descent" },
-      { id: "record_doc", name: "Model Evaluation Plots & Confusion Matrix", weight: 15, desc: "ROC curves, classification reports" }
-    ]
-  },
-  {
-    code: "25MCC115",
-    name: "MCA Capstone Project & Technical Seminar",
-    short: "Project-Seminar",
-    type: "Practical",
-    credits: 2,
-    faculty: "Sri P. Krishna Prasad & Dr. P. Suresh",
-    rubricCriteria: [
-      { id: "code_correctness", name: "Project Implementation & Live Demo", weight: 40, desc: "End-to-end working software product" },
-      { id: "code_quality", name: "System Design, GitHub Commits & Documentation", weight: 25, desc: "Clean Git commits, SRS, Swagger docs" },
-      { id: "viva_voce", name: "Technical Presentation & Defense", weight: 25, desc: "Problem definition, novelty, answering viva" },
-      { id: "record_doc", name: "Project Dissertation Thesis & IEEE Paper", weight: 10, desc: "Plagiarism verified report & publication draft" }
-    ]
-  }
-];
+// Complete Autonomous R25 Courses Across All 4 Semesters (29 Courses)
+export { ALL_COURSES, CBIT_SEMESTERS };
+export const COURSES = ALL_COURSES;
+
 
 // 60 Authentic CBIT MCA Students roster (Updated to 1601-25-862-xxx)
 export const MCA_STUDENTS = [
@@ -731,4 +414,41 @@ export function generateInitialMarks() {
   });
 
   return marks;
+}
+
+// Calculate semester SGPA for a student based on courses and marks across all sems
+export function calculateSemesterSgpa(rollNo, semId = 'sem_1', marksData = {}, coursesList = ALL_COURSES) {
+  const semCourses = semId === 'all' 
+    ? coursesList 
+    : coursesList.filter(c => c.semesterId === semId);
+
+  let totalGradePoints = 0;
+  let totalCredits = 0;
+
+  semCourses.forEach(course => {
+    const mark = marksData?.[course.code]?.[rollNo];
+    const cie = mark?.finalCie ?? (course.type === 'Theory' ? 38 : 45);
+    const maxCie = course.type === 'Theory' ? 45 : 50;
+    const percentage = (cie / maxCie) * 100;
+
+    let gp = 0;
+    if (percentage >= 90) gp = 10;
+    else if (percentage >= 80) gp = 9;
+    else if (percentage >= 70) gp = 8;
+    else if (percentage >= 60) gp = 7;
+    else if (percentage >= 50) gp = 6;
+    else if (percentage >= 40) gp = 5;
+    else gp = 0;
+
+    const cr = course.credits || 3;
+    totalGradePoints += gp * cr;
+    totalCredits += cr;
+  });
+
+  const sgpa = totalCredits > 0 ? Number((totalGradePoints / totalCredits).toFixed(2)) : 8.5;
+  return {
+    sgpa,
+    totalCredits,
+    coursesCount: semCourses.length
+  };
 }

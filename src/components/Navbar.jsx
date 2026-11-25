@@ -32,9 +32,13 @@ export const Navbar = () => {
     currentUser,
     logout,
     courses, 
+    allCourses,
     selectedCourseCode, 
     setSelectedCourseCode, 
     selectedCourse,
+    selectedSemester,
+    setSelectedSemester,
+    cbitSemesters,
     activeRole, 
     setActiveRole, 
     activeTab, 
@@ -168,7 +172,33 @@ export const Navbar = () => {
           <div className="flex flex-wrap items-center gap-2">
             {!isStudent && (
               <>
-                {/* Course Selector Dropdown */}
+                {/* Semester Selector Pill Group */}
+                <div className="bg-slate-800/90 p-1 rounded-xl border border-slate-700 flex items-center text-[11px] font-mono shadow-sm">
+                  {(cbitSemesters || []).map(sem => (
+                    <button
+                      key={sem.id}
+                      onClick={() => {
+                        sounds.playTick();
+                        setSelectedSemester(sem.id);
+                        // Pick first course of that semester if current course not in it
+                        if (sem.id !== 'all') {
+                          const firstSemCourse = (allCourses || courses).find(c => c.semesterId === sem.id);
+                          if (firstSemCourse) setSelectedCourseCode(firstSemCourse.code);
+                        }
+                      }}
+                      className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
+                        selectedSemester === sem.id 
+                          ? 'bg-blue-600 text-white shadow-md shadow-blue-900/30' 
+                          : 'text-slate-400 hover:text-white hover:bg-slate-700/50'
+                      }`}
+                      title={sem.name}
+                    >
+                      {sem.shortName}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Course Selector Dropdown Across All Semesters */}
                 <div className="relative">
                   <select
                     value={selectedCourseCode}
@@ -176,22 +206,57 @@ export const Navbar = () => {
                       sounds.playTick();
                       setSelectedCourseCode(e.target.value);
                     }}
-                    className="bg-slate-800 hover:bg-slate-750 border border-slate-700 text-slate-100 text-xs font-semibold rounded-xl pl-3 pr-8 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-all cursor-pointer shadow-sm"
+                    className="bg-slate-800 hover:bg-slate-750 border border-slate-700 text-slate-100 text-xs font-semibold rounded-xl pl-3 pr-8 py-2 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-all cursor-pointer shadow-sm max-w-[280px]"
                   >
-                    <optgroup label="── 📚 Theory Courses (45M CIE) ──" className="bg-slate-950 text-indigo-300 font-bold">
-                      {courses.filter(c => c.type === 'Theory').map(course => (
-                        <option key={course.code} value={course.code} className="bg-slate-900 text-white font-normal">
-                          {course.code} : {course.short} (Theory)
-                        </option>
-                      ))}
-                    </optgroup>
-                    <optgroup label="── 🔬 Practical Lab Courses (50M CIE) ──" className="bg-slate-950 text-emerald-300 font-bold">
-                      {courses.filter(c => c.type === 'Practical').map(course => (
-                        <option key={course.code} value={course.code} className="bg-slate-900 text-white font-normal">
-                          {course.code} : {course.short} (Lab)
-                        </option>
-                      ))}
-                    </optgroup>
+                    {selectedSemester === 'all' ? (
+                      <>
+                        <optgroup label="── 📘 Semester I (1st Year) ──" className="bg-slate-950 text-blue-300 font-bold">
+                          {(allCourses || courses).filter(c => c.semesterId === 'sem_1').map(course => (
+                            <option key={course.code} value={course.code} className="bg-slate-900 text-white font-normal">
+                              {course.code} : {course.short} ({course.type})
+                            </option>
+                          ))}
+                        </optgroup>
+                        <optgroup label="── 📗 Semester II (1st Year) ──" className="bg-slate-950 text-emerald-300 font-bold">
+                          {(allCourses || courses).filter(c => c.semesterId === 'sem_2').map(course => (
+                            <option key={course.code} value={course.code} className="bg-slate-900 text-white font-normal">
+                              {course.code} : {course.short} ({course.type})
+                            </option>
+                          ))}
+                        </optgroup>
+                        <optgroup label="── 📙 Semester III (2nd Year) ──" className="bg-slate-950 text-amber-300 font-bold">
+                          {(allCourses || courses).filter(c => c.semesterId === 'sem_3').map(course => (
+                            <option key={course.code} value={course.code} className="bg-slate-900 text-white font-normal">
+                              {course.code} : {course.short} ({course.type})
+                            </option>
+                          ))}
+                        </optgroup>
+                        <optgroup label="── 📕 Semester IV (2nd Year) ──" className="bg-slate-950 text-purple-300 font-bold">
+                          {(allCourses || courses).filter(c => c.semesterId === 'sem_4').map(course => (
+                            <option key={course.code} value={course.code} className="bg-slate-900 text-white font-normal">
+                              {course.code} : {course.short} ({course.type})
+                            </option>
+                          ))}
+                        </optgroup>
+                      </>
+                    ) : (
+                      <>
+                        <optgroup label="── 📚 Theory Courses ──" className="bg-slate-950 text-indigo-300 font-bold">
+                          {courses.filter(c => c.type === 'Theory').map(course => (
+                            <option key={course.code} value={course.code} className="bg-slate-900 text-white font-normal">
+                              {course.code} : {course.short} (Theory - {course.credits} Cr)
+                            </option>
+                          ))}
+                        </optgroup>
+                        <optgroup label="── 🔬 Practical / Projects ──" className="bg-slate-950 text-emerald-300 font-bold">
+                          {courses.filter(c => c.type !== 'Theory').map(course => (
+                            <option key={course.code} value={course.code} className="bg-slate-900 text-white font-normal">
+                              {course.code} : {course.short} ({course.type} - {course.credits} Cr)
+                            </option>
+                          ))}
+                        </optgroup>
+                      </>
+                    )}
                   </select>
                 </div>
 
