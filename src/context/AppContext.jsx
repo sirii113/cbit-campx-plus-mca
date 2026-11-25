@@ -8,6 +8,7 @@ import {
   generateInitialMarks, 
   calculateR25Cie 
 } from '../data/mockCbitData';
+import { MCA_REGULATIONS } from '../data/mcaSyllabusCatalog';
 import { realtimeDb } from '../utils/realtimeDb';
 
 const AppContext = createContext(null);
@@ -29,8 +30,16 @@ export const AppProvider = ({ children }) => {
   const [activeStudentRoll, setActiveStudentRoll] = useState(() => currentUser?.rollNo || "1601-25-862-001");
   const [activeTab, setActiveTab] = useState(() => currentUser?.role === 'student' ? 'student-view' : 'marks-entry');
   const [activeExamType, setActiveExamType] = useState("r25-summary");
+  const [activeRegulation, setActiveRegulation] = useState(() => {
+    return localStorage.getItem('cbit_campx_active_regulation') || 'R-25';
+  });
+  const [activeSemId, setActiveSemId] = useState('sem_1');
   const [toastMessage, setToastMessage] = useState(null);
   const [loginAlert, setLoginAlert] = useState(null);
+
+  useEffect(() => {
+    localStorage.setItem('cbit_campx_active_regulation', activeRegulation);
+  }, [activeRegulation]);
 
   const [marksData, setMarksData] = useState(() => {
     const saved = localStorage.getItem('cbit_campx_marks_r25');
@@ -765,7 +774,7 @@ export const AppProvider = ({ children }) => {
 
     // STRICT FACULTY AUTHENTICATION: Lecturers must supply the confidential Faculty Staff Security PIN!
     if (isFaculty) {
-      const validPins = ['CBIT-FAC-2025', '1601-FAC', 'MCA-FAC-2025'];
+      const validPins = realtimeDb.getAuthorizedStaffPins();
       const cleanPin = (facultyStaffPin || '').trim().toUpperCase();
       if (!cleanPin || !validPins.includes(cleanPin)) {
         realtimeDb.recordAuthFailure(cleanEmail, 'faculty', 'Invalid Faculty Security PIN on password reset attempt');
@@ -801,6 +810,29 @@ export const AppProvider = ({ children }) => {
         ? `Faculty password successfully updated in Central Vault. Your credentials are protected.`
         : `Student password successfully updated in Central Vault.`
     };
+  };
+
+  // Update or Change Faculty Staff Security PIN
+  const updateFacultyStaffPin = (currentPin, newPin) => {
+    const res = realtimeDb.updateStaffPin(currentPin, newPin, currentUser?.name || 'Faculty Member');
+    if (res.success) {
+      showToast(res.message, 'success');
+    } else {
+      showToast(res.error, 'error');
+    }
+    return res;
+  };
+
+  // Emergency Recover Staff Security PIN when faculty forgets it
+  const recoverFacultyStaffPin = (recoveryKey, newPin, facultyEmail = '') => {
+    const emailToUse = facultyEmail || currentUser?.email || '';
+    const res = realtimeDb.recoverStaffPin(recoveryKey, newPin, emailToUse);
+    if (res.success) {
+      showToast(res.message, 'success');
+    } else {
+      showToast(res.error, 'error');
+    }
+    return res;
   };
 
   const updateLabRubric = (courseCode, rollNo, criteriaId, value) => {
@@ -940,6 +972,14 @@ export const AppProvider = ({ children }) => {
         setActiveTab,
         activeExamType,
         setActiveExamType,
+        activeRegulation,
+        setActiveRegulation,
+        activeSemId,
+        setActiveSemId,
+        mcaRegulations: MCA_REGULATIONS,
+        updateFacultyStaffPin,
+        recoverFacultyStaffPin,
+        getAuthorizedStaffPins: () => realtimeDb.getAuthorizedStaffPins(),
         marksData,
         updateQuestionMark,
         updateSlipTestMark,

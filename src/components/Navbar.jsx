@@ -3,6 +3,8 @@ import { useApp } from '../context/AppContext';
 import { sounds } from '../utils/soundEffects';
 import { CommandPaletteModal } from './CommandPaletteModal';
 import { NotificationDrawer } from './Notifications/NotificationDrawer';
+import { McaSyllabusModal } from './Syllabus/McaSyllabusModal';
+import { FacultyPinManagementModal } from './Auth/FacultyPinManagementModal';
 import { 
   GraduationCap, 
   BookOpen, 
@@ -37,12 +39,15 @@ export const Navbar = () => {
     setActiveRole, 
     activeTab, 
     setActiveTab, 
+    activeRegulation,
     resetToSeedData,
     cbitInfo
   } = useApp();
 
   const [isCommandOpen, setIsCommandOpen] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
+  const [isSyllabusOpen, setIsSyllabusOpen] = useState(false);
+  const [isPinModalOpen, setIsPinModalOpen] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [timeStr, setTimeStr] = useState('');
 
@@ -101,9 +106,26 @@ export const Navbar = () => {
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
             </button>
 
-            <span className="bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded text-[10px] font-mono shadow-sm">
-              R-25 Autonomous
-            </span>
+            {/* Regulation & Syllabus Explorer Trigger */}
+            <button
+              onClick={() => setIsSyllabusOpen(true)}
+              className="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black px-2.5 py-0.5 rounded text-[10px] font-mono shadow-sm flex items-center gap-1 transition-all cursor-pointer"
+              title="Browse MCA Regulations (R-25, R-22, R-20, R-16) across all years"
+            >
+              <BookOpen className="w-3 h-3 text-slate-950" />
+              <span>{activeRegulation || 'R-25'} Syllabus (All Years)</span>
+            </button>
+
+            {/* Faculty PIN Settings Trigger */}
+            {!isStudent && (
+              <button
+                onClick={() => setIsPinModalOpen(true)}
+                className="bg-indigo-900/70 hover:bg-indigo-800 text-indigo-200 border border-indigo-600/50 font-bold px-2.5 py-0.5 rounded text-[10px] font-mono flex items-center gap-1 transition-all cursor-pointer"
+                title="Edit or recover your confidential Faculty Staff Security PIN"
+              >
+                <span>🔑 Staff PIN Settings</span>
+              </button>
+            )}
           </div>
         </div>
 
@@ -379,6 +401,18 @@ export const Navbar = () => {
       <NotificationDrawer
         isOpen={isNotifOpen}
         onClose={() => setIsNotifOpen(false)}
+      />
+
+      {/* MCA R-Syllabus Master Explorer Modal */}
+      <McaSyllabusModal
+        isOpen={isSyllabusOpen}
+        onClose={() => setIsSyllabusOpen(false)}
+      />
+
+      {/* Faculty Staff Security PIN Management & Recovery Modal */}
+      <FacultyPinManagementModal
+        isOpen={isPinModalOpen}
+        onClose={() => setIsPinModalOpen(false)}
       />
     </>
   );

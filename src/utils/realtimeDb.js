@@ -314,6 +314,116 @@ class RealtimeDatabase {
       };
     }
   }
+
+  // Retrieve authorized staff PINs (includes custom updated PINs)
+  getAuthorizedStaffPins() {
+    const defaultPins = ['CBIT-FAC-2025', '1601-FAC', 'MCA-FAC-2025'];
+    try {
+      const saved = localStorage.getItem('cbit_campx_staff_pins');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return Array.from(new Set([...parsed, ...defaultPins]));
+        }
+      }
+    } catch (e) {}
+    return defaultPins;
+  }
+
+  // Update or set a new custom Staff Security PIN for faculty
+  updateStaffPin(currentPin, newPin, updatedBy = 'CBIT MCA Faculty') {
+    const cleanCurrent = (currentPin || '').trim().toUpperCase();
+    const cleanNew = (newPin || '').trim().toUpperCase();
+
+    if (!cleanNew || cleanNew.length < 4) {
+      return { success: false, error: 'New PIN must be at least 4 characters long.' };
+    }
+
+    const authorized = this.getAuthorizedStaffPins();
+    if (!authorized.includes(cleanCurrent)) {
+      return { success: false, error: 'Current Staff PIN is invalid or unauthorized.' };
+    }
+
+    const updated = Array.from(new Set([cleanNew, ...authorized]));
+    localStorage.setItem('cbit_campx_staff_pins', JSON.stringify(updated));
+
+    // Audit notification
+    const db = this.getDb();
+    if (!db.notifications) db.notifications = [];
+    db.notifications.unshift({
+      id: `notif_pin_${Date.now()}`,
+      title: "🔑 Staff Security PIN Updated",
+      message: `Faculty staff PIN was successfully modified by ${updatedBy}. New PIN: ${cleanNew}. Real-Time DB synced.`,
+      type: "security",
+      timestamp: "Just now",
+      isRead: false
+    });
+    this.saveDb(db);
+
+    try {
+      fetch('/api/realtime/update-pin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ currentPin: cleanCurrent, newPin: cleanNew, updatedBy })
+      }).catch(() => {});
+    } catch (e) {}
+
+    return { success: true, newPin: cleanNew, message: 'Staff Security PIN updated successfully.' };
+  }
+
+  // Emergency PIN Recovery if faculty forgets the staff PIN
+  recoverStaffPin(recoveryKey, newPin, facultyEmail = '') {
+    const cleanKey = (recoveryKey || '').trim().toUpperCase();
+    const cleanNew = (newPin || '').trim().toUpperCase();
+
+    const MASTER_RECOVERY_KEYS = ['CBIT-HOD-RECOVERY', 'CBIT-MCA-CHAIR', 'CBIT-DEAN-ACADEMICS', 'HOD-INDIRA-2025'];
+    
+    // Check if recovery key matches master emergency keys or verified faculty identification
+    const isMasterAuthorized = MASTER_RECOVERY_KEYS.includes(cleanKey);
+    const isEmailVerified = facultyEmail && facultyEmail.toLowerCase().includes('cbit.ac.in');
+
+    if (!isMasterAuthorized && !(cleanKey === 'CBIT-MCA' && isEmailVerified)) {
+      return {
+        success: false,
+        error: 'Invalid Emergency Recovery Key. Contact Head of Department (Dr. B. Indira) or use Master HoD Key: CBIT-HOD-RECOVERY'
+      };
+    }
+
+    if (!cleanNew || cleanNew.length < 4) {
+      return { success: false, error: 'New PIN must be at least 4 characters long.' };
+    }
+
+    const defaultPins = ['CBIT-FAC-2025', '1601-FAC', 'MCA-FAC-2025'];
+    const updated = Array.from(new Set([cleanNew, ...defaultPins]));
+    localStorage.setItem('cbit_campx_staff_pins', JSON.stringify(updated));
+
+    // Audit notification
+    const db = this.getDb();
+    if (!db.notifications) db.notifications = [];
+    db.notifications.unshift({
+      id: `notif_pin_rec_${Date.now()}`,
+      title: "🚨 Emergency Staff PIN Recovered & Reset",
+      message: `Staff Security PIN was recovered using Emergency Key [${cleanKey}] for ${facultyEmail || 'Faculty'}. New PIN [${cleanNew}] is now active.`,
+      type: "security",
+      timestamp: "Just now",
+      isRead: false
+    });
+    this.saveDb(db);
+
+    try {
+      fetch('/api/realtime/update-pin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ currentPin: cleanKey, newPin: cleanNew, updatedBy: 'Emergency Recovery Gate' })
+      }).catch(() => {});
+    } catch (e) {}
+
+    return {
+      success: true,
+      newPin: cleanNew,
+      message: `Staff PIN recovered successfully! You can now use your new PIN: ${cleanNew}`
+    };
+  }
 }
 
 export const realtimeDb = new RealtimeDatabase();

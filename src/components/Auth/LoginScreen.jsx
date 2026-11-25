@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { sounds } from '../../utils/soundEffects';
+import { McaSyllabusModal } from '../Syllabus/McaSyllabusModal';
+import { FacultyPinManagementModal } from './FacultyPinManagementModal';
 import { 
   GraduationCap, 
+  BookOpen,
   UserCheck, 
   User, 
   ShieldCheck, 
@@ -55,6 +58,8 @@ export const LoginScreen = () => {
   // Email Password Generator & Reset State
   const [showEmailResetModal, setShowEmailResetModal] = useState(false);
   const [resetModalMode, setResetModalMode] = useState('custom'); // 'generate' (student only) | 'custom'
+  const [isSyllabusOpen, setIsSyllabusOpen] = useState(false);
+  const [isPinModalOpen, setIsPinModalOpen] = useState(false);
   const [resetEmailInput, setResetEmailInput] = useState('');
   const [customNewPass, setCustomNewPass] = useState('');
   const [customConfirmPass, setCustomConfirmPass] = useState('');
@@ -514,9 +519,28 @@ export const LoginScreen = () => {
                     25MCC Series
                   </span>
                 </div>
-                <span className="text-slate-300 leading-relaxed">
+                <span className="text-slate-300 leading-relaxed block">
                   3 Slip Tests (5M each = <strong>15M</strong>) + 2 Mid Exams (Average = <strong>20M</strong>) + 2 Assignments (Average = <strong>10M</strong>) → <strong className="text-emerald-400">Total CIE = 45 Marks</strong> (Min. Pass: 18M).
                 </span>
+                <div className="flex flex-wrap items-center gap-3 mt-2 pt-2 border-t border-indigo-800/40">
+                  <button
+                    type="button"
+                    onClick={() => { sounds.playTick(); setIsSyllabusOpen(true); }}
+                    className="text-[10px] text-amber-300 hover:text-amber-200 font-bold underline flex items-center gap-1 cursor-pointer"
+                  >
+                    <BookOpen className="w-3 h-3 text-amber-400" />
+                    <span>📚 Browse MCA Regulations & Syllabi (R-25, R-22, R-20, R-16 All Years)</span>
+                  </button>
+                  <span className="text-slate-600 hidden sm:inline">·</span>
+                  <button
+                    type="button"
+                    onClick={() => { sounds.playTick(); setIsPinModalOpen(true); }}
+                    className="text-[10px] text-indigo-300 hover:text-indigo-200 font-bold underline flex items-center gap-1 cursor-pointer"
+                  >
+                    <KeyRound className="w-3 h-3 text-indigo-400" />
+                    <span>🔑 Faculty Staff PIN Management & Recovery</span>
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -1419,15 +1443,25 @@ export const LoginScreen = () => {
                       {showFacultyPin ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
                   </div>
-                  <div className="flex items-center justify-between text-[10px] text-slate-400 mt-1.5">
+                  <div className="flex flex-wrap items-center justify-between gap-2 text-[10px] text-slate-400 mt-1.5">
                     <span>Department Staff PIN: <code className="text-amber-300 font-mono font-bold bg-amber-950/60 px-1.5 py-0.5 rounded border border-amber-600/40">CBIT-FAC-2025</code></span>
-                    <button
-                      type="button"
-                      onClick={() => setFacultyPinInput('CBIT-FAC-2025')}
-                      className="text-[10px] text-amber-400 hover:text-amber-300 underline font-semibold flex items-center gap-1"
-                    >
-                      <span>⚡ Auto-Fill PIN</span>
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setFacultyPinInput('CBIT-FAC-2025')}
+                        className="text-[10px] text-amber-400 hover:text-amber-300 underline font-semibold flex items-center gap-1 cursor-pointer"
+                      >
+                        <span>⚡ Auto-Fill PIN</span>
+                      </button>
+                      <span className="text-slate-600">·</span>
+                      <button
+                        type="button"
+                        onClick={() => { sounds.playTick(); setIsPinModalOpen(true); }}
+                        className="text-[10px] text-rose-400 hover:text-rose-300 underline font-semibold flex items-center gap-1 cursor-pointer"
+                      >
+                        <span>🆘 Forgot / Edit PIN?</span>
+                      </button>
+                    </div>
                   </div>
                 </div>
               )}
@@ -1629,6 +1663,18 @@ export const LoginScreen = () => {
           Strict Password Verification Active · R-25 Syllabus
         </span>
       </div>
+
+      {/* MCA R-Syllabus Master Explorer Modal */}
+      <McaSyllabusModal
+        isOpen={isSyllabusOpen}
+        onClose={() => setIsSyllabusOpen(false)}
+      />
+
+      {/* Faculty Staff Security PIN Management & Recovery Modal */}
+      <FacultyPinManagementModal
+        isOpen={isPinModalOpen}
+        onClose={() => setIsPinModalOpen(false)}
+      />
     </div>
   );
 };

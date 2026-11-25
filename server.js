@@ -231,6 +231,21 @@ app.post('/api/realtime/reset-password', (req, res) => {
   }
 });
 
+// 9. Staff Security PIN Management & Recovery
+app.post('/api/realtime/update-pin', (req, res) => {
+  try {
+    const { currentPin, newPin, updatedBy } = req.body;
+    console.log(`[CBIT Security Vault] Staff PIN updated by ${updatedBy}: New PIN [${newPin}]`);
+    res.json({
+      success: true,
+      message: 'Staff PIN updated in central server',
+      updatedBy: updatedBy || 'Faculty'
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 // Serve frontend build if available
 const distPath = path.join(__dirname, 'dist');
 if (fs.existsSync(distPath)) {
