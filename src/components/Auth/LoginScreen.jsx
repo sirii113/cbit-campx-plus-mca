@@ -6,6 +6,7 @@ import {
   UserCheck, 
   User, 
   ShieldCheck, 
+  ShieldAlert, 
   Sparkles, 
   Lock, 
   KeyRound,

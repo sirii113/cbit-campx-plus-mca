@@ -175,12 +175,25 @@ app.get('/api/realtime/marks', (req, res) => {
   }
 });
 
-// 8. Password Reset / Generation via Email
+// 8. Password Reset / Generation via Email (Protected by Faculty Security PIN)
 app.post('/api/realtime/reset-password', (req, res) => {
   try {
-    const { email, generatedPassword, role } = req.body;
+    const { email, generatedPassword, role, facultyStaffPin } = req.body;
     if (!email) {
       return res.status(400).json({ success: false, error: 'Email is required.' });
+    }
+
+    const cleanEmail = email.toLowerCase().trim();
+    const isFaculty = cleanEmail.includes('cbit.ac.in') || role === 'faculty';
+
+    if (isFaculty) {
+      const authorizedPins = ['CBIT-FAC-2025', '1601-FAC', 'MCA-FAC-2025'];
+      if (!facultyStaffPin || !authorizedPins.includes(facultyStaffPin.trim().toUpperCase())) {
+        return res.status(403).json({
+          success: false,
+          error: 'Faculty Staff Security PIN is required and invalid. Unauthorized lecturer password mutation blocked.'
+        });
+      }
     }
 
     let existingUsers = [];
@@ -193,15 +206,15 @@ app.post('/api/realtime/reset-password', (req, res) => {
     }
 
     // Update in users database or add if new user-mentioned email
-    const idx = existingUsers.findIndex(u => u.email?.toLowerCase() === email.toLowerCase());
+    const idx = existingUsers.findIndex(u => u.email?.toLowerCase() === cleanEmail);
     if (idx !== -1) {
       existingUsers[idx].password = generatedPassword;
       existingUsers[idx].passwordResetAt = new Date().toISOString();
     } else {
       existingUsers.push({
-        email: email.toLowerCase(),
+        email: cleanEmail,
         password: generatedPassword,
-        role: role || (email.includes('cbit.ac.in') ? 'faculty' : 'student'),
+        role: role || (isFaculty ? 'faculty' : 'student'),
         passwordResetAt: new Date().toISOString(),
         createdAt: new Date().toISOString()
       });
@@ -210,9 +223,8 @@ app.post('/api/realtime/reset-password', (req, res) => {
 
     res.json({
       success: true,
-      message: `New security passkey generated and dispatched to ${email}`,
-      email,
-      generatedPassword
+      message: `Security credentials updated for ${cleanEmail}`,
+      email: cleanEmail
     });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
@@ -228,8 +240,39 @@ if (fs.existsSync(distPath)) {
   });
 }
 
-app.listen(PORT, () => {
-  console.log(`[CBIT CampX-Plus] Server running on http://localhost:${PORT}`);
-  console.log(`[CBIT Real-Time DB] Logins file: ${dbLoginsPath}`);
-  console.log(`[CBIT Real-Time DB] Users file: ${dbUsersPath}`);
-});
+// Resilient port listener with automatic Windows port fallback
+const PORTS_TO_TRY = [
+  process.env.PORT ? parseInt(process.env.PORT, 10) : 5000,
+  5001,
+  3000,
+  8080,
+  8000
+];
+
+function startServer(portIndex = 0) {
+  if (portIndex >= PORTS_TO_TRY.length) {
+    console.error('[CBIT CampX-Plus] Failed to bind to any candidate port.');
+    process.exit(1);
+  }
+
+  const candidatePort = PORTS_TO_TRY[portIndex];
+  const server = app.listen(candidatePort, '0.0.0.0', () => {
+    console.log(`\n==================================================`);
+    console.log(`  🎓 CBIT CampX+ MCA R-25 Autonomous Portal`);
+    console.log(`  🌐 Web App Active: http://localhost:${candidatePort}`);
+    console.log(`  📡 Alternative URL: http://127.0.0.1:${candidatePort}`);
+    console.log(`  🗄️ Real-Time DB:  ${dataDir}`);
+    console.log(`==================================================\n`);
+  });
+
+  server.on('error', (err) => {
+    if (err.code === 'EADDRINUSE' || err.code === 'EACCES') {
+      console.warn(`[Port ${candidatePort} unavailable (${err.code}). Trying port ${PORTS_TO_TRY[portIndex + 1]}...]`);
+      startServer(portIndex + 1);
+    } else {
+      console.error('[Server Error]:', err);
+    }
+  });
+}
+
+startServer(0);
