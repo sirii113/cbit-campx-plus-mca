@@ -663,33 +663,40 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // Generate / Reset Password via Email
+  // Generate Password via Email for User-Mentioned Email
   const generatePasswordForEmail = (email, role = 'faculty') => {
-    const cleanEmail = email.trim().toLowerCase();
+    const cleanEmail = (email || '').trim().toLowerCase();
+    if (!cleanEmail) {
+      return { success: false, error: 'User email or roll number is required.' };
+    }
     
-    // Check if faculty, student, or registered user
+    // Check if faculty, student, registered user, or MCA student
     const regUsers = realtimeDb.getRegisteredUsers();
-    const regMatch = regUsers.find(u => u.email?.toLowerCase() === cleanEmail);
+    const regMatch = regUsers.find(u => u.email?.toLowerCase() === cleanEmail || (u.rollNo && u.rollNo.toLowerCase() === cleanEmail));
     const facMatch = CBIT_MCA_FACULTY.find(f => f.email?.toLowerCase() === cleanEmail);
     const stdMatch = DEMO_USERS.students.find(s => s.email?.toLowerCase() === cleanEmail || s.rollNo.toLowerCase() === cleanEmail);
+    const mcaStdMatch = MCA_STUDENTS.find(s => s.email?.toLowerCase() === cleanEmail || s.rollNo?.toLowerCase() === cleanEmail);
 
-    if (!regMatch && !facMatch && !stdMatch) {
-      return { 
-        success: false, 
-        error: `No registered account found with email: ${email}. Please verify email address or register a new account.` 
-      };
-    }
+    const targetUser = regMatch || facMatch || stdMatch || mcaStdMatch || {
+      name: cleanEmail.split('@')[0],
+      email: cleanEmail,
+      role: cleanEmail.includes('cbit.ac.in') ? 'faculty' : 'student'
+    };
 
-    const targetUser = regMatch || facMatch || stdMatch;
     // Generate secure 8-character passkey
     const randomDigits = Math.floor(1000 + Math.random() * 9000);
     const newPasskey = `Cbit#${randomDigits}`;
 
     // Update in Realtime DB
-    realtimeDb.resetPasswordByEmail(cleanEmail, newPasskey);
+    realtimeDb.resetPasswordByEmail(cleanEmail, newPasskey, {
+      name: targetUser.name,
+      role: targetUser.role || role,
+      rollNo: targetUser.rollNo || (cleanEmail.startsWith('1601') ? cleanEmail : '')
+    });
     
     if (facMatch) facMatch.password = newPasskey;
     if (stdMatch) stdMatch.password = newPasskey;
+    if (mcaStdMatch) mcaStdMatch.password = newPasskey;
 
     showToast(`New secure passkey generated and saved for ${cleanEmail}!`, 'success');
 
@@ -700,6 +707,51 @@ export const AppProvider = ({ children }) => {
       role: targetUser.role || role,
       generatedPassword: newPasskey,
       message: `A new secure passkey [${newPasskey}] has been generated and updated in the CBIT Security Database.`
+    };
+  };
+
+  // Reset Password to Custom Chosen Password for User-Mentioned Email
+  const resetCustomPasswordForEmail = (email, newPassword, role = 'student') => {
+    const cleanEmail = (email || '').trim().toLowerCase();
+    if (!cleanEmail) {
+      return { success: false, error: 'User email or roll number is required.' };
+    }
+    if (!newPassword || newPassword.length < 6) {
+      return { success: false, error: 'Password must be at least 6 characters long.' };
+    }
+
+    const regUsers = realtimeDb.getRegisteredUsers();
+    const regMatch = regUsers.find(u => u.email?.toLowerCase() === cleanEmail || (u.rollNo && u.rollNo.toLowerCase() === cleanEmail));
+    const facMatch = CBIT_MCA_FACULTY.find(f => f.email?.toLowerCase() === cleanEmail);
+    const stdMatch = DEMO_USERS.students.find(s => s.email?.toLowerCase() === cleanEmail || s.rollNo.toLowerCase() === cleanEmail);
+    const mcaStdMatch = MCA_STUDENTS.find(s => s.email?.toLowerCase() === cleanEmail || s.rollNo?.toLowerCase() === cleanEmail);
+
+    const targetUser = regMatch || facMatch || stdMatch || mcaStdMatch || {
+      name: cleanEmail.split('@')[0],
+      email: cleanEmail,
+      role: cleanEmail.includes('cbit.ac.in') ? 'faculty' : 'student'
+    };
+
+    // Update in Realtime DB
+    realtimeDb.resetPasswordByEmail(cleanEmail, newPassword, {
+      name: targetUser.name,
+      role: targetUser.role || role,
+      rollNo: targetUser.rollNo || (cleanEmail.startsWith('1601') ? cleanEmail : '')
+    });
+
+    if (facMatch) facMatch.password = newPassword;
+    if (stdMatch) stdMatch.password = newPassword;
+    if (mcaStdMatch) mcaStdMatch.password = newPassword;
+
+    showToast(`Password successfully reset and saved for ${cleanEmail}!`, 'success');
+
+    return {
+      success: true,
+      email: cleanEmail,
+      userName: targetUser.name,
+      role: targetUser.role || role,
+      updatedPassword: newPassword,
+      message: `Password has been successfully updated in Real-Time DB for ${cleanEmail}.`
     };
   };
 
@@ -850,6 +902,7 @@ export const AppProvider = ({ children }) => {
         batchFillLabInternals,
         syncMarksFromServer,
         generatePasswordForEmail,
+        resetCustomPasswordForEmail,
         bulkUpdateMarks,
         resetToSeedData,
         showToast,

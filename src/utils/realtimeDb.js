@@ -196,23 +196,39 @@ class RealtimeDatabase {
     }
   }
 
-  // Reset or generate password by email
-  resetPasswordByEmail(email, newPassword) {
+  // Reset or generate password by user-mentioned email
+  resetPasswordByEmail(email, newPassword, extraMeta = {}) {
+    const cleanEmail = (email || '').trim().toLowerCase();
     const users = this.getRegisteredUsers();
-    const idx = users.findIndex(u => u.email?.toLowerCase() === email.toLowerCase());
+    const idx = users.findIndex(u => 
+      u.email?.toLowerCase() === cleanEmail || 
+      (u.rollNo && u.rollNo.toLowerCase() === cleanEmail)
+    );
     if (idx !== -1) {
       users[idx].password = newPassword;
       users[idx].passwordResetAt = new Date().toISOString();
-      localStorage.setItem(this.usersKey, JSON.stringify(users));
+      if (extraMeta.name && !users[idx].name) users[idx].name = extraMeta.name;
+    } else {
+      users.push({
+        name: extraMeta.name || cleanEmail.split('@')[0],
+        email: cleanEmail,
+        rollNo: extraMeta.rollNo || (cleanEmail.startsWith('1601') ? cleanEmail : ''),
+        role: extraMeta.role || (cleanEmail.includes('cbit.ac.in') ? 'faculty' : 'student'),
+        password: newPassword,
+        createdAt: new Date().toISOString(),
+        passwordResetAt: new Date().toISOString(),
+        department: "MCA (Computer Applications)"
+      });
     }
+    localStorage.setItem(this.usersKey, JSON.stringify(users));
 
     // Also add to audit notifications
     const db = this.getDb();
     if (!db.notifications) db.notifications = [];
     db.notifications.unshift({
       id: `notif_pw_${Date.now()}`,
-      title: "🔑 Password Generation Request",
-      message: `A new secure passkey was generated for ${email}. Access credentials updated in Real-Time DB.`,
+      title: "🔑 Password Reset & Generate Event",
+      message: `Password credential was successfully updated for user-mentioned email: ${email}. Real-Time DB synchronized.`,
       type: "security",
       timestamp: "Just now",
       isRead: false
@@ -223,7 +239,7 @@ class RealtimeDatabase {
       fetch('/api/realtime/reset-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, generatedPassword: newPassword })
+        body: JSON.stringify({ email: cleanEmail, generatedPassword: newPassword, role: extraMeta.role })
       }).catch(() => {});
     } catch (e) {}
 

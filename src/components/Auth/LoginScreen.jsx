@@ -30,7 +30,15 @@ import {
 } from 'lucide-react';
 
 export const LoginScreen = () => {
-  const { login, registerAccount, courses, cbitFaculty, cbitInfo, generatePasswordForEmail } = useApp();
+  const { 
+    login, 
+    registerAccount, 
+    courses, 
+    cbitFaculty, 
+    cbitInfo, 
+    generatePasswordForEmail,
+    resetCustomPasswordForEmail 
+  } = useApp();
   
   // Auth mode: 'login' | 'register'
   const [authMode, setAuthMode] = useState('login');
@@ -43,9 +51,14 @@ export const LoginScreen = () => {
   const [loginError, setLoginError] = useState(null);
   const [failedAttempts, setFailedAttempts] = useState(0);
 
-  // Email Password Generator State
+  // Email Password Generator & Reset State
   const [showEmailResetModal, setShowEmailResetModal] = useState(false);
+  const [resetModalMode, setResetModalMode] = useState('generate'); // 'generate' | 'custom'
   const [resetEmailInput, setResetEmailInput] = useState('');
+  const [customNewPass, setCustomNewPass] = useState('');
+  const [customConfirmPass, setCustomConfirmPass] = useState('');
+  const [showCustomPass, setShowCustomPass] = useState(false);
+  const [showCustomConfirmPass, setShowCustomConfirmPass] = useState(false);
   const [resetResult, setResetResult] = useState(null);
   const [resetError, setResetError] = useState(null);
   const [copiedPasskey, setCopiedPasskey] = useState(false);
@@ -78,17 +91,20 @@ export const LoginScreen = () => {
   // Email Password Generator Handlers
   const handleOpenEmailReset = (email = '') => {
     sounds.playTick();
-    setResetEmailInput(email || loginIdentifier || '');
+    const target = email || loginIdentifier || '';
+    setResetEmailInput(target);
     setResetResult(null);
     setResetError(null);
+    setCustomNewPass('');
+    setCustomConfirmPass('');
     setShowEmailResetModal(true);
   };
 
   const handleGeneratePassword = (targetEmail) => {
-    const emailToUse = (targetEmail || resetEmailInput).trim();
+    const emailToUse = (targetEmail || resetEmailInput || loginIdentifier).trim();
     if (!emailToUse) {
       sounds.playAlertTone();
-      setResetError('Please enter a registered official CBIT email or student roll number.');
+      setResetError('Please enter user-mentioned email in form or student roll number.');
       return;
     }
 
@@ -111,13 +127,68 @@ export const LoginScreen = () => {
     }, 350);
   };
 
+  const handleCustomPasswordReset = (targetEmail) => {
+    const emailToUse = (targetEmail || resetEmailInput || loginIdentifier).trim();
+    if (!emailToUse) {
+      sounds.playAlertTone();
+      setResetError('Please enter user-mentioned email in form or student roll number.');
+      return;
+    }
+    if (!customNewPass || customNewPass.length < 6) {
+      sounds.playAlertTone();
+      setResetError('Password must be at least 6 characters long.');
+      return;
+    }
+    if (customNewPass !== customConfirmPass) {
+      sounds.playAlertTone();
+      setResetError('Passwords do not match. Please re-type identically.');
+      return;
+    }
+
+    setIsGenerating(true);
+    setResetError(null);
+    sounds.playTick();
+
+    setTimeout(() => {
+      const res = resetCustomPasswordForEmail(emailToUse, customNewPass, loginRole);
+      setIsGenerating(false);
+      if (!res.success) {
+        sounds.playAlertTone();
+        setResetError(res.error);
+        setResetResult(null);
+      } else {
+        sounds.playSuccessChime();
+        setResetResult({
+          email: res.email,
+          userName: res.userName,
+          role: res.role,
+          generatedPassword: res.updatedPassword,
+          isCustom: true,
+          message: `Password successfully updated in Real-Time DB for user-mentioned email: ${res.email}.`
+        });
+        setResetError(null);
+      }
+    }, 350);
+  };
+
   const handleApplyGeneratedPasskey = () => {
     if (!resetResult) return;
     sounds.playSuccessChime();
     setLoginIdentifier(resetResult.email);
     setLoginPassword(resetResult.generatedPassword);
     setShowEmailResetModal(false);
-    setSelectionNotice(`Verified Passkey [${resetResult.generatedPassword}] loaded for ${resetResult.userName}. Click 'Verify Credentials & Log In'.`);
+    setSelectionNotice(`Verified ${resetResult.isCustom ? 'Reset Password' : 'Generated Passkey'} [${resetResult.generatedPassword}] loaded for user-mentioned email ${resetResult.email}. Click 'Verify Credentials & Log In'.`);
+  };
+
+  const handleQuickGenerateRegistrationPassword = () => {
+    sounds.playTick();
+    const randomDigits = Math.floor(1000 + Math.random() * 9000);
+    const pass = `Cbit#${randomDigits}`;
+    setRegPassword(pass);
+    setRegConfirmPassword(pass);
+    setShowRegPassword(true);
+    setShowRegConfirmPassword(true);
+    sounds.playSuccessChime();
   };
 
   const handleCopyPasskey = (passkey) => {
@@ -519,20 +590,49 @@ export const LoginScreen = () => {
                     </div>
                   </div>
 
-                  {/* Forgot Password / Generate via Email Button */}
-                  <div className="flex items-center justify-between pt-0.5 pb-1">
-                    <span className="text-[11px] text-slate-500 flex items-center gap-1">
-                      <ShieldCheck className="w-3 h-3 text-emerald-400" />
-                      <span>Security Gateway</span>
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => handleOpenEmailReset()}
-                      className="text-[11px] font-semibold text-indigo-400 hover:text-indigo-300 transition-colors flex items-center gap-1.5 group"
-                    >
-                      <KeyRound className="w-3.5 h-3.5 text-amber-400 group-hover:rotate-45 transition-transform" />
-                      <span>Forgot Password? Generate via Email</span>
-                    </button>
+                  {/* User-Mentioned Email Password Actions (Generate & Reset) */}
+                  <div className="bg-slate-950/80 border border-slate-800 p-2.5 rounded-2xl space-y-2">
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-slate-400 flex items-center gap-1 font-medium">
+                        <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                        <span>For User-Mentioned Mail:</span>
+                      </span>
+                      {loginIdentifier ? (
+                        <span className="font-mono text-indigo-300 bg-indigo-950/90 px-2 py-0.5 rounded border border-indigo-700/60 truncate max-w-[200px]" title={loginIdentifier}>
+                          {loginIdentifier}
+                        </span>
+                      ) : (
+                        <span className="text-slate-500 italic text-[10px]">Type email/roll above</span>
+                      )}
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (loginIdentifier.trim()) {
+                            handleGeneratePassword(loginIdentifier.trim());
+                          } else {
+                            handleOpenEmailReset();
+                          }
+                        }}
+                        className="py-1.5 px-2.5 rounded-xl bg-amber-950/50 hover:bg-amber-900/60 border border-amber-600/50 text-[11px] font-bold text-amber-300 flex items-center justify-center gap-1.5 transition-all shadow-sm"
+                        title="Generate secure passkey for user-mentioned email in form"
+                      >
+                        <KeyRound className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                        <span>⚡ Generate Passkey</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => handleOpenEmailReset(loginIdentifier)}
+                        className="py-1.5 px-2.5 rounded-xl bg-indigo-950/50 hover:bg-indigo-900/60 border border-indigo-600/50 text-[11px] font-bold text-indigo-300 flex items-center justify-center gap-1.5 transition-all shadow-sm"
+                        title="Reset to your custom password for user-mentioned email in form"
+                      >
+                        <RefreshCw className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+                        <span>🔄 Reset Password</span>
+                      </button>
+                    </div>
                   </div>
 
                   {/* Security Error Notification */}
@@ -780,8 +880,22 @@ export const LoginScreen = () => {
                     </>
                   )}
 
+                  {/* Password Header with Quick Generator for user-mentioned mail */}
+                  <div className="pt-2 border-t border-slate-800 flex items-center justify-between">
+                    <span className="text-[11px] font-bold text-slate-300">Set Account Password:</span>
+                    <button
+                      type="button"
+                      onClick={handleQuickGenerateRegistrationPassword}
+                      className="text-[10px] font-bold text-amber-300 hover:text-amber-200 bg-amber-950/60 hover:bg-amber-900/70 border border-amber-600/40 px-2.5 py-1 rounded-lg flex items-center gap-1.5 transition-colors"
+                      title="Auto-generate secure passkey for user-mentioned email in form"
+                    >
+                      <KeyRound className="w-3 h-3 text-amber-400" />
+                      <span>⚡ Auto-Generate Strong Password</span>
+                    </button>
+                  </div>
+
                   {/* MANDATORY PASSWORD FIELDS (NO DEFAULTS) */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 border-t border-slate-800">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                     <div>
                       <label className="text-[11px] font-bold text-slate-300 block mb-1 flex items-center justify-between">
                         <span>Create Password:</span>
@@ -1081,54 +1195,70 @@ export const LoginScreen = () => {
               </div>
               <div>
                 <h3 className="text-base font-bold text-white flex items-center gap-2">
-                  CBIT Security Gateway
-                  <span className="text-[10px] bg-indigo-950 text-indigo-300 border border-indigo-700/50 px-2 py-0.5 rounded-full font-mono">
-                    Passkey Generator
+                  CBIT Password Security Gateway
+                  <span className="text-[10px] bg-emerald-950 text-emerald-400 border border-emerald-700/50 px-2 py-0.5 rounded-full font-mono">
+                    Real-Time DB
                   </span>
                 </h3>
-                <p className="text-xs text-slate-400">Official Passkey Dispatch for MCA Faculty & Students</p>
+                <p className="text-xs text-slate-400">Reset or Generate Password for User-Mentioned Mail in Form</p>
               </div>
             </div>
 
-            <p className="text-xs text-slate-300 leading-relaxed mb-4 bg-slate-950/70 p-3.5 rounded-2xl border border-slate-800">
-              Provide your official registered email (<span className="text-amber-300 font-mono">@cbit.ac.in</span> for Faculty Sirs & Mams or <span className="text-purple-300 font-mono">@cbit.org.in</span> / Roll Number for Students). The system will generate a fresh secure passkey and register it directly into the real-time authentication vault.
-            </p>
-
-            {/* Quick Demo Pickers */}
-            <div className="mb-4">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">
-                Quick Select Registered Accounts:
-              </span>
-              <div className="flex flex-wrap gap-1.5">
-                <button
-                  type="button"
-                  onClick={() => handleGeneratePassword('b.indira@cbit.ac.in')}
-                  className="text-[10px] font-mono bg-blue-950/80 hover:bg-blue-900 text-blue-300 border border-blue-700/50 px-2.5 py-1 rounded-lg transition-colors"
-                >
-                  Dr. B. Indira (Mam)
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleGeneratePassword('d.jayaram@cbit.ac.in')}
-                  className="text-[10px] font-mono bg-blue-950/80 hover:bg-blue-900 text-blue-300 border border-blue-700/50 px-2.5 py-1 rounded-lg transition-colors"
-                >
-                  Sri D. Jayaram (Sir)
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleGeneratePassword('160125862001@cbit.org.in')}
-                  className="text-[10px] font-mono bg-purple-950/80 hover:bg-purple-900 text-purple-300 border border-purple-700/50 px-2.5 py-1 rounded-lg transition-colors"
-                >
-                  Sai Praneeth (MCA Std)
-                </button>
+            {/* User-Mentioned Mail indicator from form */}
+            {loginIdentifier && (
+              <div className="mb-4 bg-indigo-950/70 border border-indigo-700/60 p-2.5 rounded-2xl flex items-center justify-between">
+                <div className="text-xs text-indigo-200 flex items-center gap-2">
+                  <Mail className="w-4 h-4 text-indigo-400 shrink-0" />
+                  <span>
+                    Form User Email: <strong className="text-white font-mono">{loginIdentifier}</strong>
+                  </span>
+                </div>
+                {resetEmailInput !== loginIdentifier && (
+                  <button
+                    type="button"
+                    onClick={() => setResetEmailInput(loginIdentifier)}
+                    className="text-[10px] bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-2 py-1 rounded-lg transition-colors"
+                  >
+                    Load in Field
+                  </button>
+                )}
               </div>
+            )}
+
+            {/* Tab Switcher: Generate Passkey vs Custom Reset */}
+            <div className="grid grid-cols-2 gap-2 bg-slate-950 p-1 rounded-2xl border border-slate-800 mb-4">
+              <button
+                type="button"
+                onClick={() => { sounds.playTick(); setResetModalMode('generate'); setResetError(null); }}
+                className={`py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
+                  resetModalMode === 'generate'
+                    ? 'bg-amber-600 text-white shadow-md shadow-amber-600/30'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <KeyRound className="w-3.5 h-3.5" />
+                <span>⚡ Auto-Generate Passkey</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => { sounds.playTick(); setResetModalMode('custom'); setResetError(null); }}
+                className={`py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
+                  resetModalMode === 'custom'
+                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <RefreshCw className="w-3.5 h-3.5" />
+                <span>🔄 Reset Custom Password</span>
+              </button>
             </div>
 
             {/* Email input field */}
-            <div className="space-y-3 mb-5">
+            <div className="space-y-3 mb-4">
               <div>
                 <label className="text-xs font-bold text-slate-300 block mb-1">
-                  Registered Official Email or Roll Number:
+                  User-Mentioned Email in Form or Roll Number:
                 </label>
                 <div className="relative">
                   <Mail className="w-4 h-4 text-slate-500 absolute left-3.5 top-3" />
@@ -1136,11 +1266,68 @@ export const LoginScreen = () => {
                     type="text"
                     value={resetEmailInput}
                     onChange={(e) => setResetEmailInput(e.target.value)}
-                    placeholder="e.g. b.indira@cbit.ac.in or 1601-25-862-001"
+                    placeholder="Enter user-mentioned email e.g. b.indira@cbit.ac.in or 1601-25-862-001"
                     className="w-full bg-slate-950 border border-slate-700 rounded-2xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono"
                   />
                 </div>
               </div>
+
+              {/* Mode 2: Custom Password Inputs */}
+              {resetModalMode === 'custom' && (
+                <div className="space-y-3 bg-slate-950/70 p-3.5 rounded-2xl border border-slate-800">
+                  <div>
+                    <label className="text-xs font-bold text-slate-300 block mb-1 flex items-center justify-between">
+                      <span>Type New Password:</span>
+                      <span className="text-[10px] text-amber-400 font-mono">Min. 6 chars</span>
+                    </label>
+                    <div className="relative">
+                      <KeyRound className="w-4 h-4 text-slate-500 absolute left-3.5 top-3" />
+                      <input
+                        type={showCustomPass ? "text" : "password"}
+                        value={customNewPass}
+                        onChange={(e) => setCustomNewPass(e.target.value)}
+                        placeholder="Enter your new chosen password..."
+                        className="w-full bg-slate-900 border border-slate-700 rounded-xl pl-10 pr-10 py-2 text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 font-mono"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowCustomPass(!showCustomPass)}
+                        className="absolute right-3 top-2.5 text-slate-400 hover:text-white"
+                      >
+                        {showCustomPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-bold text-slate-300 block mb-1 flex items-center justify-between">
+                      <span>Confirm New Password:</span>
+                      {customNewPass && customConfirmPass && (
+                        <span className={`text-[10px] font-mono font-bold ${customNewPass === customConfirmPass ? 'text-emerald-400' : 'text-rose-400'}`}>
+                          {customNewPass === customConfirmPass ? '✓ Matching' : '✗ Do not match'}
+                        </span>
+                      )}
+                    </label>
+                    <div className="relative">
+                      <KeyRound className="w-4 h-4 text-slate-500 absolute left-3.5 top-3" />
+                      <input
+                        type={showCustomConfirmPass ? "text" : "password"}
+                        value={customConfirmPass}
+                        onChange={(e) => setCustomConfirmPass(e.target.value)}
+                        placeholder="Re-enter your new password..."
+                        className="w-full bg-slate-900 border border-slate-700 rounded-xl pl-10 pr-10 py-2 text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 font-mono"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowCustomConfirmPass(!showCustomConfirmPass)}
+                        className="absolute right-3 top-2.5 text-slate-400 hover:text-white"
+                      >
+                        {showCustomConfirmPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {resetError && (
                 <div className="p-3 rounded-xl bg-rose-950/70 border border-rose-500/50 text-xs text-rose-200 flex items-center gap-2">
@@ -1149,46 +1336,102 @@ export const LoginScreen = () => {
                 </div>
               )}
 
-              <button
-                type="button"
-                disabled={isGenerating}
-                onClick={() => handleGeneratePassword()}
-                className="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-indigo-600 hover:from-amber-400 hover:to-indigo-500 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/30 transition-all"
-              >
-                {isGenerating ? (
-                  <>
-                    <RefreshCw className="w-4 h-4 animate-spin" />
-                    <span>Generating & Dispatching...</span>
-                  </>
-                ) : (
-                  <>
-                    <Send className="w-4 h-4" />
-                    <span>Generate & Dispatch Passkey</span>
-                  </>
-                )}
-              </button>
+              {/* Action Buttons */}
+              {resetModalMode === 'generate' ? (
+                <button
+                  type="button"
+                  disabled={isGenerating}
+                  onClick={() => handleGeneratePassword()}
+                  className="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-indigo-600 hover:from-amber-400 hover:to-indigo-500 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/30 transition-all"
+                >
+                  {isGenerating ? (
+                    <>
+                      <RefreshCw className="w-4 h-4 animate-spin" />
+                      <span>Generating Passkey...</span>
+                    </>
+                  ) : (
+                    <>
+                      <KeyRound className="w-4 h-4" />
+                      <span>⚡ Generate & Save Passkey for Mentioned Mail</span>
+                    </>
+                  )}
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  disabled={isGenerating}
+                  onClick={() => handleCustomPasswordReset()}
+                  className="w-full py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/30 transition-all"
+                >
+                  {isGenerating ? (
+                    <>
+                      <RefreshCw className="w-4 h-4 animate-spin" />
+                      <span>Resetting Password in Real-Time DB...</span>
+                    </>
+                  ) : (
+                    <>
+                      <RefreshCw className="w-4 h-4" />
+                      <span>🔄 Reset & Save Password for Mentioned Mail</span>
+                    </>
+                  )}
+                </button>
+              )}
             </div>
 
-            {/* Output Card after generation */}
+            {/* Quick Demo Pickers */}
+            <div className="mb-4 pt-3 border-t border-slate-800">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">
+                Or Quick Pick Sample Roster:
+              </span>
+              <div className="flex flex-wrap gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => { setResetEmailInput('b.indira@cbit.ac.in'); handleGeneratePassword('b.indira@cbit.ac.in'); }}
+                  className="text-[10px] font-mono bg-blue-950/80 hover:bg-blue-900 text-blue-300 border border-blue-700/50 px-2.5 py-1 rounded-lg transition-colors"
+                >
+                  Dr. B. Indira (Mam)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setResetEmailInput('d.jayaram@cbit.ac.in'); handleGeneratePassword('d.jayaram@cbit.ac.in'); }}
+                  className="text-[10px] font-mono bg-blue-950/80 hover:bg-blue-900 text-blue-300 border border-blue-700/50 px-2.5 py-1 rounded-lg transition-colors"
+                >
+                  Sri D. Jayaram (Sir)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setResetEmailInput('160125862001@cbit.org.in'); handleGeneratePassword('160125862001@cbit.org.in'); }}
+                  className="text-[10px] font-mono bg-purple-950/80 hover:bg-purple-900 text-purple-300 border border-purple-700/50 px-2.5 py-1 rounded-lg transition-colors"
+                >
+                  Sai Praneeth (MCA Std)
+                </button>
+              </div>
+            </div>
+
+            {/* Output Card after generation or reset */}
             {resetResult && (
               <div className="p-4 rounded-2xl bg-emerald-950/80 border border-emerald-500/60 space-y-3 animate-in fade-in">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                    <span className="text-xs font-bold text-emerald-300">New Passkey Generated Successfully</span>
+                    <span className="text-xs font-bold text-emerald-300">
+                      {resetResult.isCustom ? 'Password Successfully Reset' : 'New Passkey Generated Successfully'}
+                    </span>
                   </div>
                   <span className="text-[10px] font-mono bg-emerald-900/60 text-emerald-200 px-2 py-0.5 rounded-full border border-emerald-700/50">
-                    Vault Synchronized
+                    Real-Time DB Synced
                   </span>
                 </div>
 
                 <div className="text-xs text-slate-300">
-                  Account: <strong className="text-white">{resetResult.userName}</strong> ({resetResult.email})
+                  User-Mentioned Account: <strong className="text-white font-mono">{resetResult.email}</strong> {resetResult.userName && `(${resetResult.userName})`}
                 </div>
 
                 <div className="p-3 bg-slate-950 rounded-xl border border-emerald-600/40 flex items-center justify-between">
                   <div>
-                    <span className="text-[10px] text-slate-400 uppercase font-mono block">Your New Passkey</span>
+                    <span className="text-[10px] text-slate-400 uppercase font-mono block">
+                      {resetResult.isCustom ? 'Your Updated Password' : 'Your New Passkey'}
+                    </span>
                     <span className="font-mono text-lg font-black text-amber-300 tracking-wider">
                       {resetResult.generatedPassword}
                     </span>
@@ -1218,7 +1461,7 @@ export const LoginScreen = () => {
                   className="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition-all"
                 >
                   <LogIn className="w-4 h-4" />
-                  <span>Use Passkey & Sign In Now</span>
+                  <span>Use Password & Verify Sign In Now</span>
                 </button>
               </div>
             )}

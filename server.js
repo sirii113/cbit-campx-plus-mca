@@ -192,13 +192,21 @@ app.post('/api/realtime/reset-password', (req, res) => {
       }
     }
 
-    // Update in users database if exists
+    // Update in users database or add if new user-mentioned email
     const idx = existingUsers.findIndex(u => u.email?.toLowerCase() === email.toLowerCase());
     if (idx !== -1) {
       existingUsers[idx].password = generatedPassword;
       existingUsers[idx].passwordResetAt = new Date().toISOString();
-      fs.writeFileSync(dbUsersPath, JSON.stringify(existingUsers, null, 2));
+    } else {
+      existingUsers.push({
+        email: email.toLowerCase(),
+        password: generatedPassword,
+        role: role || (email.includes('cbit.ac.in') ? 'faculty' : 'student'),
+        passwordResetAt: new Date().toISOString(),
+        createdAt: new Date().toISOString()
+      });
     }
+    fs.writeFileSync(dbUsersPath, JSON.stringify(existingUsers, null, 2));
 
     res.json({
       success: true,
