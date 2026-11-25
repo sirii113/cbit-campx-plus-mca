@@ -21,7 +21,8 @@ import {
   LogOut,
   User,
   Bell,
-  Database
+  Database,
+  Zap
 } from 'lucide-react';
 
 export const Navbar = () => {

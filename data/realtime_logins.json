@@ -1,5 +1,18 @@
 [
   {
+    "id": "log_1795610593439_16q7",
+    "timestamp": "2026-11-25T12:43:13.439Z",
+    "userName": "Dr. B. Indira",
+    "identifier": "b.indira@cbit.ac.in",
+    "role": "faculty",
+    "department": "MCA (Computer Applications)",
+    "ip": "10.12.86.233 (CBIT Gandipet Campus Gateway)",
+    "device": "Desktop / Windows 11",
+    "sessionToken": "cbit_RG753AUE",
+    "syncStatus": "Real-Time DB Saved",
+    "serverReceivedAt": "2026-11-25T12:43:13.450Z"
+  },
+  {
     "id": "log_1795609900567_jlce",
     "timestamp": "2026-11-25T12:31:40.567Z",
     "userName": "Dr. B. Indira",
