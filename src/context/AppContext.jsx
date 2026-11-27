@@ -11,6 +11,12 @@ import {
   calculateR25Cie,
   calculateSemesterSgpa
 } from '../data/mockCbitData';
+import { 
+  MCA_SENIORS_STUDENTS, 
+  SENIOR_COHORT_INFO, 
+  SENIOR_BENCHMARKS, 
+  generateSeniorMarks 
+} from '../data/mcaSeniorsData';
 import { MCA_REGULATIONS } from '../data/mcaSyllabusCatalog';
 import { realtimeDb } from '../utils/realtimeDb';
 
@@ -22,10 +28,28 @@ export const AppProvider = ({ children }) => {
     return saved ? JSON.parse(saved) : null;
   });
 
+  // Selected Cohort: 'current' (2025-27) or 'seniors' (2023-25)
+  const [selectedCohort, setSelectedCohort] = useState(() => {
+    return localStorage.getItem('cbit_campx_selected_cohort') || 'current';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('cbit_campx_selected_cohort', selectedCohort);
+  }, [selectedCohort]);
+
   const [students, setStudents] = useState(() => {
     const saved = localStorage.getItem('cbit_campx_students');
     return saved ? JSON.parse(saved) : MCA_STUDENTS;
   });
+
+  const [seniorMarksData, setSeniorMarksData] = useState(() => {
+    const saved = localStorage.getItem('cbit_campx_marks_seniors');
+    return saved ? JSON.parse(saved) : generateSeniorMarks();
+  });
+
+  useEffect(() => {
+    localStorage.setItem('cbit_campx_marks_seniors', JSON.stringify(seniorMarksData));
+  }, [seniorMarksData]);
 
   const [selectedSemester, setSelectedSemester] = useState(() => {
     return localStorage.getItem('cbit_campx_selected_semester') || 'all';
@@ -216,6 +240,11 @@ export const AppProvider = ({ children }) => {
         }
         authenticatedUser = regMatch;
       } else {
+        const seniorMatch = MCA_SENIORS_STUDENTS.find(s => 
+          s.rollNo.replace(/-/g, '').toLowerCase() === idClean.replace(/-/g, '') ||
+          s.email.toLowerCase() === idClean ||
+          s.name.toLowerCase().includes(idClean)
+        );
         const demoMatch = DEMO_USERS.students.find(s => 
           s.rollNo.replace(/-/g, '').toLowerCase() === idClean.replace(/-/g, '') ||
           s.email.toLowerCase() === idClean ||
@@ -224,9 +253,12 @@ export const AppProvider = ({ children }) => {
         const studentProfile = demoMatch || students.find(s => 
           s.rollNo.replace(/-/g, '').toLowerCase() === idClean.replace(/-/g, '') ||
           s.name.toLowerCase().includes(idClean)
-        );
+        ) || seniorMatch;
 
         if (studentProfile) {
+          if (seniorMatch && studentProfile === seniorMatch) {
+            setSelectedCohort('seniors');
+          }
           const expectedPassword = studentProfile.password || 'mca@2025';
           if (cleanPass !== expectedPassword) {
             realtimeDb.recordAuthFailure(identifier, 'student', `Incorrect password for ${studentProfile.name}`);
@@ -422,9 +454,52 @@ export const AppProvider = ({ children }) => {
     setLoginAlert(null);
   };
 
+  const activeStudents = selectedCohort === 'seniors' ? MCA_SENIORS_STUDENTS : students;
+  const activeMarksData = selectedCohort === 'seniors' ? seniorMarksData : marksData;
+
   const courses = filteredCourses;
   const selectedCourse = COURSES.find(c => c.code === selectedCourseCode) || COURSES[0];
-  const activeStudent = students.find(s => s.rollNo === activeStudentRoll) || students[0];
+  const activeStudent = activeStudents.find(s => s.rollNo === activeStudentRoll) || 
+                        students.find(s => s.rollNo === activeStudentRoll) || 
+                        MCA_SENIORS_STUDENTS.find(s => s.rollNo === activeStudentRoll) || 
+                        activeStudents[0];
+
+  const cohortInfo = selectedCohort === 'seniors'
+    ? {
+        ...CBIT_INFO,
+        academicYear: "2023 - 2025",
+        currentSemester: "Semester IV (Completed)",
+        cohortName: "Senior Batch (2023–2025)",
+        isSeniorCohort: true,
+        rollPrefix: "1601-23-862",
+        benchmark: SENIOR_BENCHMARKS
+      }
+    : {
+        ...CBIT_INFO,
+        cohortName: "Current Batch (2025–2027)",
+        isSeniorCohort: false,
+        rollPrefix: "1601-25-862"
+      };
+
+  const toggleCohort = (targetCohort) => {
+    const nextCohort = targetCohort || (selectedCohort === 'current' ? 'seniors' : 'current');
+    setSelectedCohort(nextCohort);
+    if (nextCohort === 'seniors') {
+      setActiveStudentRoll('1601-23-862-001');
+      showToast('🎓 Switched to Senior Batch (2023–2025) · 60 Students · Completed Records & Benchmarks', 'info');
+    } else {
+      setActiveStudentRoll('1601-25-862-001');
+      showToast('🌟 Switched to Current Batch (2025–2027) · Live Continuous Evaluation (CIE)', 'info');
+    }
+  };
+
+  const updateActiveMarks = (updaterFn) => {
+    if (selectedCohort === 'seniors') {
+      setSeniorMarksData(updaterFn);
+    } else {
+      setMarksData(updaterFn);
+    }
+  };
 
   const recomputeStudentR25 = (studentMark) => {
     const mid1Total = studentMark.mid1?.total || 14;
@@ -457,7 +532,7 @@ export const AppProvider = ({ children }) => {
 
   const updateQuestionMark = (courseCode, rollNo, examType, qNo, value) => {
     const numVal = Math.max(0, Math.min(4, Number(value) || 0));
-    setMarksData(prev => {
+    updateActiveMarks(prev => {
       const next = { ...prev };
       if (!next[courseCode]) next[courseCode] = {};
       if (!next[courseCode][rollNo]) next[courseCode][rollNo] = {};
@@ -477,7 +552,7 @@ export const AppProvider = ({ children }) => {
   const updateSlipTestMark = (courseCode, rollNo, slipKey, value) => {
     if (currentUser?.role === 'student') return; // Strict RBAC: students cannot edit marks
     const numVal = Math.max(0, Math.min(5, Number(value) || 0));
-    setMarksData(prev => {
+    updateActiveMarks(prev => {
       const next = { ...prev };
       if (!next[courseCode]) next[courseCode] = {};
       if (!next[courseCode][rollNo]) next[courseCode][rollNo] = {};
@@ -495,7 +570,7 @@ export const AppProvider = ({ children }) => {
   const updateAssignmentR25 = (courseCode, rollNo, assignKey, value) => {
     if (currentUser?.role === 'student') return; // Strict RBAC
     const numVal = Math.max(0, Math.min(10, Number(value) || 0));
-    setMarksData(prev => {
+    updateActiveMarks(prev => {
       const next = { ...prev };
       if (!next[courseCode]) next[courseCode] = {};
       if (!next[courseCode][rollNo]) next[courseCode][rollNo] = {};
@@ -513,7 +588,7 @@ export const AppProvider = ({ children }) => {
   const updateDirectMidTotal = (courseCode, rollNo, examType, value) => {
     if (currentUser?.role === 'student') return;
     const numVal = Math.max(0, Math.min(20, Number(value) || 0));
-    setMarksData(prev => {
+    updateActiveMarks(prev => {
       const next = { ...prev };
       if (!next[courseCode]) next[courseCode] = {};
       if (!next[courseCode][rollNo]) next[courseCode][rollNo] = {};
@@ -534,11 +609,11 @@ export const AppProvider = ({ children }) => {
 
   const batchInstantFill = (courseCode, componentKey, fillValue) => {
     if (currentUser?.role === 'student') return;
-    setMarksData(prev => {
+    updateActiveMarks(prev => {
       const next = { ...prev };
       if (!next[courseCode]) next[courseCode] = {};
 
-      students.forEach(student => {
+      activeStudents.forEach(student => {
         if (!next[courseCode][student.rollNo]) next[courseCode][student.rollNo] = {};
         const target = next[courseCode][student.rollNo];
 
@@ -579,7 +654,7 @@ export const AppProvider = ({ children }) => {
       ? Math.max(0, Math.min(30, Number(value) || 0))
       : Math.max(0, Math.min(20, Number(value) || 0));
 
-    setMarksData(prev => {
+    updateActiveMarks(prev => {
       const next = { ...prev };
       if (!next[courseCode]) next[courseCode] = {};
       if (!next[courseCode][rollNo]) next[courseCode][rollNo] = {};
@@ -622,7 +697,7 @@ export const AppProvider = ({ children }) => {
     const maxVal = partKey === 'execution' ? 10 : 5;
     const numVal = Math.max(0, Math.min(maxVal, Number(value) || 0));
 
-    setMarksData(prev => {
+    updateActiveMarks(prev => {
       const next = { ...prev };
       if (!next[courseCode]) next[courseCode] = {};
       if (!next[courseCode][rollNo]) next[courseCode][rollNo] = {};
@@ -649,11 +724,11 @@ export const AppProvider = ({ children }) => {
     const maxVal = targetKey === 'dayToDay' ? 30 : 20;
     const numVal = Math.max(0, Math.min(maxVal, Number(fillValue) || 0));
 
-    setMarksData(prev => {
+    updateActiveMarks(prev => {
       const next = { ...prev };
       if (!next[courseCode]) next[courseCode] = {};
 
-      students.forEach(student => {
+      activeStudents.forEach(student => {
         if (!next[courseCode][student.rollNo]) next[courseCode][student.rollNo] = {};
         const sObj = next[courseCode][student.rollNo];
 
@@ -853,7 +928,7 @@ export const AppProvider = ({ children }) => {
 
   const updateLabRubric = (courseCode, rollNo, criteriaId, value) => {
     if (currentUser?.role === 'student') return; // Strict RBAC
-    setMarksData(prev => {
+    updateActiveMarks(prev => {
       const next = { ...prev };
       if (!next[courseCode]) next[courseCode] = {};
       if (!next[courseCode][rollNo]) next[courseCode][rollNo] = { rubricScores: {} };
@@ -880,13 +955,13 @@ export const AppProvider = ({ children }) => {
   const bulkUpdateMarks = (courseCode, examType, parsedRows) => {
     if (currentUser?.role === 'student') return; // Strict RBAC
     let updatedCount = 0;
-    setMarksData(prev => {
+    updateActiveMarks(prev => {
       const next = { ...prev };
       if (!next[courseCode]) next[courseCode] = {};
 
       parsedRows.forEach(row => {
         const cleanRoll = row.rollNo?.trim();
-        const studentMatch = students.find(s => 
+        const studentMatch = activeStudents.find(s => 
           s.rollNo === cleanRoll || 
           s.rollNo.replace(/-/g, '') === cleanRoll.replace(/-/g, '')
         );
@@ -974,7 +1049,14 @@ export const AppProvider = ({ children }) => {
         logout,
         loginAlert,
         dismissLoginAlert,
-        students,
+        students: activeStudents,
+        currentCohortStudents: students,
+        seniorStudents: MCA_SENIORS_STUDENTS,
+        selectedCohort,
+        setSelectedCohort,
+        toggleCohort,
+        seniorCohortInfo: SENIOR_COHORT_INFO,
+        seniorBenchmarks: SENIOR_BENCHMARKS,
         courses,
         allCourses: COURSES,
         selectedSemester,
@@ -1001,7 +1083,9 @@ export const AppProvider = ({ children }) => {
         updateFacultyStaffPin,
         recoverFacultyStaffPin,
         getAuthorizedStaffPins: () => realtimeDb.getAuthorizedStaffPins(),
-        marksData,
+        marksData: activeMarksData,
+        currentCohortMarks: marksData,
+        seniorMarksData,
         updateQuestionMark,
         updateSlipTestMark,
         updateAssignmentR25,
@@ -1017,7 +1101,8 @@ export const AppProvider = ({ children }) => {
         bulkUpdateMarks,
         resetToSeedData,
         showToast,
-        cbitInfo: CBIT_INFO,
+        cbitInfo: cohortInfo,
+        cohortInfo,
         cbitFaculty: CBIT_MCA_FACULTY
       }}
     >

@@ -40,7 +40,10 @@ export const StudentDashboard = () => {
     cbitSemesters,
     calculateSemesterSgpa,
     marksData, 
-    cbitInfo 
+    cbitInfo,
+    selectedCohort,
+    toggleCohort,
+    seniorBenchmarks 
   } = useApp();
 
   const isStudentRole = currentUser?.role === 'student';
@@ -162,11 +165,16 @@ export const StudentDashboard = () => {
                 <div className="space-y-1">
                   <div className="flex flex-wrap items-center gap-1.5">
                     <span className="text-[10px] bg-amber-400 text-slate-950 px-2 py-0.5 rounded-full font-mono font-black uppercase">
-                      R-25 Autonomous
+                      {activeStudent.batch ? `Batch ${activeStudent.batch}` : 'R-25 Autonomous'}
                     </span>
                     <span className="text-[10px] bg-indigo-500/30 text-indigo-200 px-2 py-0.5 rounded-full font-mono font-semibold border border-indigo-400/30">
                       Total 90 Credits
                     </span>
+                    {activeStudent.placement && (
+                      <span className="text-[10px] bg-emerald-500/30 text-emerald-200 px-2 py-0.5 rounded-full font-mono font-semibold border border-emerald-400/30">
+                        {activeStudent.placement.company} ({activeStudent.placement.package})
+                      </span>
+                    )}
                   </div>
                   <h3 className="text-lg font-black tracking-tight text-white leading-tight">
                     {activeStudent.name}
@@ -174,6 +182,26 @@ export const StudentDashboard = () => {
                   <p className="font-mono text-xs font-bold text-amber-300">{activeStudent.rollNo}</p>
                 </div>
               </div>
+
+              {/* Senior Major Project Showcase inside ID Card */}
+              {activeStudent.majorProject && (
+                <div className="mt-3 p-2.5 rounded-2xl bg-white/5 border border-white/10 text-xs space-y-1">
+                  <div className="flex items-center justify-between text-[10px] text-amber-300 font-mono">
+                    <span className="flex items-center gap-1 font-bold">
+                      <BookOpen className="w-3 h-3 text-amber-400" />
+                      <span>Major Project (25MCC214):</span>
+                    </span>
+                    <span className="font-bold">CIE: {activeStudent.majorProject.cieScore}/100M</span>
+                  </div>
+                  <p className="font-semibold text-slate-100 text-[11px] line-clamp-1">
+                    "{activeStudent.majorProject.title}"
+                  </p>
+                  <div className="flex items-center justify-between text-[10px] text-slate-400">
+                    <span>Guide: <strong className="text-slate-300">{activeStudent.majorProject.guide}</strong></span>
+                    <span className="text-purple-300 font-mono">{activeStudent.majorProject.domain}</span>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Semester-by-Semester SGPA Progression Grid */}
@@ -246,19 +274,44 @@ export const StudentDashboard = () => {
               </div>
 
               {!isStudentRole ? (
-                <div className="flex items-center gap-2">
-                  <label className="text-xs font-semibold text-slate-500">Switch Student:</label>
+                <div className="flex flex-wrap items-center gap-2">
+                  {/* Cohort Switcher */}
+                  <div className="flex items-center bg-slate-100 p-1 rounded-xl text-[11px] font-mono">
+                    <button
+                      type="button"
+                      onClick={() => toggleCohort('current')}
+                      className={`px-2 py-0.5 rounded-lg font-bold transition-all cursor-pointer ${
+                        selectedCohort === 'current'
+                          ? 'bg-amber-400 text-slate-950 font-black shadow-sm'
+                          : 'text-slate-500 hover:text-slate-900'
+                      }`}
+                    >
+                      🌟 Current
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => toggleCohort('seniors')}
+                      className={`px-2 py-0.5 rounded-lg font-bold transition-all cursor-pointer ${
+                        selectedCohort === 'seniors'
+                          ? 'bg-indigo-600 text-white font-black shadow-sm'
+                          : 'text-slate-500 hover:text-slate-900'
+                      }`}
+                    >
+                      🎓 Seniors
+                    </button>
+                  </div>
+
                   <select
                     value={activeStudentRoll}
                     onChange={(e) => {
                       sounds.playTick();
                       setActiveStudentRoll(e.target.value);
                     }}
-                    className="p-2 border border-slate-300 rounded-xl text-xs bg-slate-50 font-bold text-slate-800 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                    className="p-1.5 border border-slate-300 rounded-xl text-xs bg-slate-50 font-bold text-slate-800 focus:ring-2 focus:ring-indigo-500 focus:outline-none max-w-[190px]"
                   >
                     {students.map(s => (
                       <option key={s.rollNo} value={s.rollNo}>
-                        {s.rollNo.slice(-3)}: {s.name} (CGPA: {s.cgpa})
+                        {s.rollNo.slice(-3)}: {s.name} ({s.cgpa})
                       </option>
                     ))}
                   </select>
@@ -313,6 +366,23 @@ export const StudentDashboard = () => {
               </div>
             </div>
           </div>
+
+          {/* Senior Batch Benchmark Comparison for Students */}
+          {!activeStudent.batch && (
+            <div className="p-3.5 rounded-2xl bg-gradient-to-r from-purple-50 via-indigo-50 to-blue-50 border border-purple-200 text-xs flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-purple-600 text-white flex items-center justify-center font-bold text-sm shrink-0 shadow-md">
+                  🎓
+                </div>
+                <div>
+                  <span className="font-bold text-slate-900 block">Senior Batch (2023–2025) Performance Benchmark:</span>
+                  <span className="text-slate-600">
+                    Seniors Class Avg: <strong className="text-purple-950 font-mono">8.78 CGPA</strong> · Placement Rate: <strong className="text-emerald-700 font-mono">91.7%</strong> · High: <strong className="text-indigo-900">₹24 LPA (Google)</strong> · Your Standing: <strong className={activeStudent.cgpa >= 8.78 ? 'text-emerald-700 font-bold' : 'text-indigo-700 font-bold'}>{activeStudent.cgpa >= 8.78 ? '🏆 Exceeding Senior Average' : '🎯 On Track for First Class'}</strong>
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* R-25 Autonomous Evaluation Formula Banner */}
           <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2">

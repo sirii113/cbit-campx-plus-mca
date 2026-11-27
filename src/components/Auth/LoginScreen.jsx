@@ -1231,13 +1231,14 @@ export const LoginScreen = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                 <div className="p-2.5 rounded-2xl bg-slate-950 border border-slate-800 flex flex-col justify-between">
                   <div>
                     <div className="text-xs font-bold text-amber-300 truncate">Sai Praneeth (001)</div>
                     <div className="text-[10px] text-slate-400 font-mono">1601-25-862-001</div>
+                    <div className="text-[9px] text-slate-500 font-sans truncate">Current 2025-27 Batch</div>
                   </div>
-                  <div className="flex items-center gap-1.5 mt-2.5">
+                  <div className="flex items-center gap-1.5 mt-2">
                     <button
                       type="button"
                       onClick={() => handleOpenEmailReset('160125862001@cbit.org.in')}
@@ -1261,8 +1262,9 @@ export const LoginScreen = () => {
                   <div>
                     <div className="text-xs font-bold text-rose-400 truncate">Vigneshwar (009)</div>
                     <div className="text-[10px] text-slate-400 font-mono">1601-25-862-009</div>
+                    <div className="text-[9px] text-slate-500 font-sans truncate">Current 2025-27 Batch</div>
                   </div>
-                  <div className="flex items-center gap-1.5 mt-2.5">
+                  <div className="flex items-center gap-1.5 mt-2">
                     <button
                       type="button"
                       onClick={() => handleOpenEmailReset('160125862009@cbit.org.in')}
@@ -1277,6 +1279,27 @@ export const LoginScreen = () => {
                       className="flex-1 py-1 rounded-lg bg-indigo-950 hover:bg-indigo-900 text-indigo-300 border border-indigo-800 text-[10px] font-bold flex items-center justify-center gap-1"
                     >
                       <span>Select</span>
+                      <ArrowRight className="w-2.5 h-2.5" />
+                    </button>
+                  </div>
+                </div>
+
+                <div className="p-2.5 rounded-2xl bg-purple-950/40 border border-purple-800/60 flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center gap-1">
+                      <span className="text-[9px] bg-purple-500/20 text-purple-300 font-bold px-1.5 py-0.2 rounded font-mono">Senior</span>
+                      <div className="text-xs font-bold text-amber-300 truncate">Venkata Sai (001)</div>
+                    </div>
+                    <div className="text-[10px] text-purple-300/80 font-mono">1601-23-862-001</div>
+                    <div className="text-[9px] text-emerald-400 font-sans truncate">Oracle · ₹16.0 LPA</div>
+                  </div>
+                  <div className="flex items-center gap-1.5 mt-2">
+                    <button
+                      type="button"
+                      onClick={() => handleSelectStudent({ rollNo: '1601-23-862-001', name: 'K. Venkata Sai' })}
+                      className="flex-1 py-1 rounded-lg bg-purple-900 hover:bg-purple-800 text-purple-200 border border-purple-700 text-[10px] font-bold flex items-center justify-center gap-1 cursor-pointer"
+                    >
+                      <span>Select Senior</span>
                       <ArrowRight className="w-2.5 h-2.5" />
                     </button>
                   </div>

@@ -21,7 +21,7 @@ import {
 } from 'lucide-react';
 
 export const PlacementReadinessDashboard = () => {
-  const { students, marksData, showToast } = useApp();
+  const { students, marksData, selectedCohort: appCohort, toggleCohort, seniorCohortInfo, showToast } = useApp();
   const [selectedCohort, setSelectedCohort] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSkill, setSelectedSkill] = useState('all');
@@ -112,6 +112,40 @@ export const PlacementReadinessDashboard = () => {
               <span>Export TPO Shortlist</span>
             </button>
           </div>
+        </div>
+      </div>
+
+      {/* Senior Batch Historical Placement Benchmark Strip */}
+      <div className="p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-purple-950/80 via-slate-900 to-indigo-950/80 border border-purple-500/30 text-white shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="flex items-center gap-3.5">
+          <div className="w-11 h-11 rounded-2xl bg-amber-400 text-slate-950 flex items-center justify-center font-black text-xl shrink-0 shadow-lg shadow-amber-400/20">
+            🏆
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <h4 className="font-black text-white text-sm">
+                Senior MCA Batch (2023–2025) Placement Track Benchmark
+              </h4>
+              <span className="text-[10px] bg-emerald-500/20 text-emerald-300 font-mono font-bold px-2 py-0.5 rounded-full border border-emerald-500/30">
+                55/60 Recruited (91.7%)
+              </span>
+            </div>
+            <p className="text-xs text-slate-300 mt-0.5">
+              Top Offer: <strong className="text-amber-300 font-mono">₹24.0 LPA (Google Cloud AI)</strong> · Oracle: <strong className="text-indigo-300 font-mono">₹16.0 LPA</strong> · ServiceNow: <strong className="text-purple-300 font-mono">₹14.5 LPA</strong> · Avg Package: <strong className="text-emerald-300 font-mono">₹7.8 LPA</strong>
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => {
+              toggleCohort(appCohort === 'seniors' ? 'current' : 'seniors');
+            }}
+            className="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold rounded-xl transition shadow-md shadow-purple-600/30 cursor-pointer flex items-center gap-1.5"
+          >
+            <span>{appCohort === 'seniors' ? 'Switch to Current Batch (25-27)' : 'Switch to Senior Batch (23-25)'}</span>
+          </button>
         </div>
       </div>
 

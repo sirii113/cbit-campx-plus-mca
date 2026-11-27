@@ -30,6 +30,8 @@ export const CbitCoEReport = () => {
     activeStudent,
     marksData, 
     cbitInfo, 
+    selectedCohort,
+    toggleCohort,
     showToast 
   } = useApp();
 
@@ -96,7 +98,33 @@ export const CbitCoEReport = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            {/* Cohort Switcher */}
+            <div className="flex items-center bg-slate-100 p-1 rounded-xl text-xs font-bold font-mono">
+              <button
+                type="button"
+                onClick={() => { sounds.playTick(); toggleCohort('current'); }}
+                className={`px-2.5 py-1.5 rounded-lg transition-all cursor-pointer ${
+                  selectedCohort === 'current'
+                    ? 'bg-amber-400 text-slate-950 font-black shadow-sm'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                🌟 Current (25-27)
+              </button>
+              <button
+                type="button"
+                onClick={() => { sounds.playTick(); toggleCohort('seniors'); }}
+                className={`px-2.5 py-1.5 rounded-lg transition-all cursor-pointer ${
+                  selectedCohort === 'seniors'
+                    ? 'bg-indigo-600 text-white font-black shadow-sm'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                🎓 Seniors (23-25)
+              </button>
+            </div>
+
             {/* Report Mode Switcher */}
             <div className="flex items-center bg-slate-100 p-1 rounded-xl text-xs font-bold">
               <button

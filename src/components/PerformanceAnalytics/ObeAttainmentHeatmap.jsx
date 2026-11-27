@@ -20,14 +20,18 @@ import {
 import { Award, CheckCircle2, AlertCircle, BarChart3, ShieldCheck, Download } from 'lucide-react';
 
 export const ObeAttainmentHeatmap = () => {
-  const { selectedCourse, marksData, students, showToast } = useApp();
+  const { selectedCourse, marksData, students, seniorStudents, seniorMarksData, showToast } = useApp();
 
   const attainmentData = calculateObeAttainment(selectedCourse, marksData, students);
   const { coAttainment, bloomAttainment, overallAttainmentLevel, avgAttainmentPct, percentagePassed } = attainmentData;
 
-  const radarData = coAttainment.map(c => ({
+  // Calculate Senior Batch historical attainment for continuous improvement comparison
+  const seniorAttainment = calculateObeAttainment(selectedCourse, seniorMarksData, seniorStudents || []);
+
+  const radarData = coAttainment.map((c, idx) => ({
     subject: c.co,
     attainment: c.attainmentPercentage,
+    seniorBenchmark: seniorAttainment.coAttainment?.[idx]?.attainmentPercentage || 85,
     target: c.targetThreshold
   }));
 
@@ -153,6 +157,7 @@ export const ObeAttainmentHeatmap = () => {
                 <PolarAngleAxis dataKey="subject" tick={{ fontSize: 11, fill: '#475569' }} />
                 <PolarRadiusAxis domain={[0, 100]} tick={{ fontSize: 9 }} />
                 <Radar name="Attainment" dataKey="attainment" stroke="#2563eb" fill="#3b82f6" fillOpacity={0.4} />
+                <Radar name="Seniors Benchmark (2023-25)" dataKey="seniorBenchmark" stroke="#8b5cf6" fill="#8b5cf6" fillOpacity={0.2} />
                 <Radar name="Target Benchmark" dataKey="target" stroke="#94a3b8" fill="#cbd5e1" fillOpacity={0.2} />
                 <Legend wrapperStyle={{ fontSize: '11px' }} />
               </RadarChart>
