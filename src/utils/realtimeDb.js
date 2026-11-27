@@ -358,7 +358,7 @@ class RealtimeDatabase {
     db.notifications.unshift({
       id: `notif_pin_${Date.now()}`,
       title: "🔑 Staff Security PIN Updated",
-      message: `Faculty staff PIN was successfully modified by ${updatedBy}. New PIN: ${cleanNew}. Real-Time DB synced.`,
+      message: `Faculty staff PIN was successfully modified by ${updatedBy} and stored in the server Security PIN database.`,
       type: "security",
       timestamp: "Just now",
       isRead: false
