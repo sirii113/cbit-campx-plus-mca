@@ -239,7 +239,12 @@ class RealtimeDatabase {
       fetch('/api/realtime/reset-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: cleanEmail, generatedPassword: newPassword, role: extraMeta.role })
+        body: JSON.stringify({
+          email: cleanEmail,
+          generatedPassword: newPassword,
+          role: extraMeta.role,
+          facultyStaffPin: extraMeta.facultyStaffPin
+        })
       }).catch(() => {});
     } catch (e) {}
 

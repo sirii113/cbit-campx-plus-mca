@@ -3,6 +3,7 @@ import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
+import crypto from 'crypto';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -12,6 +13,26 @@ const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
+
+// Password Hashing Utilities (Salted scrypt)
+function hashPassword(plainText) {
+  const salt = crypto.randomBytes(16).toString('hex');
+  const derivedKey = crypto.scryptSync(String(plainText), salt, 64).toString('hex');
+  return `${salt}:${derivedKey}`;
+}
+
+function verifyPassword(plainText, storedValue) {
+  if (!storedValue) return false;
+  if (!storedValue.includes(':')) {
+    return String(plainText) === String(storedValue);
+  }
+  const [salt, keyHex] = storedValue.split(':');
+  if (!salt || !keyHex) return false;
+  const keyBuffer = Buffer.from(keyHex, 'hex');
+  const derivedBuffer = crypto.scryptSync(String(plainText), salt, 64);
+  if (keyBuffer.length !== derivedBuffer.length) return false;
+  return crypto.timingSafeEqual(keyBuffer, derivedBuffer);
+}
 
 // Real-Time Database storage directory
 const dataDir = path.join(__dirname, 'data');
@@ -23,6 +44,7 @@ const dbLoginsPath = path.join(dataDir, 'realtime_logins.json');
 const dbUsersPath = path.join(dataDir, 'realtime_users.json');
 const dbMarksPath = path.join(dataDir, 'realtime_marks.json');
 const dbSeniorsPath = path.join(dataDir, 'realtime_seniors.json');
+const dbPinsPath = path.join(dataDir, 'realtime_pins.json');
 
 if (!fs.existsSync(dbLoginsPath)) {
   fs.writeFileSync(dbLoginsPath, JSON.stringify([], null, 2));
@@ -35,6 +57,18 @@ if (!fs.existsSync(dbMarksPath)) {
 }
 if (!fs.existsSync(dbSeniorsPath)) {
   fs.writeFileSync(dbSeniorsPath, JSON.stringify([], null, 2));
+}
+if (!fs.existsSync(dbPinsPath)) {
+  fs.writeFileSync(dbPinsPath, JSON.stringify(['CBIT-FAC-2025', '1601-FAC', 'MCA-FAC-2025'], null, 2));
+}
+
+function getAuthorizedPins() {
+  try {
+    const pins = JSON.parse(fs.readFileSync(dbPinsPath, 'utf8'));
+    return Array.isArray(pins) && pins.length > 0 ? pins : ['CBIT-FAC-2025', '1601-FAC', 'MCA-FAC-2025'];
+  } catch {
+    return ['CBIT-FAC-2025', '1601-FAC', 'MCA-FAC-2025'];
+  }
 }
 
 // 1. Health endpoint
@@ -81,10 +115,14 @@ app.post('/api/realtime/login', (req, res) => {
   }
 });
 
-// 3. Real-Time Database: Store New User Account Registration
+// 3. Real-Time Database: Store New User Account Registration (Salted scrypt password hash)
 app.post('/api/realtime/register', (req, res) => {
   try {
-    const newUser = req.body;
+    const newUser = { ...req.body };
+    if (newUser.password) {
+      newUser.passwordHash = hashPassword(newUser.password);
+      delete newUser.password;
+    }
     let existingUsers = [];
     if (fs.existsSync(dbUsersPath)) {
       try {
@@ -124,11 +162,11 @@ app.get('/api/realtime/logins', (req, res) => {
   }
 });
 
-// 5. Retrieve All Registered Users
+// 5. Retrieve All Registered Users (sanitized — never expose password hashes)
 app.get('/api/realtime/users', (req, res) => {
   try {
     if (fs.existsSync(dbUsersPath)) {
-      const users = JSON.parse(fs.readFileSync(dbUsersPath, 'utf8'));
+      const users = JSON.parse(fs.readFileSync(dbUsersPath, 'utf8')).map(({ password, passwordHash, ...safe }) => safe);
       return res.json({ success: true, count: users.length, users });
     }
     res.json({ success: true, count: 0, users: [] });
@@ -179,25 +217,23 @@ app.get('/api/realtime/marks', (req, res) => {
   }
 });
 
-// 8. Password Reset / Generation via Email (Protected by Faculty Security PIN)
+// 8. Password Reset via Email / Roll (Strictly Protected by Faculty Security PIN for ALL Roles)
 app.post('/api/realtime/reset-password', (req, res) => {
   try {
     const { email, generatedPassword, role, facultyStaffPin } = req.body;
-    if (!email) {
-      return res.status(400).json({ success: false, error: 'Email is required.' });
+    if (!email || !generatedPassword) {
+      return res.status(400).json({ success: false, error: 'Identifier and new password are required.' });
     }
 
     const cleanEmail = email.toLowerCase().trim();
     const isFaculty = cleanEmail.includes('cbit.ac.in') || role === 'faculty';
+    const authorizedPins = getAuthorizedPins().map(p => p.toUpperCase());
 
-    if (isFaculty) {
-      const authorizedPins = ['CBIT-FAC-2025', '1601-FAC', 'MCA-FAC-2025'];
-      if (!facultyStaffPin || !authorizedPins.includes(facultyStaffPin.trim().toUpperCase())) {
-        return res.status(403).json({
-          success: false,
-          error: 'Faculty Staff Security PIN is required and invalid. Unauthorized lecturer password mutation blocked.'
-        });
-      }
+    if (!facultyStaffPin || !authorizedPins.includes(facultyStaffPin.trim().toUpperCase())) {
+      return res.status(403).json({
+        success: false,
+        error: 'Valid Faculty Staff Security PIN is required to reset or issue credentials.'
+      });
     }
 
     let existingUsers = [];
@@ -209,15 +245,16 @@ app.post('/api/realtime/reset-password', (req, res) => {
       }
     }
 
-    // Update in users database or add if new user-mentioned email
-    const idx = existingUsers.findIndex(u => u.email?.toLowerCase() === cleanEmail);
+    const hashed = hashPassword(generatedPassword);
+    const idx = existingUsers.findIndex(u => u.email?.toLowerCase() === cleanEmail || u.rollNo?.toLowerCase() === cleanEmail);
     if (idx !== -1) {
-      existingUsers[idx].password = generatedPassword;
+      existingUsers[idx].passwordHash = hashed;
+      delete existingUsers[idx].password;
       existingUsers[idx].passwordResetAt = new Date().toISOString();
     } else {
       existingUsers.push({
         email: cleanEmail,
-        password: generatedPassword,
+        passwordHash: hashed,
         role: role || (isFaculty ? 'faculty' : 'student'),
         passwordResetAt: new Date().toISOString(),
         createdAt: new Date().toISOString()
@@ -227,7 +264,7 @@ app.post('/api/realtime/reset-password', (req, res) => {
 
     res.json({
       success: true,
-      message: `Security credentials updated for ${cleanEmail}`,
+      message: `Security credentials hashed & updated for ${cleanEmail}`,
       email: cleanEmail
     });
   } catch (error) {
@@ -235,14 +272,71 @@ app.post('/api/realtime/reset-password', (req, res) => {
   }
 });
 
-// 9. Staff Security PIN Management & Recovery
+// 8b. Server-Side Salted Password Verification
+app.post('/api/realtime/verify-login', (req, res) => {
+  try {
+    const { identifier, password } = req.body;
+    if (!identifier || !password) {
+      return res.status(400).json({ success: false, error: 'Identifier and password are required.' });
+    }
+    const cleanId = identifier.toLowerCase().trim();
+    const cleanNoDash = cleanId.replace(/-/g, '');
+
+    let existingUsers = [];
+    if (fs.existsSync(dbUsersPath)) {
+      try {
+        existingUsers = JSON.parse(fs.readFileSync(dbUsersPath, 'utf8'));
+      } catch {
+        existingUsers = [];
+      }
+    }
+
+    const match = existingUsers.find(u =>
+      u.email?.toLowerCase() === cleanId ||
+      u.rollNo?.toLowerCase() === cleanId ||
+      u.rollNo?.replace(/-/g, '').toLowerCase() === cleanNoDash
+    );
+
+    if (!match) {
+      return res.json({ success: true, found: false });
+    }
+
+    const valid = verifyPassword(password, match.passwordHash || match.password);
+    if (!valid) {
+      return res.status(401).json({ success: true, found: true, valid: false });
+    }
+
+    const { password: _p, passwordHash: _ph, ...safeUser } = match;
+    return res.json({ success: true, found: true, valid: true, user: safeUser });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// 9. Staff Security PIN Management & Recovery (Persisted on Server)
 app.post('/api/realtime/update-pin', (req, res) => {
   try {
     const { currentPin, newPin, updatedBy } = req.body;
-    console.log(`[CBIT Security Vault] Staff PIN updated by ${updatedBy}: New PIN [${newPin}]`);
+    if (!newPin || String(newPin).trim().length < 4) {
+      return res.status(400).json({ success: false, error: 'New PIN must be at least 4 characters.' });
+    }
+
+    const masterKeys = ['CBIT-HOD-RECOVERY', 'CBIT-MCA-CHAIR', 'CBIT-DEAN-ACADEMICS', 'HOD-INDIRA-2025'];
+    const currentPins = getAuthorizedPins().map(p => p.toUpperCase());
+    const cleanCurrent = (currentPin || '').trim().toUpperCase();
+    const cleanNew = String(newPin).trim().toUpperCase();
+
+    if (!currentPins.includes(cleanCurrent) && !masterKeys.includes(cleanCurrent)) {
+      return res.status(403).json({ success: false, error: 'Current PIN or Master Recovery Key is invalid.' });
+    }
+
+    const updatedPins = Array.from(new Set([cleanNew, ...getAuthorizedPins().filter(p => p.toUpperCase() !== cleanCurrent)]));
+    fs.writeFileSync(dbPinsPath, JSON.stringify(updatedPins, null, 2));
+
+    console.log(`[CBIT Security Vault] Staff PIN updated by ${updatedBy || 'Faculty'}`);
     res.json({
       success: true,
-      message: 'Staff PIN updated in central server',
+      message: 'Staff PIN securely updated in central server',
       updatedBy: updatedBy || 'Faculty'
     });
   } catch (error) {

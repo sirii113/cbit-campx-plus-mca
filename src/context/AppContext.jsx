@@ -237,7 +237,7 @@ export const AppProvider = ({ children }) => {
             realtimeDb.recordAuthFailure(identifier, 'faculty', `Incorrect password for ${facMatch.name}`);
             return { 
               success: false, 
-              error: `🔒 Access Denied: Incorrect password for ${facMatch.name}. (Default faculty passkey: cbit@mca2025)` 
+              error: `🔒 Access Denied: Incorrect password for ${facMatch.name}.` 
             };
           }
           authenticatedUser = facMatch;
@@ -300,7 +300,7 @@ export const AppProvider = ({ children }) => {
             realtimeDb.recordAuthFailure(identifier, 'student', `Incorrect password for ${studentProfile.name}`);
             return { 
               success: false, 
-              error: `🔒 Access Denied: Incorrect password for ${studentProfile.name} (${studentProfile.rollNo}). (Passkey: cbit@mca2025)` 
+              error: `🔒 Access Denied: Incorrect password for ${studentProfile.name} (${studentProfile.rollNo}).` 
             };
           }
 
@@ -993,64 +993,16 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // Generate Password via Email (STUDENTS ONLY — Public Faculty Passkeys BLOCKED for Security)
+  // Public passkey generation is disabled to protect student & faculty privacy
   const generatePasswordForEmail = (email, role = 'student') => {
-    const cleanEmail = (email || '').trim().toLowerCase();
-    if (!cleanEmail) {
-      return { success: false, error: 'User email or roll number is required.' };
-    }
-    
-    // Check if faculty, student, registered user, or MCA student
-    const regUsers = realtimeDb.getRegisteredUsers();
-    const regMatch = regUsers.find(u => u.email?.toLowerCase() === cleanEmail || (u.rollNo && u.rollNo.toLowerCase() === cleanEmail));
-    const facMatch = CBIT_MCA_FACULTY.find(f => f.email?.toLowerCase() === cleanEmail);
-    const stdMatch = DEMO_USERS.students.find(s => s.email?.toLowerCase() === cleanEmail || s.rollNo.toLowerCase() === cleanEmail);
-    const mcaStdMatch = MCA_STUDENTS.find(s => s.email?.toLowerCase() === cleanEmail || s.rollNo?.toLowerCase() === cleanEmail);
-
-    const targetUser = regMatch || facMatch || stdMatch || mcaStdMatch || {
-      name: cleanEmail.split('@')[0],
-      email: cleanEmail,
-      role: cleanEmail.includes('cbit.ac.in') ? 'faculty' : 'student'
-    };
-
-    // STRICT SECURITY GATE: Faculty/Lecturer passkeys CANNOT be generated publicly!
-    const isFaculty = cleanEmail.includes('cbit.ac.in') || targetUser.role === 'faculty' || role === 'faculty';
-    if (isFaculty) {
-      realtimeDb.recordAuthFailure(cleanEmail, 'faculty', 'Public passkey generation blocked for lecturer account');
-      return {
-        success: false,
-        isFacultyBlocked: true,
-        error: '🛡️ Security Block: Faculty accounts have administrative and grading authority. Passkeys cannot be generated publicly for lecturers to protect student marks data. Lecturers must log in with their private password or use Faculty Password Reset with their Staff Security PIN.'
-      };
-    }
-
-    // Student passkey generation (safe, students can only see their own performance)
-    const randomDigits = Math.floor(1000 + Math.random() * 9000);
-    const newPasskey = `Cbit#${randomDigits}`;
-
-    // Update in Realtime DB
-    realtimeDb.resetPasswordByEmail(cleanEmail, newPasskey, {
-      name: targetUser.name,
-      role: 'student',
-      rollNo: targetUser.rollNo || (cleanEmail.startsWith('1601') ? cleanEmail : '')
-    });
-    
-    if (stdMatch) stdMatch.password = newPasskey;
-    if (mcaStdMatch) mcaStdMatch.password = newPasskey;
-
-    showToast(`New student passkey generated and saved for ${cleanEmail}!`, 'success');
-
+    realtimeDb.recordAuthFailure(email || 'unknown', role, 'Blocked public passkey generation attempt');
     return {
-      success: true,
-      email: cleanEmail,
-      userName: targetUser.name,
-      role: 'student',
-      generatedPassword: newPasskey,
-      message: `A new secure student passkey [${newPasskey}] has been generated and updated in the CBIT Security Database.`
+      success: false,
+      error: '🛡️ Security Policy: Public passkey generation is disabled. Please ask an authorized Faculty member to reset credentials using their Staff Security PIN.'
     };
   };
 
-  // Reset Password to Custom Chosen Password for User-Mentioned Email (Requires Staff PIN for Faculty)
+  // Reset Password to Custom Chosen Password (Requires Faculty Staff Security PIN for ALL roles)
   const resetCustomPasswordForEmail = (email, newPassword, role = 'student', facultyStaffPin = '') => {
     const cleanEmail = (email || '').trim().toLowerCase();
     if (!cleanEmail) {
@@ -1060,6 +1012,17 @@ export const AppProvider = ({ children }) => {
       return { success: false, error: 'Password must be at least 6 characters long.' };
     }
 
+    const validPins = realtimeDb.getAuthorizedStaffPins();
+    const cleanPin = (facultyStaffPin || '').trim().toUpperCase();
+    if (!cleanPin || !validPins.includes(cleanPin)) {
+      realtimeDb.recordAuthFailure(cleanEmail, role, 'Invalid Faculty Security PIN on password reset attempt');
+      return {
+        success: false,
+        isFacultyBlocked: true,
+        error: '⛔ Access Denied: Valid Faculty Staff Security PIN is required to reset account credentials.'
+      };
+    }
+
     const regUsers = realtimeDb.getRegisteredUsers();
     const regMatch = regUsers.find(u => u.email?.toLowerCase() === cleanEmail || (u.rollNo && u.rollNo.toLowerCase() === cleanEmail));
     const facMatch = CBIT_MCA_FACULTY.find(f => f.email?.toLowerCase() === cleanEmail);
@@ -1074,25 +1037,12 @@ export const AppProvider = ({ children }) => {
 
     const isFaculty = cleanEmail.includes('cbit.ac.in') || targetUser.role === 'faculty' || role === 'faculty';
 
-    // STRICT FACULTY AUTHENTICATION: Lecturers must supply the confidential Faculty Staff Security PIN!
-    if (isFaculty) {
-      const validPins = realtimeDb.getAuthorizedStaffPins();
-      const cleanPin = (facultyStaffPin || '').trim().toUpperCase();
-      if (!cleanPin || !validPins.includes(cleanPin)) {
-        realtimeDb.recordAuthFailure(cleanEmail, 'faculty', 'Invalid Faculty Security PIN on password reset attempt');
-        return {
-          success: false,
-          isFacultyBlocked: true,
-          error: '⛔ Access Denied: Invalid Faculty Staff Security PIN. Only authorized CBIT MCA lecturers and Exam Branch staff are permitted to reset faculty credentials.'
-        };
-      }
-    }
-
-    // Update in Realtime DB
+    // Update in Realtime DB (passes facultyStaffPin to server for salted scrypt hashing)
     realtimeDb.resetPasswordByEmail(cleanEmail, newPassword, {
       name: targetUser.name,
       role: targetUser.role || (isFaculty ? 'faculty' : 'student'),
-      rollNo: targetUser.rollNo || (cleanEmail.startsWith('1601') ? cleanEmail : '')
+      rollNo: targetUser.rollNo || (cleanEmail.startsWith('1601') ? cleanEmail : ''),
+      facultyStaffPin: cleanPin
     });
 
     if (facMatch) facMatch.password = newPassword;

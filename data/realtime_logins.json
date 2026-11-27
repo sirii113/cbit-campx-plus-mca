@@ -1,5 +1,31 @@
 [
   {
+    "id": "log_1795780212271_r2pm",
+    "timestamp": "2026-11-27T11:50:12.271Z",
+    "userName": "Dr. B. Indira",
+    "identifier": "b.indira@cbit.ac.in",
+    "role": "faculty",
+    "department": "MCA (Computer Applications)",
+    "ip": "10.12.86.208 (CBIT Gandipet Campus Gateway)",
+    "device": "Desktop / Windows 11",
+    "sessionToken": "cbit_TMQOEIJ2",
+    "syncStatus": "Real-Time DB Saved",
+    "serverReceivedAt": "2026-11-27T11:50:12.273Z"
+  },
+  {
+    "id": "log_1795780185006_wad9",
+    "timestamp": "2026-11-27T11:49:45.006Z",
+    "userName": "Dr. B. Indira",
+    "identifier": "b.indira@cbit.ac.in",
+    "role": "faculty",
+    "department": "MCA (Computer Applications)",
+    "ip": "10.12.86.60 (CBIT Gandipet Campus Gateway)",
+    "device": "Desktop / Windows 11",
+    "sessionToken": "cbit_MCF79NPP",
+    "syncStatus": "Real-Time DB Saved",
+    "serverReceivedAt": "2026-11-27T11:49:45.018Z"
+  },
+  {
     "id": "log_1795610969809_eyjg",
     "timestamp": "2026-11-25T12:49:29.809Z",
     "userName": "Dr. B. Indira",
