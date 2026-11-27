@@ -508,6 +508,47 @@ export const Navbar = () => {
               <Award className="w-4 h-4 text-emerald-400" />
               <span>Official R25 CoE Marksheet</span>
             </button>
+
+            <button
+              onClick={() => handleTabClick('noticeboard')}
+              className={`flex items-center gap-2 px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all whitespace-nowrap ${
+                activeTab === 'noticeboard' 
+                  ? 'text-white bg-amber-500/30 border border-amber-400/60 shadow-sm' 
+                  : 'text-slate-400 hover:text-white hover:bg-slate-800'
+              }`}
+            >
+              <Bell className="w-4 h-4 text-amber-400" />
+              <span>📌 Exam & Revision Noticeboard</span>
+            </button>
+          </div>
+        )}
+
+        {/* Student Navigation Tabs (My 360° Portal + Noticeboard) */}
+        {isStudent && (
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-2 border-t border-slate-800/80 py-2 overflow-x-auto no-scrollbar">
+            <button
+              onClick={() => handleTabClick('student-view')}
+              className={`flex items-center gap-2 px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all whitespace-nowrap ${
+                activeTab !== 'noticeboard'
+                  ? 'text-white bg-indigo-600/30 border border-indigo-500/50 shadow-sm'
+                  : 'text-slate-400 hover:text-white hover:bg-slate-800'
+              }`}
+            >
+              <Sparkles className="w-4 h-4 text-amber-400" />
+              <span>🎓 My 360° Marks & SGPA</span>
+            </button>
+
+            <button
+              onClick={() => handleTabClick('noticeboard')}
+              className={`flex items-center gap-2 px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all whitespace-nowrap ${
+                activeTab === 'noticeboard'
+                  ? 'text-white bg-amber-500/30 border border-amber-400/60 shadow-sm'
+                  : 'text-slate-400 hover:text-white hover:bg-slate-800'
+              }`}
+            >
+              <Bell className="w-4 h-4 text-amber-400" />
+              <span>📌 Slip Tests, Mid Exams & Quick Revision Noticeboard</span>
+            </button>
           </div>
         )}
       </header>

@@ -8,6 +8,7 @@ import { RiskPredictorEWS } from './components/PerformanceAnalytics/RiskPredicto
 import { PlacementReadinessDashboard } from './components/McaPlacementReadiness/PlacementReadinessDashboard';
 import { StudentDashboard } from './components/StudentPortal/StudentDashboard';
 import { CbitCoEReport } from './components/Reports/CbitCoEReport';
+import { NoticeboardPanel } from './components/Noticeboard/NoticeboardPanel';
 import { LoginAlertModal } from './components/Notifications/LoginAlertModal';
 
 class ErrorBoundary extends React.Component {
@@ -86,7 +87,7 @@ const MainContent = () => {
         <div>
           <Navbar />
           <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            <StudentDashboard />
+            {activeTab === 'noticeboard' ? <NoticeboardPanel /> : <StudentDashboard />}
           </main>
         </div>
 
@@ -124,6 +125,7 @@ const MainContent = () => {
           {activeTab === 'placement' && <PlacementReadinessDashboard />}
           {activeTab === 'student-view' && <StudentDashboard />}
           {activeTab === 'coe-report' && <CbitCoEReport />}
+          {activeTab === 'noticeboard' && <NoticeboardPanel />}
         </main>
       </div>
 

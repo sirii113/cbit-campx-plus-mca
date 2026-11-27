@@ -46,6 +46,7 @@ const dbMarksPath = path.join(dataDir, 'realtime_marks.json');
 const dbSeniorsPath = path.join(dataDir, 'realtime_seniors.json');
 const dbPinsPath = path.join(dataDir, 'realtime_pins.json');
 const dbSecurityPinsPath = path.join(dataDir, 'realtime_security_pins.json');
+const dbNoticesPath = path.join(dataDir, 'realtime_notices.json');
 
 if (!fs.existsSync(dbLoginsPath)) {
   fs.writeFileSync(dbLoginsPath, JSON.stringify([], null, 2));
@@ -81,6 +82,32 @@ if (!fs.existsSync(dbSecurityPinsPath)) {
       role: 'Faculty',
       updatedBy: 'System Init',
       updatedAt: new Date().toISOString()
+    }
+  ], null, 2));
+}
+if (!fs.existsSync(dbNoticesPath)) {
+  fs.writeFileSync(dbNoticesPath, JSON.stringify([
+    {
+      id: 'notice_slip_1',
+      category: 'Slip Test',
+      courseCode: '25MCC101',
+      title: 'Slip Test-1: Data Structures Using C++ (5 Marks)',
+      examDate: '2026-12-02 · 10:00 AM',
+      revisionTopics: 'Asymptotic Notations, Linked Lists, Stacks & Queues, Infix-to-Postfix Conversion',
+      message: 'Best 2 out of 3 Slip Tests (5M) count toward the 40M CBIT Theory CIE. Bring blue/black pen only.',
+      postedBy: 'Dr. B. Indira (HoD)',
+      createdAt: new Date().toISOString()
+    },
+    {
+      id: 'notice_mid_1',
+      category: 'Mid Exam',
+      courseCode: 'ALL-MCA',
+      title: 'Mid-Term Examination-I (20 Marks · R-25 / R-23)',
+      examDate: '2026-12-14 to 2026-12-18',
+      revisionTopics: 'Units 1 & 2 of all Core Theory Courses (Computer Architecture, OOP Java, DS Using C++, DBMS)',
+      message: 'Average of Mid-1 (20M) and Mid-2 (20M) forms 20 Marks of Theory CIE.',
+      postedBy: 'CBIT MCA Exam Cell',
+      createdAt: new Date().toISOString()
     }
   ], null, 2));
 }
@@ -466,6 +493,53 @@ app.get('/api/realtime/seniors', (req, res) => {
       }
     }
     res.json({ success: true, count: 0, seniors: [] });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// 12. Real-Time Noticeboard (Slip Tests, Mid Exams, Assignments, Quick Revision Reminders)
+app.get('/api/realtime/notices', (req, res) => {
+  try {
+    const notices = fs.existsSync(dbNoticesPath) ? JSON.parse(fs.readFileSync(dbNoticesPath, 'utf8')) : [];
+    res.json({ success: true, count: notices.length, notices });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+app.post('/api/realtime/notices', (req, res) => {
+  try {
+    const notice = req.body;
+    if (!notice || !notice.title) {
+      return res.status(400).json({ success: false, error: 'Notice title is required.' });
+    }
+    let notices = [];
+    if (fs.existsSync(dbNoticesPath)) {
+      try {
+        notices = JSON.parse(fs.readFileSync(dbNoticesPath, 'utf8'));
+      } catch {
+        notices = [];
+      }
+    }
+    notices.unshift({ ...notice, serverReceivedAt: new Date().toISOString() });
+    fs.writeFileSync(dbNoticesPath, JSON.stringify(notices.slice(0, 100), null, 2));
+    res.json({ success: true, count: notices.length, notice });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+app.delete('/api/realtime/notices/:id', (req, res) => {
+  try {
+    const { id } = req.params;
+    let notices = [];
+    if (fs.existsSync(dbNoticesPath)) {
+      notices = JSON.parse(fs.readFileSync(dbNoticesPath, 'utf8'));
+    }
+    const filtered = notices.filter(n => n.id !== id);
+    fs.writeFileSync(dbNoticesPath, JSON.stringify(filtered, null, 2));
+    res.json({ success: true, count: filtered.length });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
