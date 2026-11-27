@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { sounds } from '../../utils/soundEffects';
 import { McaSyllabusModal } from '../Syllabus/McaSyllabusModal';
-import { FacultyPinManagementModal } from './FacultyPinManagementModal';
 import { 
   GraduationCap, 
   BookOpen,
@@ -41,8 +40,7 @@ export const LoginScreen = () => {
     cbitFaculty, 
     cbitInfo, 
     generatePasswordForEmail,
-    resetCustomPasswordForEmail,
-    getAuthorizedStaffPins
+    resetCustomPasswordForEmail
   } = useApp();
   
   // Auth mode: 'login' | 'register'
@@ -60,7 +58,6 @@ export const LoginScreen = () => {
   const [showEmailResetModal, setShowEmailResetModal] = useState(false);
   const [resetModalMode, setResetModalMode] = useState('custom'); // 'generate' (student only) | 'custom'
   const [isSyllabusOpen, setIsSyllabusOpen] = useState(false);
-  const [isPinModalOpen, setIsPinModalOpen] = useState(false);
   const [resetEmailInput, setResetEmailInput] = useState('');
   const [customNewPass, setCustomNewPass] = useState('');
   const [customConfirmPass, setCustomConfirmPass] = useState('');
@@ -136,19 +133,12 @@ export const LoginScreen = () => {
       return;
     }
 
-    const validStaffPins = (getAuthorizedStaffPins ? getAuthorizedStaffPins() : ['CBIT-FAC-2025', '1601-FAC', 'MCA-FAC-2025']).map(p => p.toUpperCase());
-    if (!facultyPinInput || !validStaffPins.includes(facultyPinInput.trim().toUpperCase())) {
-      sounds.playAlertTone();
-      setResetError('⛔ Access Denied: Valid Faculty Staff Security PIN is required to reset or issue credentials.');
-      return;
-    }
-
     setIsGenerating(true);
     setResetError(null);
     sounds.playTick();
 
     setTimeout(() => {
-      const res = resetCustomPasswordForEmail(emailToUse, customNewPass, loginRole, facultyPinInput);
+      const res = resetCustomPasswordForEmail(emailToUse, customNewPass, loginRole);
       setIsGenerating(false);
       if (!res.success) {
         sounds.playAlertTone();
@@ -277,12 +267,6 @@ export const LoginScreen = () => {
         setRegError('Please provide Faculty Name and Official CBIT Email.');
         return;
       }
-      const validStaffPins = (getAuthorizedStaffPins ? getAuthorizedStaffPins() : ['CBIT-FAC-2025', '1601-FAC', 'MCA-FAC-2025']).map(p => p.toUpperCase());
-      if (!regFacultyPin || !validStaffPins.includes(regFacultyPin.trim().toUpperCase())) {
-        sounds.playAlertTone();
-        setRegError('⛔ Faculty Registration Blocked: Valid Faculty Staff Security PIN is required.');
-        return;
-      }
       const fullNameWithTitle = `${regTitle} ${regName.replace(/^(Dr\.|Sri|Smt\.|Mr\.|Prof\.)\s*/i, '')}`.trim();
       
       const payload = {
@@ -293,7 +277,6 @@ export const LoginScreen = () => {
         email: regEmail.trim().toLowerCase(),
         courseCode: regCourseCode,
         specialization: regSpecialization.trim() || 'Computer Applications',
-        facultyStaffPin: regFacultyPin.trim().toUpperCase(),
         password: regPassword.trim()
       };
 
@@ -493,15 +476,6 @@ export const LoginScreen = () => {
                     <BookOpen className="w-3 h-3 text-amber-400" />
                     <span>📚 Browse MCA Regulations & Syllabi (R-25, R-23, R-20, R-16 All Years)</span>
                   </button>
-                  <span className="text-slate-600 hidden sm:inline">·</span>
-                  <button
-                    type="button"
-                    onClick={() => { sounds.playTick(); setIsPinModalOpen(true); }}
-                    className="text-[10px] text-indigo-300 hover:text-indigo-200 font-bold underline flex items-center gap-1 cursor-pointer"
-                  >
-                    <KeyRound className="w-3 h-3 text-indigo-400" />
-                    <span>🔑 Faculty Staff PIN Management & Recovery</span>
-                  </button>
                 </div>
               </div>
             </div>
@@ -636,7 +610,7 @@ export const LoginScreen = () => {
                         className="w-full py-2 px-3 rounded-xl bg-indigo-950/60 hover:bg-indigo-900/70 border border-indigo-600/50 text-[11px] font-bold text-indigo-300 flex items-center justify-center gap-2 transition-all shadow-sm"
                       >
                         <Lock className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
-                        <span>Faculty Password Reset (Staff PIN Required)</span>
+                        <span>Faculty Password Reset</span>
                       </button>
                     </div>
                   ) : (
@@ -663,10 +637,10 @@ export const LoginScreen = () => {
                         type="button"
                         onClick={() => handleOpenEmailReset(loginIdentifier)}
                         className="w-full py-2 px-3 rounded-xl bg-indigo-950/50 hover:bg-indigo-900/60 border border-indigo-600/50 text-[11px] font-bold text-indigo-300 flex items-center justify-center gap-1.5 transition-all shadow-sm"
-                        title="Reset password with Faculty Staff Security PIN"
+                        title="Reset password for student account"
                       >
                         <Lock className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
-                        <span>Student Password Reset (Staff PIN Required)</span>
+                        <span>Student Password Reset</span>
                       </button>
                     </div>
                   )}
@@ -868,37 +842,6 @@ export const LoginScreen = () => {
                           placeholder="e.g. Generative AI, Cloud Computing, Full Stack"
                           className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500"
                         />
-                      </div>
-
-                      {/* Faculty Staff Security PIN (Required to prevent unauthorized faculty registration) */}
-                      <div>
-                        <label className="text-[11px] font-bold text-slate-300 block mb-1 flex items-center justify-between">
-                          <span className="flex items-center gap-1 text-amber-300">
-                            <ShieldAlert className="w-3.5 h-3.5 text-amber-400" />
-                            <span>Faculty Staff Security PIN:</span>
-                          </span>
-                          <span className="text-[9px] text-amber-400 font-mono">Official Code Required</span>
-                        </label>
-                        <div className="relative">
-                          <input
-                            type={showRegFacultyPin ? "text" : "password"}
-                            required
-                            value={regFacultyPin}
-                            onChange={(e) => setRegFacultyPin(e.target.value)}
-                            placeholder="Enter confidential Staff PIN..."
-                            className="w-full bg-slate-950 border border-amber-600/60 rounded-xl pl-3 pr-9 py-2 text-xs text-amber-200 placeholder-slate-500 focus:ring-2 focus:ring-amber-500 font-mono"
-                          />
-                          <button
-                            type="button"
-                            onClick={() => setShowRegFacultyPin(!showRegFacultyPin)}
-                            className="absolute right-2.5 top-2.5 text-slate-500 hover:text-slate-300"
-                          >
-                            {showRegFacultyPin ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-                          </button>
-                        </div>
-                        <div className="text-[10px] text-slate-400 mt-1">
-                          <span>Obtain the confidential Staff Security PIN from the MCA HoD / Exam Cell.</span>
-                        </div>
                       </div>
                     </>
                   ) : (
@@ -1361,44 +1304,6 @@ export const LoginScreen = () => {
                 </div>
               </div>
 
-              {/* Faculty Staff Security PIN Requirement (Enforced for ALL password resets) */}
-              <div>
-                <label className="text-xs font-bold text-amber-300 block mb-1 flex items-center justify-between">
-                  <span className="flex items-center gap-1">
-                    <ShieldAlert className="w-3.5 h-3.5 text-amber-400" />
-                    <span>Faculty Staff Security PIN:</span>
-                  </span>
-                  <span className="text-[10px] text-amber-400 font-mono">Confidential Code Required</span>
-                </label>
-                <div className="relative">
-                  <KeyRound className="w-4 h-4 text-amber-500 absolute left-3.5 top-3" />
-                  <input
-                    type={showFacultyPin ? "text" : "password"}
-                    value={facultyPinInput}
-                    onChange={(e) => setFacultyPinInput(e.target.value)}
-                    placeholder="Enter confidential Faculty Staff PIN..."
-                    className="w-full bg-slate-950 border border-amber-600/60 rounded-2xl pl-10 pr-10 py-2.5 text-xs text-amber-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 font-mono"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowFacultyPin(!showFacultyPin)}
-                    className="absolute right-3.5 top-3 text-slate-400 hover:text-white"
-                  >
-                    {showFacultyPin ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
-                </div>
-                <div className="flex flex-wrap items-center justify-between gap-2 text-[10px] text-slate-400 mt-1.5">
-                  <span>Only authorized Faculty / HoD can reset account passwords.</span>
-                  <button
-                    type="button"
-                    onClick={() => { sounds.playTick(); setIsPinModalOpen(true); }}
-                    className="text-[10px] text-rose-400 hover:text-rose-300 underline font-semibold flex items-center gap-1 cursor-pointer"
-                  >
-                    <span>🆘 Forgot / Edit PIN?</span>
-                  </button>
-                </div>
-              </div>
-
               {/* Custom Password Inputs */}
               <div className="space-y-3 bg-slate-950/70 p-3.5 rounded-2xl border border-slate-800">
                   <div>
@@ -1461,7 +1366,7 @@ export const LoginScreen = () => {
                 </div>
               )}
 
-              {/* Action Button (Staff PIN Protected) */}
+              {/* Action Button */}
               <button
                 type="button"
                 disabled={isGenerating}
@@ -1471,12 +1376,12 @@ export const LoginScreen = () => {
                 {isGenerating ? (
                   <>
                     <RefreshCw className="w-4 h-4 animate-spin" />
-                    <span>Verifying Staff PIN & Hashing Password...</span>
+                    <span>Hashing & Saving Password...</span>
                   </>
                 ) : (
                   <>
                     <ShieldCheck className="w-4 h-4" />
-                    <span>🔒 Verify Staff PIN & Save Password</span>
+                    <span>🔒 Reset & Save Password</span>
                   </>
                 )}
               </button>
@@ -1574,12 +1479,6 @@ export const LoginScreen = () => {
       <McaSyllabusModal
         isOpen={isSyllabusOpen}
         onClose={() => setIsSyllabusOpen(false)}
-      />
-
-      {/* Faculty Staff Security PIN Management & Recovery Modal */}
-      <FacultyPinManagementModal
-        isOpen={isPinModalOpen}
-        onClose={() => setIsPinModalOpen(false)}
       />
     </div>
   );

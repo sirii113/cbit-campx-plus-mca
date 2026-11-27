@@ -393,7 +393,7 @@ export const AppProvider = ({ children }) => {
 
   // Register New Account (Faculty or Student)
   const registerAccount = (accountData, autoLogin = false) => {
-    const { role, name, email, rollNo, designation, password, courseCode, primarySkill, facultyStaffPin } = accountData;
+    const { role, name, email, rollNo, designation, password, courseCode, primarySkill } = accountData;
 
     if (!name || (!email && !rollNo)) {
       return { success: false, error: 'Please provide full name and email or roll number.' };
@@ -401,18 +401,6 @@ export const AppProvider = ({ children }) => {
 
     if (!password || password.trim().length < 6) {
       return { success: false, error: 'Password must be at least 6 characters long for security.' };
-    }
-
-    // Faculty Registration Security Gate: require authorized Faculty Staff PIN
-    if (role === 'faculty') {
-      const validPins = ['CBIT-FAC-2025', '1601-FAC', 'MCA-FAC-2025'];
-      const cleanPin = (facultyStaffPin || '').trim().toUpperCase();
-      if (!cleanPin || !validPins.includes(cleanPin)) {
-        return {
-          success: false,
-          error: '⛔ Faculty Registration Blocked: Invalid Faculty Staff Security PIN. Only authorized CBIT MCA department lecturers can register as Faculty.'
-        };
-      }
     }
 
     const cleanPass = password.trim();
@@ -1060,25 +1048,14 @@ export const AppProvider = ({ children }) => {
     };
   };
 
-  // Reset Password to Custom Chosen Password (Requires Faculty Staff Security PIN for ALL roles)
-  const resetCustomPasswordForEmail = (email, newPassword, role = 'student', facultyStaffPin = '') => {
+  // Reset Password to Custom Chosen Password
+  const resetCustomPasswordForEmail = (email, newPassword, role = 'student') => {
     const cleanEmail = (email || '').trim().toLowerCase();
     if (!cleanEmail) {
       return { success: false, error: 'User email or roll number is required.' };
     }
     if (!newPassword || newPassword.length < 6) {
       return { success: false, error: 'Password must be at least 6 characters long.' };
-    }
-
-    const validPins = realtimeDb.getAuthorizedStaffPins();
-    const cleanPin = (facultyStaffPin || '').trim().toUpperCase();
-    if (!cleanPin || !validPins.includes(cleanPin)) {
-      realtimeDb.recordAuthFailure(cleanEmail, role, 'Invalid Faculty Security PIN on password reset attempt');
-      return {
-        success: false,
-        isFacultyBlocked: true,
-        error: '⛔ Access Denied: Valid Faculty Staff Security PIN is required to reset account credentials.'
-      };
     }
 
     const regUsers = realtimeDb.getRegisteredUsers();
@@ -1095,12 +1072,11 @@ export const AppProvider = ({ children }) => {
 
     const isFaculty = cleanEmail.includes('cbit.ac.in') || targetUser.role === 'faculty' || role === 'faculty';
 
-    // Update in Realtime DB (passes facultyStaffPin to server for salted scrypt hashing)
+    // Update in Realtime DB (hashed on server with scrypt)
     realtimeDb.resetPasswordByEmail(cleanEmail, newPassword, {
       name: targetUser.name,
       role: targetUser.role || (isFaculty ? 'faculty' : 'student'),
-      rollNo: targetUser.rollNo || (cleanEmail.startsWith('1601') ? cleanEmail : ''),
-      facultyStaffPin: cleanPin
+      rollNo: targetUser.rollNo || (cleanEmail.startsWith('1601') ? cleanEmail : '')
     });
 
     if (facMatch) facMatch.password = newPassword;

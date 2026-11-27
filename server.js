@@ -217,24 +217,16 @@ app.get('/api/realtime/marks', (req, res) => {
   }
 });
 
-// 8. Password Reset via Email / Roll (Strictly Protected by Faculty Security PIN for ALL Roles)
+// 8. Password Reset via Email / Roll (Salted scrypt password hashing)
 app.post('/api/realtime/reset-password', (req, res) => {
   try {
-    const { email, generatedPassword, role, facultyStaffPin } = req.body;
+    const { email, generatedPassword, role } = req.body;
     if (!email || !generatedPassword) {
       return res.status(400).json({ success: false, error: 'Identifier and new password are required.' });
     }
 
     const cleanEmail = email.toLowerCase().trim();
     const isFaculty = cleanEmail.includes('cbit.ac.in') || role === 'faculty';
-    const authorizedPins = getAuthorizedPins().map(p => p.toUpperCase());
-
-    if (!facultyStaffPin || !authorizedPins.includes(facultyStaffPin.trim().toUpperCase())) {
-      return res.status(403).json({
-        success: false,
-        error: 'Valid Faculty Staff Security PIN is required to reset or issue credentials.'
-      });
-    }
 
     let existingUsers = [];
     if (fs.existsSync(dbUsersPath)) {
