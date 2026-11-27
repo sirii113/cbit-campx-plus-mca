@@ -45,6 +45,9 @@ export const Navbar = () => {
     activeTab, 
     setActiveTab, 
     activeRegulation,
+    setActiveRegulation,
+    mcaRegulations,
+    showToast,
     resetToSeedData,
     cbitInfo,
     selectedCohort,
@@ -167,7 +170,7 @@ export const Navbar = () => {
                   CampX<span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400">+</span>
                 </span>
                 <span className="bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 text-[10px] font-black uppercase px-2 py-0.5 rounded-md tracking-wider shadow-sm">
-                  R-25 Syllabus
+                  {activeRegulation || 'R-25'} Syllabus
                 </span>
               </div>
               <p className="text-[11px] text-slate-400">Department of Computer Applications · MCA Continuous Evaluation Cockpit</p>
@@ -204,6 +207,29 @@ export const Navbar = () => {
                   <span className="font-bold text-amber-300">🎓 MCA 2024 Senior Batch</span>
                   <span className="text-[10px] text-indigo-300 hidden sm:inline">(60 Scholars · 1601-24-862)</span>
                 </button>
+
+                {/* R-Regulation Schema Selector Pill Group (R-25, R-22, R-20, R-16) */}
+                <div className="bg-slate-800/90 p-1 rounded-xl border border-amber-500/40 flex items-center text-[11px] font-mono shadow-sm">
+                  {(mcaRegulations || []).map(reg => (
+                    <button
+                      key={reg.id}
+                      type="button"
+                      onClick={() => {
+                        sounds.playSuccessChime();
+                        setActiveRegulation(reg.id);
+                        showToast(`Switched active curriculum to ${reg.id} (${reg.prefix} · ${reg.cieScheme.totalCredits} Cr)`, 'info');
+                      }}
+                      className={`px-2 py-1 rounded-lg font-bold transition-all cursor-pointer ${
+                        activeRegulation === reg.id
+                          ? 'bg-amber-400 text-slate-950 font-black shadow-md'
+                          : 'text-slate-400 hover:text-white hover:bg-slate-700/50'
+                      }`}
+                      title={`${reg.name} (${reg.academicBatch})`}
+                    >
+                      {reg.id}
+                    </button>
+                  ))}
+                </div>
 
                 {/* Semester Selector Pill Group */}
                 <div className="bg-slate-800/90 p-1 rounded-xl border border-slate-700 flex items-center text-[11px] font-mono shadow-sm">

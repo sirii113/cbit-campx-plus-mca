@@ -40,6 +40,9 @@ export const MarksEntryTable = () => {
     cbitSemesters,
     selectedCohort,
     toggleCohort,
+    activeRegulation,
+    setActiveRegulation,
+    mcaRegulations,
     seniorStudents,
     seniorMarksData,
     seniorBenchmarks,
@@ -199,6 +202,30 @@ export const MarksEntryTable = () => {
               <div className="px-3 py-1 rounded-xl text-xs font-black bg-indigo-600 text-white shadow-md flex items-center gap-1.5">
                 <span>🎓 CBIT MCA 2024 Senior Batch (60 Scholars · 1601-24-862 Series)</span>
               </div>
+            </div>
+
+            {/* R-Regulation Schema Selector inside Marks Entry Table */}
+            <div className="flex flex-wrap items-center gap-1.5 pt-2">
+              <span className="text-xs text-slate-400 font-bold mr-1">R-Syllabus Schema:</span>
+              {(mcaRegulations || []).map(reg => (
+                <button
+                  key={reg.id}
+                  type="button"
+                  onClick={() => {
+                    sounds.playSuccessChime();
+                    setActiveRegulation(reg.id);
+                    showToast(`Switched Marks Entry to ${reg.id} (${reg.prefix} · ${reg.cieScheme.totalCredits} Cr)`, 'info');
+                  }}
+                  className={`px-3 py-1 rounded-xl text-xs font-bold font-mono transition-all cursor-pointer ${
+                    activeRegulation === reg.id
+                      ? 'bg-amber-400 text-slate-950 font-black shadow-md'
+                      : 'bg-slate-800/80 text-slate-300 hover:bg-slate-700 hover:text-white border border-slate-700'
+                  }`}
+                  title={`${reg.name} · ${reg.academicBatch}`}
+                >
+                  {reg.id} ({reg.prefix})
+                </button>
+              ))}
             </div>
 
             {/* Semester Filter Tabs inside Marks Entry Table */}

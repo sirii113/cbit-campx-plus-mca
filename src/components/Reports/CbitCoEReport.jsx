@@ -32,6 +32,9 @@ export const CbitCoEReport = () => {
     cbitInfo, 
     selectedCohort,
     toggleCohort,
+    activeRegulation,
+    setActiveRegulation,
+    mcaRegulations,
     showToast 
   } = useApp();
 
@@ -99,6 +102,28 @@ export const CbitCoEReport = () => {
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
+            {/* R-Regulation Selector */}
+            <div className="flex items-center bg-slate-100 p-1 rounded-xl text-xs font-bold font-mono">
+              {(mcaRegulations || []).map(reg => (
+                <button
+                  key={reg.id}
+                  type="button"
+                  onClick={() => {
+                    sounds.playTick();
+                    setActiveRegulation(reg.id);
+                    showToast(`CoE Report switched to ${reg.id} Regulation`, 'info');
+                  }}
+                  className={`px-2.5 py-1.5 rounded-lg transition-all cursor-pointer ${
+                    activeRegulation === reg.id
+                      ? 'bg-amber-400 text-slate-950 font-black shadow-sm'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  {reg.id}
+                </button>
+              ))}
+            </div>
+
             {/* Active Cohort Badge: MCA 2024 Senior Batch */}
             <div className="flex items-center bg-indigo-50 border border-indigo-200 px-3 py-1.5 rounded-xl text-xs font-bold font-mono text-indigo-900">
               <span className="w-2 h-2 rounded-full bg-emerald-500 mr-2"></span>

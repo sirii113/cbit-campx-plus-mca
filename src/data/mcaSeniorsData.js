@@ -550,14 +550,14 @@ for (let i = 21; i <= 60; i++) {
   });
 }
 
-// Generate Realistic 4-Semester Historical Marks for a single Senior Student
-export function generateMarksForSeniorStudent(student) {
+// Generate Realistic Historical Marks for a single Student across any Regulation's course list
+export function generateMarksForSeniorStudent(student, coursesList = ALL_COURSES) {
   const studentMarks = {};
   const cgpa = parseFloat(student.cgpa) || 8.5;
   const attendance = parseInt(student.attendance, 10) || 90;
   const cgpaRatio = (cgpa - 6.5) / 3.5; // 0.2 to 1.0
 
-  ALL_COURSES.forEach(course => {
+  coursesList.forEach(course => {
     if (course.type === "Theory") {
       const m1 = Math.min(20, Math.max(12, Math.round(14 + cgpaRatio * 5.8)));
       const m2 = Math.min(20, Math.max(13, Math.round(15 + cgpaRatio * 4.8)));
@@ -610,17 +610,17 @@ export function generateMarksForSeniorStudent(student) {
   return studentMarks;
 }
 
-// Generate Realistic 4-Semester Historical Marks for Seniors
-export function generateSeniorMarks(studentsList = MCA_SENIORS_STUDENTS) {
+// Generate Realistic Historical Marks for Students across any Regulation's courses
+export function generateSeniorMarks(studentsList = MCA_SENIORS_STUDENTS, coursesList = ALL_COURSES) {
   const marks = {};
 
-  ALL_COURSES.forEach(course => {
+  coursesList.forEach(course => {
     marks[course.code] = {};
   });
 
   studentsList.forEach(student => {
-    const studentCourseMarks = generateMarksForSeniorStudent(student);
-    ALL_COURSES.forEach(course => {
+    const studentCourseMarks = generateMarksForSeniorStudent(student, coursesList);
+    coursesList.forEach(course => {
       marks[course.code][student.rollNo] = studentCourseMarks[course.code];
     });
   });

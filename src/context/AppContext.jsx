@@ -86,6 +86,46 @@ export const AppProvider = ({ children }) => {
     localStorage.setItem('cbit_campx_marks_seniors', JSON.stringify(seniorMarksData));
   }, [seniorMarksData]);
 
+  const [activeRegulation, setActiveRegulation] = useState(() => {
+    return localStorage.getItem('cbit_campx_active_regulation') || 'R-25';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('cbit_campx_active_regulation', activeRegulation);
+  }, [activeRegulation]);
+
+  // Dynamic Courses & Semesters driven by the selected R-Regulation (R-25, R-22, R-20, R-16)
+  const activeRegulationObj = MCA_REGULATIONS.find(r => r.id === activeRegulation) || MCA_REGULATIONS[0];
+  const activeRegCourses = activeRegulation === 'R-25'
+    ? COURSES
+    : activeRegulationObj.semesters.flatMap((sem, sIdx) =>
+        sem.courses.map((c, cIdx) => ({
+          code: c.code,
+          name: c.title,
+          short: c.title.split('(')[0].trim().slice(0, 22),
+          type: c.type,
+          credits: c.credits,
+          semesterId: sem.semId,
+          semesterName: sem.semester,
+          year: sem.year,
+          faculty: CBIT_MCA_FACULTY[(sIdx * 5 + cIdx) % CBIT_MCA_FACULTY.length].name,
+          maxCie: c.type === 'Theory' ? 45 : 50,
+          regulation: activeRegulationObj.id
+        }))
+      );
+
+  const activeRegSemesters = activeRegulation === 'R-25'
+    ? CBIT_SEMESTERS
+    : [
+        { id: 'all', name: 'All Semesters', short: 'All' },
+        ...activeRegulationObj.semesters.map(sem => ({
+          id: sem.semId,
+          name: sem.semester,
+          short: sem.semester.replace('Semester ', 'Sem '),
+          credits: sem.totalCredits
+        }))
+      ];
+
   const [selectedSemester, setSelectedSemester] = useState(() => {
     return localStorage.getItem('cbit_campx_selected_semester') || 'all';
   });
@@ -94,26 +134,35 @@ export const AppProvider = ({ children }) => {
     localStorage.setItem('cbit_campx_selected_semester', selectedSemester);
   }, [selectedSemester]);
 
-  // Filtered courses based on selected semester
+  // Filtered courses based on selected regulation & semester
   const filteredCourses = selectedSemester === 'all'
-    ? COURSES
-    : COURSES.filter(c => c.semesterId === selectedSemester);
+    ? activeRegCourses
+    : activeRegCourses.filter(c => c.semesterId === selectedSemester);
 
   const [selectedCourseCode, setSelectedCourseCode] = useState("25MCC101");
   const [activeRole, setActiveRole] = useState(() => currentUser?.role || "faculty");
   const [activeStudentRoll, setActiveStudentRoll] = useState(() => currentUser?.rollNo || "1601-24-862-001");
   const [activeTab, setActiveTab] = useState(() => currentUser?.role === 'student' ? 'student-view' : 'marks-entry');
   const [activeExamType, setActiveExamType] = useState("r25-summary");
-  const [activeRegulation, setActiveRegulation] = useState(() => {
-    return localStorage.getItem('cbit_campx_active_regulation') || 'R-25';
-  });
   const [activeSemId, setActiveSemId] = useState('sem_1');
   const [toastMessage, setToastMessage] = useState(null);
   const [loginAlert, setLoginAlert] = useState(null);
 
+  // Ensure selectedCourseCode & marks exist whenever Regulation switches (R-25 / R-22 / R-20 / R-16)
   useEffect(() => {
-    localStorage.setItem('cbit_campx_active_regulation', activeRegulation);
-  }, [activeRegulation]);
+    if (activeRegCourses.length > 0 && !activeRegCourses.some(c => c.code === selectedCourseCode)) {
+      setSelectedCourseCode(activeRegCourses[0].code);
+    }
+    if (selectedSemester !== 'all' && !activeRegSemesters.some(s => s.id === selectedSemester)) {
+      setSelectedSemester('all');
+    }
+    setSeniorMarksData(prev => {
+      const missingCourses = activeRegCourses.filter(c => !prev[c.code]);
+      if (missingCourses.length === 0) return prev;
+      const generated = generateSeniorMarks(seniorStudents, missingCourses);
+      return { ...prev, ...generated };
+    });
+  }, [activeRegulation, seniorStudents]);
 
   const [marksData, setMarksData] = useState(() => {
     const saved = localStorage.getItem('cbit_campx_marks_r25');
@@ -494,7 +543,7 @@ export const AppProvider = ({ children }) => {
   const activeMarksData = seniorMarksData;
 
   const courses = filteredCourses;
-  const selectedCourse = COURSES.find(c => c.code === selectedCourseCode) || COURSES[0];
+  const selectedCourse = activeRegCourses.find(c => c.code === selectedCourseCode) || activeRegCourses[0] || COURSES[0];
   const activeStudent = activeStudents.find(s => s.rollNo === activeStudentRoll) || 
                         activeStudents.find(s => s.rollNo.replace('1601-24-', '1601-22-') === activeStudentRoll) ||
                         activeStudents[0];
@@ -1224,10 +1273,10 @@ export const AppProvider = ({ children }) => {
         seniorCohortInfo: dynamicSeniorCohortInfo,
         seniorBenchmarks: dynamicSeniorBenchmarks,
         courses,
-        allCourses: COURSES,
+        allCourses: activeRegCourses,
         selectedSemester,
         setSelectedSemester,
-        cbitSemesters: CBIT_SEMESTERS,
+        cbitSemesters: activeRegSemesters,
         calculateSemesterSgpa,
         selectedCourseCode,
         setSelectedCourseCode,
