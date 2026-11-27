@@ -40,7 +40,8 @@ export const LoginScreen = () => {
     cbitFaculty, 
     cbitInfo, 
     generatePasswordForEmail,
-    resetCustomPasswordForEmail
+    resetCustomPasswordForEmail,
+    getAuthorizedStaffPins
   } = useApp();
   
   // Auth mode: 'login' | 'register'
@@ -133,12 +134,19 @@ export const LoginScreen = () => {
       return;
     }
 
+    const validStaffPins = (getAuthorizedStaffPins ? getAuthorizedStaffPins() : []).map(p => p.toUpperCase());
+    if (!facultyPinInput || !validStaffPins.includes(facultyPinInput.trim().toUpperCase())) {
+      sounds.playAlertTone();
+      setResetError('⛔ Access Denied: Valid Faculty Staff Security PIN is required.');
+      return;
+    }
+
     setIsGenerating(true);
     setResetError(null);
     sounds.playTick();
 
     setTimeout(() => {
-      const res = resetCustomPasswordForEmail(emailToUse, customNewPass, loginRole);
+      const res = resetCustomPasswordForEmail(emailToUse, customNewPass, loginRole, facultyPinInput);
       setIsGenerating(false);
       if (!res.success) {
         sounds.playAlertTone();
@@ -267,6 +275,12 @@ export const LoginScreen = () => {
         setRegError('Please provide Faculty Name and Official CBIT Email.');
         return;
       }
+      const validStaffPins = (getAuthorizedStaffPins ? getAuthorizedStaffPins() : []).map(p => p.toUpperCase());
+      if (!regFacultyPin || !validStaffPins.includes(regFacultyPin.trim().toUpperCase())) {
+        sounds.playAlertTone();
+        setRegError('⛔ Faculty Registration Blocked: Valid Faculty Staff Security PIN is required.');
+        return;
+      }
       const fullNameWithTitle = `${regTitle} ${regName.replace(/^(Dr\.|Sri|Smt\.|Mr\.|Prof\.)\s*/i, '')}`.trim();
       
       const payload = {
@@ -277,6 +291,7 @@ export const LoginScreen = () => {
         email: regEmail.trim().toLowerCase(),
         courseCode: regCourseCode,
         specialization: regSpecialization.trim() || 'Computer Applications',
+        facultyStaffPin: regFacultyPin.trim().toUpperCase(),
         password: regPassword.trim()
       };
 
@@ -843,6 +858,34 @@ export const LoginScreen = () => {
                           className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500"
                         />
                       </div>
+
+                      {/* Faculty Staff Security PIN (No Forgot PIN Option) */}
+                      <div>
+                        <label className="text-[11px] font-bold text-slate-300 block mb-1 flex items-center justify-between">
+                          <span className="flex items-center gap-1 text-amber-300">
+                            <ShieldAlert className="w-3.5 h-3.5 text-amber-400" />
+                            <span>Faculty Staff Security PIN:</span>
+                          </span>
+                          <span className="text-[9px] text-amber-400 font-mono">Required</span>
+                        </label>
+                        <div className="relative">
+                          <input
+                            type={showRegFacultyPin ? "text" : "password"}
+                            required
+                            value={regFacultyPin}
+                            onChange={(e) => setRegFacultyPin(e.target.value)}
+                            placeholder="Enter confidential Staff PIN..."
+                            className="w-full bg-slate-950 border border-amber-600/60 rounded-xl pl-3 pr-9 py-2 text-xs text-amber-200 placeholder-slate-500 focus:ring-2 focus:ring-amber-500 font-mono"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowRegFacultyPin(!showRegFacultyPin)}
+                            className="absolute right-2.5 top-2.5 text-slate-500 hover:text-slate-300"
+                          >
+                            {showRegFacultyPin ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                          </button>
+                        </div>
+                      </div>
                     </>
                   ) : (
                     /* Student Specific Fields */
@@ -1301,6 +1344,34 @@ export const LoginScreen = () => {
                     }
                     className="w-full bg-slate-950 border border-slate-700 rounded-2xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono"
                   />
+                </div>
+              </div>
+
+              {/* Faculty Staff Security PIN (No Forgot PIN Option) */}
+              <div>
+                <label className="text-xs font-bold text-amber-300 block mb-1 flex items-center justify-between">
+                  <span className="flex items-center gap-1">
+                    <ShieldAlert className="w-3.5 h-3.5 text-amber-400" />
+                    <span>Faculty Staff Security PIN:</span>
+                  </span>
+                  <span className="text-[10px] text-amber-400 font-mono">Confidential Code</span>
+                </label>
+                <div className="relative">
+                  <KeyRound className="w-4 h-4 text-amber-500 absolute left-3.5 top-3" />
+                  <input
+                    type={showFacultyPin ? "text" : "password"}
+                    value={facultyPinInput}
+                    onChange={(e) => setFacultyPinInput(e.target.value)}
+                    placeholder="Enter confidential Faculty Staff PIN..."
+                    className="w-full bg-slate-950 border border-amber-600/60 rounded-2xl pl-10 pr-10 py-2.5 text-xs text-amber-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 font-mono"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowFacultyPin(!showFacultyPin)}
+                    className="absolute right-3.5 top-3 text-slate-400 hover:text-white"
+                  >
+                    {showFacultyPin ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
                 </div>
               </div>
 

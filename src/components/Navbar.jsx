@@ -4,6 +4,7 @@ import { sounds } from '../utils/soundEffects';
 import { CommandPaletteModal } from './CommandPaletteModal';
 import { NotificationDrawer } from './Notifications/NotificationDrawer';
 import { McaSyllabusModal } from './Syllabus/McaSyllabusModal';
+import { FacultyPinManagementModal } from './Auth/FacultyPinManagementModal';
 import { SeniorProjectsModal } from './SeniorsArchive/SeniorProjectsModal';
 import { 
   GraduationCap, 
@@ -57,6 +58,7 @@ export const Navbar = () => {
   const [isCommandOpen, setIsCommandOpen] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   const [isSyllabusOpen, setIsSyllabusOpen] = useState(false);
+  const [isPinModalOpen, setIsPinModalOpen] = useState(false);
   const [isSeniorsOpen, setIsSeniorsOpen] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [timeStr, setTimeStr] = useState('');
@@ -127,6 +129,17 @@ export const Navbar = () => {
               <BookOpen className="w-3 h-3 text-slate-950" />
               <span>{activeRegulation || 'R-25'} Syllabus (All Years)</span>
             </button>
+
+            {/* Faculty Change Staff PIN Trigger (Authenticated Faculty Only) */}
+            {!isStudent && (
+              <button
+                onClick={() => setIsPinModalOpen(true)}
+                className="bg-indigo-900/70 hover:bg-indigo-800 text-indigo-200 border border-indigo-600/50 font-bold px-2.5 py-0.5 rounded text-[10px] font-mono flex items-center gap-1 transition-all cursor-pointer"
+                title="Change Faculty Staff Security PIN"
+              >
+                <span>🔑 Change Staff PIN</span>
+              </button>
+            )}
 
             {/* Senior Projects & Benchmarks Trigger */}
             <button
@@ -569,6 +582,12 @@ export const Navbar = () => {
       <McaSyllabusModal
         isOpen={isSyllabusOpen}
         onClose={() => setIsSyllabusOpen(false)}
+      />
+
+      {/* Faculty Change Security PIN Modal (No Forgot PIN Option) */}
+      <FacultyPinManagementModal
+        isOpen={isPinModalOpen}
+        onClose={() => setIsPinModalOpen(false)}
       />
 
       {/* Senior Batch Projects & Placements Showcase Modal */}

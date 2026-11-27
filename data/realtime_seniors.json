@@ -1,1 +1,1622 @@
-[]
+[
+  {
+    "rollNo": "1601-24-862-001",
+    "name": "K. Venkata Sai",
+    "gender": "M",
+    "email": "160124862001@cbit.org.in",
+    "cgpa": 9.42,
+    "attendance": 94,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "venkatasai-cbit",
+    "leetcode": 540,
+    "placement": {
+      "company": "Oracle India",
+      "role": "Associate Software Engineer",
+      "package": "₹16.0 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Real-Time Distributed Event Stream Analytics with Apache Kafka & ClickHouse",
+      "domain": "Distributed Systems & Cloud",
+      "guide": "Dr. B. Indira (HoD)",
+      "cieScore": 96,
+      "seeScore": 98,
+      "status": "Exemplary Distinction"
+    },
+    "primarySkill": "Distributed Systems (Kafka/Go)",
+    "rank": 3
+  },
+  {
+    "rollNo": "1601-24-862-002",
+    "name": "P. Harika Reddy",
+    "gender": "F",
+    "email": "160124862002@cbit.org.in",
+    "cgpa": 9.68,
+    "attendance": 98,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "harika-reddy-p",
+    "leetcode": 610,
+    "placement": {
+      "company": "ServiceNow",
+      "role": "Software Engineer - Core Platform",
+      "package": "₹14.5 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Self-Healing Microservices Architecture with Kubernetes Operators & eBPF",
+      "domain": "Cloud Native & DevOps",
+      "guide": "Dr. M. Ramchander",
+      "cieScore": 98,
+      "seeScore": 99,
+      "status": "Exemplary Distinction"
+    },
+    "primarySkill": "Kubernetes & Go",
+    "rank": 2
+  },
+  {
+    "rollNo": "1601-24-862-003",
+    "name": "Ch. Sai Teja",
+    "gender": "M",
+    "email": "160124862003@cbit.org.in",
+    "cgpa": 8.85,
+    "attendance": 88,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "saiteja-ch",
+    "leetcode": 420,
+    "placement": {
+      "company": "Salesforce",
+      "role": "Member of Technical Staff",
+      "package": "₹12.0 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Automated Enterprise API Gateway with Token-Bucket Rate Limiting",
+      "domain": "Microservices & Security",
+      "guide": "Sri B. Srinivas S. P. Kumar",
+      "cieScore": 91,
+      "seeScore": 92,
+      "status": "First Class with Distinction"
+    },
+    "primarySkill": "Node.js & Redis",
+    "rank": 15
+  },
+  {
+    "rollNo": "1601-24-862-004",
+    "name": "V. Lavanya",
+    "gender": "F",
+    "email": "160124862004@cbit.org.in",
+    "cgpa": 9.15,
+    "attendance": 92,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "lavanya-v-dev",
+    "leetcode": 490,
+    "placement": {
+      "company": "JPMorgan Chase",
+      "role": "Software Analyst",
+      "package": "₹13.5 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "High-Frequency Financial Transaction Anomaly Detection Using Isolation Forests",
+      "domain": "FinTech & AI",
+      "guide": "Dr. G. N. R. Prasad",
+      "cieScore": 94,
+      "seeScore": 95,
+      "status": "Exemplary Distinction"
+    },
+    "primarySkill": "Python & Machine Learning",
+    "rank": 8
+  },
+  {
+    "rollNo": "1601-24-862-005",
+    "name": "M. Srikanth Varma",
+    "gender": "M",
+    "email": "160124862005@cbit.org.in",
+    "cgpa": 8.6,
+    "attendance": 86,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "srikanth-varma",
+    "leetcode": 380,
+    "placement": {
+      "company": "TCS Digital",
+      "role": "Systems Engineer (Digital)",
+      "package": "₹7.5 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Decentralized Supply Chain Provenance Tracker on Ethereum Smart Contracts",
+      "domain": "Blockchain & Web3",
+      "guide": "Sri P. Krishna Prasad",
+      "cieScore": 88,
+      "seeScore": 90,
+      "status": "First Class with Distinction"
+    },
+    "primarySkill": "Solidity & Full Stack",
+    "rank": 21
+  },
+  {
+    "rollNo": "1601-24-862-006",
+    "name": "B. Akhil Kumar",
+    "gender": "M",
+    "email": "160124862006@cbit.org.in",
+    "cgpa": 8.4,
+    "attendance": 84,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "akhil-kumar-b",
+    "leetcode": 340,
+    "placement": {
+      "company": "Cognizant GenC Next",
+      "role": "Programmer Analyst",
+      "package": "₹6.75 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Multi-Modal Sentiment Analysis Engine for Vernacular Indian Languages",
+      "domain": "NLP & Deep Learning",
+      "guide": "Dr. P. Suresh",
+      "cieScore": 86,
+      "seeScore": 88,
+      "status": "First Class with Distinction"
+    },
+    "primarySkill": "Python & PyTorch",
+    "rank": 28
+  },
+  {
+    "rollNo": "1601-24-862-007",
+    "name": "D. Sneha Reddy",
+    "gender": "F",
+    "email": "160124862007@cbit.org.in",
+    "cgpa": 9.82,
+    "attendance": 99,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "snehareddy-d",
+    "leetcode": 680,
+    "placement": {
+      "company": "Google India",
+      "role": "Software Engineer - Cloud AI",
+      "package": "₹24.0 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Efficient Quantization Framework for Large Vision Transformers on Edge Hardware",
+      "domain": "Edge AI & Deep Learning",
+      "guide": "Dr. B. Indira (HoD)",
+      "cieScore": 100,
+      "seeScore": 100,
+      "status": "University Gold Medalist"
+    },
+    "primarySkill": "Deep Learning & C++",
+    "rank": 1
+  },
+  {
+    "rollNo": "1601-24-862-008",
+    "name": "G. Rakesh Goud",
+    "gender": "M",
+    "email": "160124862008@cbit.org.in",
+    "cgpa": 7.95,
+    "attendance": 82,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "rakesh-goud",
+    "leetcode": 260,
+    "placement": {
+      "company": "Accenture",
+      "role": "Advanced App Engineering Analyst",
+      "package": "₹4.5 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Smart Campus Energy Management Dashboard using ESP32 & MQTT Broker",
+      "domain": "IoT & Full Stack",
+      "guide": "Mr. Rambabu Potabattula",
+      "cieScore": 84,
+      "seeScore": 85,
+      "status": "First Class"
+    },
+    "primarySkill": "MERN Stack & IoT",
+    "rank": 39
+  },
+  {
+    "rollNo": "1601-24-862-009",
+    "name": "N. Mounika",
+    "gender": "F",
+    "email": "160124862009@cbit.org.in",
+    "cgpa": 8.95,
+    "attendance": 91,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "mounika-n-dev",
+    "leetcode": 450,
+    "placement": {
+      "company": "NCR Voyix",
+      "role": "Software Engineer",
+      "package": "₹10.5 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Point-of-Sale (POS) Micro-Transactions Resiliency Engine with Distributed Sagas",
+      "domain": "Enterprise Systems",
+      "guide": "Dr. D. Jayaram",
+      "cieScore": 92,
+      "seeScore": 94,
+      "status": "First Class with Distinction"
+    },
+    "primarySkill": "Java / Spring Boot",
+    "rank": 12
+  },
+  {
+    "rollNo": "1601-24-862-010",
+    "name": "T. Kalyan Krishna",
+    "gender": "M",
+    "email": "160124862010@cbit.org.in",
+    "cgpa": 8.7,
+    "attendance": 87,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "kalyan-krishna-t",
+    "leetcode": 390,
+    "placement": {
+      "company": "Deloitte India",
+      "role": "Consultant - Cloud Architecture",
+      "package": "₹8.5 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Automated Multi-Cloud Infrastructure Provisioner via Terraform & AWS CDK",
+      "domain": "Cloud Infrastructure",
+      "guide": "Dr. M. Ramchander",
+      "cieScore": 90,
+      "seeScore": 91,
+      "status": "First Class with Distinction"
+    },
+    "primarySkill": "Terraform & AWS",
+    "rank": 18
+  },
+  {
+    "rollNo": "1601-24-862-011",
+    "name": "A. Swathi",
+    "gender": "F",
+    "email": "160124862011@cbit.org.in",
+    "cgpa": 9.3,
+    "attendance": 95,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "swathi-a",
+    "leetcode": 510,
+    "placement": {
+      "company": "ServiceNow",
+      "role": "Associate Software Engineer",
+      "package": "₹14.5 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "AI-Augmented Code Refactoring Assistant with Abstract Syntax Tree Graph Neural Networks",
+      "domain": "AI for Software Engineering",
+      "guide": "Dr. B. Indira (HoD)",
+      "cieScore": 95,
+      "seeScore": 96,
+      "status": "Exemplary Distinction"
+    },
+    "primarySkill": "Python & Compiler Design",
+    "rank": 5
+  },
+  {
+    "rollNo": "1601-24-862-012",
+    "name": "C. Tarun Kumar",
+    "gender": "M",
+    "email": "160124862012@cbit.org.in",
+    "cgpa": 8.25,
+    "attendance": 83,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "tarun-c-code",
+    "leetcode": 310,
+    "placement": {
+      "company": "Infosys",
+      "role": "Specialist Programmer",
+      "package": "₹6.0 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Containerized CI/CD Pipeline Orchestrator with Blue-Green Deployment on Docker Swarm",
+      "domain": "DevOps & SRE",
+      "guide": "Sri P. Krishna Prasad",
+      "cieScore": 85,
+      "seeScore": 87,
+      "status": "First Class"
+    },
+    "primarySkill": "Docker & Linux",
+    "rank": 32
+  },
+  {
+    "rollNo": "1601-24-862-013",
+    "name": "E. Bhavya Sri",
+    "gender": "F",
+    "email": "160124862013@cbit.org.in",
+    "cgpa": 9.05,
+    "attendance": 93,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "bhavya-sri-e",
+    "leetcode": 470,
+    "placement": {
+      "company": "Virtusa",
+      "role": "Senior Consultant Engineer",
+      "package": "₹8.0 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Zero-Trust Role-Based Access Control Architecture with JWT & Decentralized Identity",
+      "domain": "Cyber Security & Web",
+      "guide": "Sri B. Srinivas S. P. Kumar",
+      "cieScore": 93,
+      "seeScore": 94,
+      "status": "First Class with Distinction"
+    },
+    "primarySkill": "Full Stack Security",
+    "rank": 10
+  },
+  {
+    "rollNo": "1601-24-862-014",
+    "name": "K. Naveen Reddy",
+    "gender": "M",
+    "email": "160124862014@cbit.org.in",
+    "cgpa": 8.5,
+    "attendance": 85,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "naveen-k-reddy",
+    "leetcode": 360,
+    "placement": {
+      "company": "Tech Mahindra",
+      "role": "Associate Software Engineer",
+      "package": "₹5.5 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Distributed Web Crawler & Indexing Engine with Inverted Index and MapReduce",
+      "domain": "Information Retrieval",
+      "guide": "Smt. G. Kavitha",
+      "cieScore": 87,
+      "seeScore": 89,
+      "status": "First Class with Distinction"
+    },
+    "primarySkill": "Big Data & Hadoop",
+    "rank": 25
+  },
+  {
+    "rollNo": "1601-24-862-015",
+    "name": "L. Deepa Rani",
+    "gender": "F",
+    "email": "160124862015@cbit.org.in",
+    "cgpa": 8.9,
+    "attendance": 90,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "deepa-rani-l",
+    "leetcode": 430,
+    "placement": {
+      "company": "EPAM Systems",
+      "role": "Junior Software Engineer",
+      "package": "₹8.0 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Real-Time Collaborative Code Editor with Conflict-Free Replicated Data Types (CRDT)",
+      "domain": "WebSockets & Systems",
+      "guide": "Smt. T. Sravanthi",
+      "cieScore": 91,
+      "seeScore": 93,
+      "status": "First Class with Distinction"
+    },
+    "primarySkill": "React & WebSockets",
+    "rank": 14
+  },
+  {
+    "rollNo": "1601-24-862-016",
+    "name": "M. Aditya Varma",
+    "gender": "M",
+    "email": "160124862016@cbit.org.in",
+    "cgpa": 9.38,
+    "attendance": 94,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "aditya-varma-m",
+    "leetcode": 530,
+    "placement": {
+      "company": "Oracle India",
+      "role": "Associate Software Engineer",
+      "package": "₹16.0 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Distributed Graph Query Engine for Social Network Recommendation Systems",
+      "domain": "Graph Databases & AI",
+      "guide": "Dr. G. N. R. Prasad",
+      "cieScore": 95,
+      "seeScore": 97,
+      "status": "Exemplary Distinction"
+    },
+    "primarySkill": "Neo4j & Java",
+    "rank": 4
+  },
+  {
+    "rollNo": "1601-24-862-017",
+    "name": "P. Meghana",
+    "gender": "F",
+    "email": "160124862017@cbit.org.in",
+    "cgpa": 8.75,
+    "attendance": 88,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "meghana-p-dev",
+    "leetcode": 400,
+    "placement": {
+      "company": "Cognizant GenC Next",
+      "role": "Programmer Analyst",
+      "package": "₹6.75 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Automated Crop Disease Identification using Mobile Vision Transformers",
+      "domain": "Computer Vision & Edge",
+      "guide": "Dr. P. Suresh",
+      "cieScore": 89,
+      "seeScore": 91,
+      "status": "First Class with Distinction"
+    },
+    "primarySkill": "Flutter & TensorFlow Lite",
+    "rank": 17
+  },
+  {
+    "rollNo": "1601-24-862-018",
+    "name": "R. Pranav Chary",
+    "gender": "M",
+    "email": "160124862018@cbit.org.in",
+    "cgpa": 8.1,
+    "attendance": 81,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "pranav-chary",
+    "leetcode": 290,
+    "placement": {
+      "company": "Hexaware",
+      "role": "Software Engineer Trainee",
+      "package": "₹5.0 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Secure Electronic Voting System Powered by Hyperledger Fabric Consortium",
+      "domain": "Permissioned Blockchain",
+      "guide": "Sri P. Krishna Prasad",
+      "cieScore": 84,
+      "seeScore": 86,
+      "status": "First Class"
+    },
+    "primarySkill": "Hyperledger & Node.js",
+    "rank": 35
+  },
+  {
+    "rollNo": "1601-24-862-019",
+    "name": "S. Yamini",
+    "gender": "F",
+    "email": "160124862019@cbit.org.in",
+    "cgpa": 9.2,
+    "attendance": 94,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "yamini-s",
+    "leetcode": 500,
+    "placement": {
+      "company": "Salesforce",
+      "role": "Software Engineer",
+      "package": "₹12.0 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Federated Learning Framework for Multi-Hospital Privacy-Preserving Health Diagnostics",
+      "domain": "Privacy AI & Federated Learning",
+      "guide": "Dr. B. Indira (HoD)",
+      "cieScore": 94,
+      "seeScore": 96,
+      "status": "Exemplary Distinction"
+    },
+    "primarySkill": "PySyft & Deep Learning",
+    "rank": 7
+  },
+  {
+    "rollNo": "1601-24-862-020",
+    "name": "V. Sandeep Reddy",
+    "gender": "M",
+    "email": "160124862020@cbit.org.in",
+    "cgpa": 8.65,
+    "attendance": 86,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "sandeep-v-reddy",
+    "leetcode": 375,
+    "placement": {
+      "company": "TCS Digital",
+      "role": "Digital Innovator Engineer",
+      "package": "₹7.5 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "AI-Powered Automated Vulnerability Scanner for Smart Contracts",
+      "domain": "Cyber Security & Web3",
+      "guide": "Mr. Rambabu Potabattula",
+      "cieScore": 89,
+      "seeScore": 90,
+      "status": "First Class with Distinction"
+    },
+    "primarySkill": "Solidity & Python",
+    "rank": 20
+  },
+  {
+    "rollNo": "1601-24-862-021",
+    "name": "K. Abhilash",
+    "gender": "M",
+    "email": "160124862021@cbit.org.in",
+    "cgpa": 8.51,
+    "attendance": 88,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "abhilash-cbit",
+    "leetcode": 361,
+    "placement": {
+      "company": "Cognizant GenC",
+      "role": "Software Engineer",
+      "package": "₹6.75 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Mobile App Development Implementation for Enterprise Scalability (K. Abhilash)",
+      "domain": "Mobile App Development",
+      "guide": "Mr. Rambabu Potabattula",
+      "cieScore": 85,
+      "seeScore": 85,
+      "status": "First Class with Distinction"
+    },
+    "primarySkill": "Mobile App Development",
+    "rank": 21
+  },
+  {
+    "rollNo": "1601-24-862-022",
+    "name": "M. Akshitha",
+    "gender": "F",
+    "email": "160124862022@cbit.org.in",
+    "cgpa": 8.9,
+    "attendance": 91,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "akshitha-cbit",
+    "leetcode": 408,
+    "placement": {
+      "company": "Accenture",
+      "role": "Associate Software Engineer",
+      "package": "₹4.5 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Computer Vision & Edge Implementation for Enterprise Scalability (M. Akshitha)",
+      "domain": "Computer Vision & Edge",
+      "guide": "Dr. P. Suresh",
+      "cieScore": 89,
+      "seeScore": 90,
+      "status": "First Class with Distinction"
+    },
+    "primarySkill": "Computer Vision & Edge",
+    "rank": 22
+  },
+  {
+    "rollNo": "1601-24-862-023",
+    "name": "N. Bharath",
+    "gender": "M",
+    "email": "160124862023@cbit.org.in",
+    "cgpa": 9.29,
+    "attendance": 95,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "bharath-cbit",
+    "leetcode": 455,
+    "placement": {
+      "company": "Infosys",
+      "role": "Systems Engineer",
+      "package": "₹4.0 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Data Analytics & Mining Implementation for Enterprise Scalability (N. Bharath)",
+      "domain": "Data Analytics & Mining",
+      "guide": "Smt. G. Kavitha",
+      "cieScore": 93,
+      "seeScore": 95,
+      "status": "First Class with Distinction"
+    },
+    "primarySkill": "Data Analytics & Mining",
+    "rank": 23
+  },
+  {
+    "rollNo": "1601-24-862-024",
+    "name": "P. Chandana",
+    "gender": "F",
+    "email": "160124862024@cbit.org.in",
+    "cgpa": 7.38,
+    "attendance": 77,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "chandana-cbit",
+    "leetcode": 226,
+    "placement": {
+      "company": "Wipro",
+      "role": "Project Engineer",
+      "package": "₹4.5 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Cloud & Microservices Implementation for Enterprise Scalability (P. Chandana)",
+      "domain": "Cloud & Microservices",
+      "guide": "Dr. M. Ramchander",
+      "cieScore": 82,
+      "seeScore": 82,
+      "status": "First Class"
+    },
+    "primarySkill": "Cloud & Microservices",
+    "rank": 24
+  },
+  {
+    "rollNo": "1601-24-862-025",
+    "name": "R. Divyansh",
+    "gender": "M",
+    "email": "160124862025@cbit.org.in",
+    "cgpa": 7.78,
+    "attendance": 81,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "divyansh-cbit",
+    "leetcode": 274,
+    "placement": {
+      "company": "ServiceNow",
+      "role": "Associate Developer",
+      "package": "₹14.5 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "AI / Machine Learning Implementation for Enterprise Scalability (R. Divyansh)",
+      "domain": "AI / Machine Learning",
+      "guide": "Dr. B. Indira (HoD)",
+      "cieScore": 82,
+      "seeScore": 83,
+      "status": "First Class"
+    },
+    "primarySkill": "AI / Machine Learning",
+    "rank": 25
+  },
+  {
+    "rollNo": "1601-24-862-026",
+    "name": "S. Goutham",
+    "gender": "M",
+    "email": "160124862026@cbit.org.in",
+    "cgpa": 8.17,
+    "attendance": 84,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "goutham-cbit",
+    "leetcode": 320,
+    "placement": {
+      "company": "Persistent Systems",
+      "role": "Software Engineer",
+      "package": "₹7.0 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Database & Big Data Implementation for Enterprise Scalability (S. Goutham)",
+      "domain": "Database & Big Data",
+      "guide": "Dr. G. N. R. Prasad",
+      "cieScore": 82,
+      "seeScore": 84,
+      "status": "First Class"
+    },
+    "primarySkill": "Database & Big Data",
+    "rank": 26
+  },
+  {
+    "rollNo": "1601-24-862-027",
+    "name": "T. Hima Bindu",
+    "gender": "F",
+    "email": "160124862027@cbit.org.in",
+    "cgpa": 8.56,
+    "attendance": 88,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "himabindu-cbit",
+    "leetcode": 367,
+    "placement": {
+      "company": "LTIMindtree",
+      "role": "Software Engineer",
+      "package": "₹5.5 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Web Security & Blockchain Implementation for Enterprise Scalability (T. Hima Bindu)",
+      "domain": "Web Security & Blockchain",
+      "guide": "Sri P. Krishna Prasad",
+      "cieScore": 86,
+      "seeScore": 86,
+      "status": "First Class with Distinction"
+    },
+    "primarySkill": "Web Security & Blockchain",
+    "rank": 27
+  },
+  {
+    "rollNo": "1601-24-862-028",
+    "name": "V. Irfan",
+    "gender": "M",
+    "email": "160124862028@cbit.org.in",
+    "cgpa": 8.95,
+    "attendance": 92,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "irfan-cbit",
+    "leetcode": 414,
+    "placement": {
+      "company": "Capgemini",
+      "role": "Senior Analyst",
+      "package": "₹5.75 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Full Stack Architecture Implementation for Enterprise Scalability (V. Irfan)",
+      "domain": "Full Stack Architecture",
+      "guide": "Sri B. Srinivas S. P. Kumar",
+      "cieScore": 90,
+      "seeScore": 91,
+      "status": "First Class with Distinction"
+    },
+    "primarySkill": "Full Stack Architecture",
+    "rank": 28
+  },
+  {
+    "rollNo": "1601-24-862-029",
+    "name": "Y. Jayanth",
+    "gender": "M",
+    "email": "160124862029@cbit.org.in",
+    "cgpa": 9.34,
+    "attendance": 95,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "jayanth-cbit",
+    "leetcode": 461,
+    "placement": {
+      "company": "CBIT Incubation (Startup)",
+      "role": "Founding Engineer",
+      "package": "₹9.0 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Mobile App Development Implementation for Enterprise Scalability (Y. Jayanth)",
+      "domain": "Mobile App Development",
+      "guide": "Mr. Rambabu Potabattula",
+      "cieScore": 93,
+      "seeScore": 95,
+      "status": "First Class with Distinction"
+    },
+    "primarySkill": "Mobile App Development",
+    "rank": 29
+  },
+  {
+    "rollNo": "1601-24-862-030",
+    "name": "A. Keerthi",
+    "gender": "F",
+    "email": "160124862030@cbit.org.in",
+    "cgpa": 7.43,
+    "attendance": 77,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "keerthi-cbit",
+    "leetcode": 232,
+    "placement": {
+      "company": "TCS Digital",
+      "role": "System Engineer",
+      "package": "₹7.5 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Computer Vision & Edge Implementation for Enterprise Scalability (A. Keerthi)",
+      "domain": "Computer Vision & Edge",
+      "guide": "Dr. P. Suresh",
+      "cieScore": 82,
+      "seeScore": 82,
+      "status": "First Class"
+    },
+    "primarySkill": "Computer Vision & Edge",
+    "rank": 30
+  },
+  {
+    "rollNo": "1601-24-862-031",
+    "name": "B. Lokesh",
+    "gender": "M",
+    "email": "160124862031@cbit.org.in",
+    "cgpa": 7.82,
+    "attendance": 81,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "lokesh-cbit",
+    "leetcode": 278,
+    "placement": {
+      "company": "Cognizant GenC",
+      "role": "Software Engineer",
+      "package": "₹6.75 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Data Analytics & Mining Implementation for Enterprise Scalability (B. Lokesh)",
+      "domain": "Data Analytics & Mining",
+      "guide": "Smt. G. Kavitha",
+      "cieScore": 82,
+      "seeScore": 83,
+      "status": "First Class"
+    },
+    "primarySkill": "Data Analytics & Mining",
+    "rank": 31
+  },
+  {
+    "rollNo": "1601-24-862-032",
+    "name": "Ch. Manoj Kumar",
+    "gender": "M",
+    "email": "160124862032@cbit.org.in",
+    "cgpa": 8.21,
+    "attendance": 85,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "manojkumar-cbit",
+    "leetcode": 325,
+    "placement": {
+      "company": "Accenture",
+      "role": "Associate Software Engineer",
+      "package": "₹4.5 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Cloud & Microservices Implementation for Enterprise Scalability (Ch. Manoj Kumar)",
+      "domain": "Cloud & Microservices",
+      "guide": "Dr. M. Ramchander",
+      "cieScore": 82,
+      "seeScore": 84,
+      "status": "First Class"
+    },
+    "primarySkill": "Cloud & Microservices",
+    "rank": 32
+  },
+  {
+    "rollNo": "1601-24-862-033",
+    "name": "D. Nandhini",
+    "gender": "F",
+    "email": "160124862033@cbit.org.in",
+    "cgpa": 8.6,
+    "attendance": 88,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "nandhini-cbit",
+    "leetcode": 372,
+    "placement": {
+      "company": "Infosys",
+      "role": "Systems Engineer",
+      "package": "₹4.0 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "AI / Machine Learning Implementation for Enterprise Scalability (D. Nandhini)",
+      "domain": "AI / Machine Learning",
+      "guide": "Dr. B. Indira (HoD)",
+      "cieScore": 86,
+      "seeScore": 86,
+      "status": "First Class with Distinction"
+    },
+    "primarySkill": "AI / Machine Learning",
+    "rank": 33
+  },
+  {
+    "rollNo": "1601-24-862-034",
+    "name": "E. Omkar",
+    "gender": "M",
+    "email": "160124862034@cbit.org.in",
+    "cgpa": 8.99,
+    "attendance": 92,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "omkar-cbit",
+    "leetcode": 419,
+    "placement": {
+      "company": "Wipro",
+      "role": "Project Engineer",
+      "package": "₹4.5 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Database & Big Data Implementation for Enterprise Scalability (E. Omkar)",
+      "domain": "Database & Big Data",
+      "guide": "Dr. G. N. R. Prasad",
+      "cieScore": 90,
+      "seeScore": 91,
+      "status": "First Class with Distinction"
+    },
+    "primarySkill": "Database & Big Data",
+    "rank": 34
+  },
+  {
+    "rollNo": "1601-24-862-035",
+    "name": "G. Pavithra",
+    "gender": "F",
+    "email": "160124862035@cbit.org.in",
+    "cgpa": 9.38,
+    "attendance": 96,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "pavithra-cbit",
+    "leetcode": 466,
+    "placement": {
+      "company": "ServiceNow",
+      "role": "Associate Developer",
+      "package": "₹14.5 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Web Security & Blockchain Implementation for Enterprise Scalability (G. Pavithra)",
+      "domain": "Web Security & Blockchain",
+      "guide": "Sri P. Krishna Prasad",
+      "cieScore": 94,
+      "seeScore": 96,
+      "status": "First Class with Distinction"
+    },
+    "primarySkill": "Web Security & Blockchain",
+    "rank": 35
+  },
+  {
+    "rollNo": "1601-24-862-036",
+    "name": "K. Raghu Varma",
+    "gender": "M",
+    "email": "160124862036@cbit.org.in",
+    "cgpa": 7.48,
+    "attendance": 78,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "raghuvarma-cbit",
+    "leetcode": 238,
+    "placement": {
+      "company": "Persistent Systems",
+      "role": "Software Engineer",
+      "package": "₹7.0 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Full Stack Architecture Implementation for Enterprise Scalability (K. Raghu Varma)",
+      "domain": "Full Stack Architecture",
+      "guide": "Sri B. Srinivas S. P. Kumar",
+      "cieScore": 82,
+      "seeScore": 82,
+      "status": "First Class"
+    },
+    "primarySkill": "Full Stack Architecture",
+    "rank": 36
+  },
+  {
+    "rollNo": "1601-24-862-037",
+    "name": "M. Sai Tejeswi",
+    "gender": "F",
+    "email": "160124862037@cbit.org.in",
+    "cgpa": 7.87,
+    "attendance": 81,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "saitejeswi-cbit",
+    "leetcode": 284,
+    "placement": {
+      "company": "LTIMindtree",
+      "role": "Software Engineer",
+      "package": "₹5.5 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Mobile App Development Implementation for Enterprise Scalability (M. Sai Tejeswi)",
+      "domain": "Mobile App Development",
+      "guide": "Mr. Rambabu Potabattula",
+      "cieScore": 82,
+      "seeScore": 83,
+      "status": "First Class"
+    },
+    "primarySkill": "Mobile App Development",
+    "rank": 37
+  },
+  {
+    "rollNo": "1601-24-862-038",
+    "name": "N. Tanmay",
+    "gender": "M",
+    "email": "160124862038@cbit.org.in",
+    "cgpa": 8.26,
+    "attendance": 85,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "tanmay-cbit",
+    "leetcode": 331,
+    "placement": {
+      "company": "Capgemini",
+      "role": "Senior Analyst",
+      "package": "₹5.75 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Computer Vision & Edge Implementation for Enterprise Scalability (N. Tanmay)",
+      "domain": "Computer Vision & Edge",
+      "guide": "Dr. P. Suresh",
+      "cieScore": 83,
+      "seeScore": 85,
+      "status": "First Class"
+    },
+    "primarySkill": "Computer Vision & Edge",
+    "rank": 38
+  },
+  {
+    "rollNo": "1601-24-862-039",
+    "name": "P. Uday Kiran",
+    "gender": "M",
+    "email": "160124862039@cbit.org.in",
+    "cgpa": 8.65,
+    "attendance": 89,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "udaykiran-cbit",
+    "leetcode": 378,
+    "placement": {
+      "company": "CBIT Incubation (Startup)",
+      "role": "Founding Engineer",
+      "package": "₹9.0 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Data Analytics & Mining Implementation for Enterprise Scalability (P. Uday Kiran)",
+      "domain": "Data Analytics & Mining",
+      "guide": "Smt. G. Kavitha",
+      "cieScore": 87,
+      "seeScore": 87,
+      "status": "First Class with Distinction"
+    },
+    "primarySkill": "Data Analytics & Mining",
+    "rank": 39
+  },
+  {
+    "rollNo": "1601-24-862-040",
+    "name": "R. Vaishali",
+    "gender": "F",
+    "email": "160124862040@cbit.org.in",
+    "cgpa": 9.04,
+    "attendance": 93,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "vaishali-cbit",
+    "leetcode": 425,
+    "placement": {
+      "company": "TCS Digital",
+      "role": "System Engineer",
+      "package": "₹7.5 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Cloud & Microservices Implementation for Enterprise Scalability (R. Vaishali)",
+      "domain": "Cloud & Microservices",
+      "guide": "Dr. M. Ramchander",
+      "cieScore": 90,
+      "seeScore": 91,
+      "status": "First Class with Distinction"
+    },
+    "primarySkill": "Cloud & Microservices",
+    "rank": 40
+  },
+  {
+    "rollNo": "1601-24-862-041",
+    "name": "S. Varun",
+    "gender": "M",
+    "email": "160124862041@cbit.org.in",
+    "cgpa": 9.43,
+    "attendance": 96,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "varun-cbit",
+    "leetcode": 472,
+    "placement": {
+      "company": "Cognizant GenC",
+      "role": "Software Engineer",
+      "package": "₹6.75 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "AI / Machine Learning Implementation for Enterprise Scalability (S. Varun)",
+      "domain": "AI / Machine Learning",
+      "guide": "Dr. B. Indira (HoD)",
+      "cieScore": 94,
+      "seeScore": 96,
+      "status": "First Class with Distinction"
+    },
+    "primarySkill": "AI / Machine Learning",
+    "rank": 41
+  },
+  {
+    "rollNo": "1601-24-862-042",
+    "name": "T. Yashwanth",
+    "gender": "M",
+    "email": "160124862042@cbit.org.in",
+    "cgpa": 7.52,
+    "attendance": 78,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "yashwanth-cbit",
+    "leetcode": 242,
+    "placement": {
+      "company": "Accenture",
+      "role": "Associate Software Engineer",
+      "package": "₹4.5 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Database & Big Data Implementation for Enterprise Scalability (T. Yashwanth)",
+      "domain": "Database & Big Data",
+      "guide": "Dr. G. N. R. Prasad",
+      "cieScore": 82,
+      "seeScore": 82,
+      "status": "First Class"
+    },
+    "primarySkill": "Database & Big Data",
+    "rank": 42
+  },
+  {
+    "rollNo": "1601-24-862-043",
+    "name": "V. Anurag",
+    "gender": "M",
+    "email": "160124862043@cbit.org.in",
+    "cgpa": 7.91,
+    "attendance": 82,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "anurag-cbit",
+    "leetcode": 289,
+    "placement": {
+      "company": "Infosys",
+      "role": "Systems Engineer",
+      "package": "₹4.0 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Web Security & Blockchain Implementation for Enterprise Scalability (V. Anurag)",
+      "domain": "Web Security & Blockchain",
+      "guide": "Sri P. Krishna Prasad",
+      "cieScore": 82,
+      "seeScore": 83,
+      "status": "First Class"
+    },
+    "primarySkill": "Web Security & Blockchain",
+    "rank": 43
+  },
+  {
+    "rollNo": "1601-24-862-044",
+    "name": "Y. Bhavani",
+    "gender": "F",
+    "email": "160124862044@cbit.org.in",
+    "cgpa": 8.3,
+    "attendance": 86,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "bhavani-cbit",
+    "leetcode": 336,
+    "placement": {
+      "company": "Wipro",
+      "role": "Project Engineer",
+      "package": "₹4.5 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Full Stack Architecture Implementation for Enterprise Scalability (Y. Bhavani)",
+      "domain": "Full Stack Architecture",
+      "guide": "Sri B. Srinivas S. P. Kumar",
+      "cieScore": 83,
+      "seeScore": 85,
+      "status": "First Class"
+    },
+    "primarySkill": "Full Stack Architecture",
+    "rank": 44
+  },
+  {
+    "rollNo": "1601-24-862-045",
+    "name": "A. Chaitanya",
+    "gender": "M",
+    "email": "160124862045@cbit.org.in",
+    "cgpa": 8.7,
+    "attendance": 89,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "chaitanya-cbit",
+    "leetcode": 384,
+    "placement": {
+      "company": "ServiceNow",
+      "role": "Associate Developer",
+      "package": "₹14.5 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Mobile App Development Implementation for Enterprise Scalability (A. Chaitanya)",
+      "domain": "Mobile App Development",
+      "guide": "Mr. Rambabu Potabattula",
+      "cieScore": 87,
+      "seeScore": 87,
+      "status": "First Class with Distinction"
+    },
+    "primarySkill": "Mobile App Development",
+    "rank": 45
+  },
+  {
+    "rollNo": "1601-24-862-046",
+    "name": "B. Deepak",
+    "gender": "M",
+    "email": "160124862046@cbit.org.in",
+    "cgpa": 9.09,
+    "attendance": 93,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "deepak-cbit",
+    "leetcode": 431,
+    "placement": {
+      "company": "Persistent Systems",
+      "role": "Software Engineer",
+      "package": "₹7.0 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Computer Vision & Edge Implementation for Enterprise Scalability (B. Deepak)",
+      "domain": "Computer Vision & Edge",
+      "guide": "Dr. P. Suresh",
+      "cieScore": 91,
+      "seeScore": 92,
+      "status": "First Class with Distinction"
+    },
+    "primarySkill": "Computer Vision & Edge",
+    "rank": 46
+  },
+  {
+    "rollNo": "1601-24-862-047",
+    "name": "Ch. Eshwar",
+    "gender": "M",
+    "email": "160124862047@cbit.org.in",
+    "cgpa": 9.48,
+    "attendance": 97,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "eshwar-cbit",
+    "leetcode": 478,
+    "placement": {
+      "company": "LTIMindtree",
+      "role": "Software Engineer",
+      "package": "₹5.5 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Data Analytics & Mining Implementation for Enterprise Scalability (Ch. Eshwar)",
+      "domain": "Data Analytics & Mining",
+      "guide": "Smt. G. Kavitha",
+      "cieScore": 95,
+      "seeScore": 97,
+      "status": "First Class with Distinction"
+    },
+    "primarySkill": "Data Analytics & Mining",
+    "rank": 47
+  },
+  {
+    "rollNo": "1601-24-862-048",
+    "name": "D. Geethika",
+    "gender": "F",
+    "email": "160124862048@cbit.org.in",
+    "cgpa": 7.57,
+    "attendance": 79,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "geethika-cbit",
+    "leetcode": 248,
+    "placement": {
+      "company": "Capgemini",
+      "role": "Senior Analyst",
+      "package": "₹5.75 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Cloud & Microservices Implementation for Enterprise Scalability (D. Geethika)",
+      "domain": "Cloud & Microservices",
+      "guide": "Dr. M. Ramchander",
+      "cieScore": 82,
+      "seeScore": 82,
+      "status": "First Class"
+    },
+    "primarySkill": "Cloud & Microservices",
+    "rank": 48
+  },
+  {
+    "rollNo": "1601-24-862-049",
+    "name": "E. Hemanth",
+    "gender": "M",
+    "email": "160124862049@cbit.org.in",
+    "cgpa": 7.96,
+    "attendance": 82,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "hemanth-cbit",
+    "leetcode": 295,
+    "placement": {
+      "company": "CBIT Incubation (Startup)",
+      "role": "Founding Engineer",
+      "package": "₹9.0 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "AI / Machine Learning Implementation for Enterprise Scalability (E. Hemanth)",
+      "domain": "AI / Machine Learning",
+      "guide": "Dr. B. Indira (HoD)",
+      "cieScore": 82,
+      "seeScore": 83,
+      "status": "First Class"
+    },
+    "primarySkill": "AI / Machine Learning",
+    "rank": 49
+  },
+  {
+    "rollNo": "1601-24-862-050",
+    "name": "G. Jithendra",
+    "gender": "M",
+    "email": "160124862050@cbit.org.in",
+    "cgpa": 8.35,
+    "attendance": 86,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "jithendra-cbit",
+    "leetcode": 342,
+    "placement": {
+      "company": "TCS Digital",
+      "role": "System Engineer",
+      "package": "₹7.5 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Database & Big Data Implementation for Enterprise Scalability (G. Jithendra)",
+      "domain": "Database & Big Data",
+      "guide": "Dr. G. N. R. Prasad",
+      "cieScore": 84,
+      "seeScore": 86,
+      "status": "First Class"
+    },
+    "primarySkill": "Database & Big Data",
+    "rank": 50
+  },
+  {
+    "rollNo": "1601-24-862-051",
+    "name": "K. Kalyani",
+    "gender": "F",
+    "email": "160124862051@cbit.org.in",
+    "cgpa": 8.74,
+    "attendance": 90,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "kalyani-cbit",
+    "leetcode": 389,
+    "placement": {
+      "company": "Cognizant GenC",
+      "role": "Software Engineer",
+      "package": "₹6.75 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Web Security & Blockchain Implementation for Enterprise Scalability (K. Kalyani)",
+      "domain": "Web Security & Blockchain",
+      "guide": "Sri P. Krishna Prasad",
+      "cieScore": 87,
+      "seeScore": 87,
+      "status": "First Class with Distinction"
+    },
+    "primarySkill": "Web Security & Blockchain",
+    "rank": 51
+  },
+  {
+    "rollNo": "1601-24-862-052",
+    "name": "M. Madhav",
+    "gender": "M",
+    "email": "160124862052@cbit.org.in",
+    "cgpa": 9.13,
+    "attendance": 93,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "madhav-cbit",
+    "leetcode": 436,
+    "placement": {
+      "company": "Accenture",
+      "role": "Associate Software Engineer",
+      "package": "₹4.5 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Full Stack Architecture Implementation for Enterprise Scalability (M. Madhav)",
+      "domain": "Full Stack Architecture",
+      "guide": "Sri B. Srinivas S. P. Kumar",
+      "cieScore": 91,
+      "seeScore": 92,
+      "status": "First Class with Distinction"
+    },
+    "primarySkill": "Full Stack Architecture",
+    "rank": 52
+  },
+  {
+    "rollNo": "1601-24-862-053",
+    "name": "N. Naveena",
+    "gender": "F",
+    "email": "160124862053@cbit.org.in",
+    "cgpa": 7.22,
+    "attendance": 75,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "naveena-cbit",
+    "leetcode": 206,
+    "placement": {
+      "company": "Infosys",
+      "role": "Systems Engineer",
+      "package": "₹4.0 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Mobile App Development Implementation for Enterprise Scalability (N. Naveena)",
+      "domain": "Mobile App Development",
+      "guide": "Mr. Rambabu Potabattula",
+      "cieScore": 82,
+      "seeScore": 84,
+      "status": "First Class"
+    },
+    "primarySkill": "Mobile App Development",
+    "rank": 53
+  },
+  {
+    "rollNo": "1601-24-862-054",
+    "name": "P. Pooja",
+    "gender": "F",
+    "email": "160124862054@cbit.org.in",
+    "cgpa": 7.61,
+    "attendance": 79,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "pooja-cbit",
+    "leetcode": 253,
+    "placement": {
+      "company": "Wipro",
+      "role": "Project Engineer",
+      "package": "₹4.5 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Computer Vision & Edge Implementation for Enterprise Scalability (P. Pooja)",
+      "domain": "Computer Vision & Edge",
+      "guide": "Dr. P. Suresh",
+      "cieScore": 82,
+      "seeScore": 82,
+      "status": "First Class"
+    },
+    "primarySkill": "Computer Vision & Edge",
+    "rank": 54
+  },
+  {
+    "rollNo": "1601-24-862-055",
+    "name": "R. Rajesh",
+    "gender": "M",
+    "email": "160124862055@cbit.org.in",
+    "cgpa": 8.01,
+    "attendance": 83,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "rajesh-cbit",
+    "leetcode": 301,
+    "placement": {
+      "company": "ServiceNow",
+      "role": "Associate Developer",
+      "package": "₹14.5 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Data Analytics & Mining Implementation for Enterprise Scalability (R. Rajesh)",
+      "domain": "Data Analytics & Mining",
+      "guide": "Smt. G. Kavitha",
+      "cieScore": 82,
+      "seeScore": 83,
+      "status": "First Class"
+    },
+    "primarySkill": "Data Analytics & Mining",
+    "rank": 55
+  },
+  {
+    "rollNo": "1601-24-862-056",
+    "name": "S. Sameera",
+    "gender": "F",
+    "email": "160124862056@cbit.org.in",
+    "cgpa": 8.4,
+    "attendance": 86,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "sameera-cbit",
+    "leetcode": 348,
+    "placement": {
+      "company": "Persistent Systems",
+      "role": "Software Engineer",
+      "package": "₹7.0 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Cloud & Microservices Implementation for Enterprise Scalability (S. Sameera)",
+      "domain": "Cloud & Microservices",
+      "guide": "Dr. M. Ramchander",
+      "cieScore": 84,
+      "seeScore": 86,
+      "status": "First Class"
+    },
+    "primarySkill": "Cloud & Microservices",
+    "rank": 56
+  },
+  {
+    "rollNo": "1601-24-862-057",
+    "name": "T. Tarun",
+    "gender": "M",
+    "email": "160124862057@cbit.org.in",
+    "cgpa": 8.79,
+    "attendance": 90,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "tarun-cbit",
+    "leetcode": 395,
+    "placement": {
+      "company": "LTIMindtree",
+      "role": "Software Engineer",
+      "package": "₹5.5 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "AI / Machine Learning Implementation for Enterprise Scalability (T. Tarun)",
+      "domain": "AI / Machine Learning",
+      "guide": "Dr. B. Indira (HoD)",
+      "cieScore": 88,
+      "seeScore": 88,
+      "status": "First Class with Distinction"
+    },
+    "primarySkill": "AI / Machine Learning",
+    "rank": 57
+  },
+  {
+    "rollNo": "1601-24-862-058",
+    "name": "V. Upendra",
+    "gender": "M",
+    "email": "160124862058@cbit.org.in",
+    "cgpa": 9.18,
+    "attendance": 94,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "upendra-cbit",
+    "leetcode": 442,
+    "placement": {
+      "company": "Capgemini",
+      "role": "Senior Analyst",
+      "package": "₹5.75 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Database & Big Data Implementation for Enterprise Scalability (V. Upendra)",
+      "domain": "Database & Big Data",
+      "guide": "Dr. G. N. R. Prasad",
+      "cieScore": 92,
+      "seeScore": 93,
+      "status": "First Class with Distinction"
+    },
+    "primarySkill": "Database & Big Data",
+    "rank": 58
+  },
+  {
+    "rollNo": "1601-24-862-059",
+    "name": "Y. Vineela",
+    "gender": "F",
+    "email": "160124862059@cbit.org.in",
+    "cgpa": 7.27,
+    "attendance": 76,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "vineela-cbit",
+    "leetcode": 212,
+    "placement": {
+      "company": "CBIT Incubation (Startup)",
+      "role": "Founding Engineer",
+      "package": "₹9.0 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Web Security & Blockchain Implementation for Enterprise Scalability (Y. Vineela)",
+      "domain": "Web Security & Blockchain",
+      "guide": "Sri P. Krishna Prasad",
+      "cieScore": 82,
+      "seeScore": 84,
+      "status": "First Class"
+    },
+    "primarySkill": "Web Security & Blockchain",
+    "rank": 59
+  },
+  {
+    "rollNo": "1601-24-862-060",
+    "name": "A. Yogesh",
+    "gender": "M",
+    "email": "160124862060@cbit.org.in",
+    "cgpa": 7.66,
+    "attendance": 79,
+    "batch": "MCA 2024 Senior Batch",
+    "github": "yogesh-cbit",
+    "leetcode": 259,
+    "placement": {
+      "company": "TCS Digital",
+      "role": "System Engineer",
+      "package": "₹7.5 LPA",
+      "status": "Placed"
+    },
+    "majorProject": {
+      "title": "Full Stack Architecture Implementation for Enterprise Scalability (A. Yogesh)",
+      "domain": "Full Stack Architecture",
+      "guide": "Sri B. Srinivas S. P. Kumar",
+      "cieScore": 82,
+      "seeScore": 82,
+      "status": "First Class"
+    },
+    "primarySkill": "Full Stack Architecture",
+    "rank": 60
+  }
+]
