@@ -46,6 +46,7 @@ const dbMarksPath = path.join(dataDir, 'realtime_marks.json');
 const dbSeniorsPath = path.join(dataDir, 'realtime_seniors.json');
 const dbPinsPath = path.join(dataDir, 'realtime_pins.json');
 const dbSecurityPinsPath = path.join(dataDir, 'realtime_security_pins.json');
+const dbSecurityPinsCsvPath = path.join(dataDir, 'realtime_security_pins.csv');
 const dbNoticesPath = path.join(dataDir, 'realtime_notices.json');
 
 if (!fs.existsSync(dbLoginsPath)) {
@@ -121,6 +122,29 @@ function getAuthorizedPins() {
   }
 }
 
+function escapeCsvCell(value) {
+  const str = value === undefined || value === null ? '' : String(value);
+  return `"${str.replace(/"/g, '""')}"`;
+}
+
+function writeSecurityPinsCsv(records) {
+  const headers = ['id', 'facultyName', 'facultyEmail', 'pin', 'role', 'action', 'updatedBy', 'updatedAt'];
+  const lines = [headers.join(',')];
+  for (const rec of records) {
+    lines.push(headers.map(h => escapeCsvCell(rec[h] || '')).join(','));
+  }
+  fs.writeFileSync(dbSecurityPinsCsvPath, lines.join('\n') + '\n', 'utf8');
+}
+
+if (!fs.existsSync(dbSecurityPinsCsvPath)) {
+  try {
+    const initialRecords = fs.existsSync(dbSecurityPinsPath)
+      ? JSON.parse(fs.readFileSync(dbSecurityPinsPath, 'utf8'))
+      : [];
+    writeSecurityPinsCsv(Array.isArray(initialRecords) ? initialRecords : []);
+  } catch {}
+}
+
 function saveSecurityPinRecord({ facultyName, facultyEmail, pin, role = 'Faculty', updatedBy = 'System', action = 'Entered' }) {
   if (!pin) return;
   try {
@@ -143,7 +167,9 @@ function saveSecurityPinRecord({ facultyName, facultyEmail, pin, role = 'Faculty
     } else {
       records.unshift(entry);
     }
-    fs.writeFileSync(dbSecurityPinsPath, JSON.stringify(records.slice(0, 100), null, 2));
+    const trimmed = records.slice(0, 100);
+    fs.writeFileSync(dbSecurityPinsPath, JSON.stringify(trimmed, null, 2));
+    writeSecurityPinsCsv(trimmed);
   } catch {}
 }
 
@@ -477,6 +503,7 @@ app.get('/api/realtime/security-pins', (req, res) => {
       success: true,
       count: records.length,
       databaseFile: 'data/realtime_security_pins.json',
+      csvFile: 'data/realtime_security_pins.csv',
       pins: records
     });
   } catch (error) {
@@ -523,9 +550,10 @@ app.post('/api/realtime/security-pins', (req, res) => {
       records.unshift(entry);
     }
     fs.writeFileSync(dbSecurityPinsPath, JSON.stringify(records, null, 2));
+    writeSecurityPinsCsv(records);
     res.json({
       success: true,
-      message: `Security PIN stored in database for ${cleanEmail}`,
+      message: `Security PIN stored in database & CSV for ${cleanEmail}`,
       record: entry,
       totalRecords: records.length
     });
