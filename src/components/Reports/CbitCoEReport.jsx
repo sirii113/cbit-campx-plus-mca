@@ -99,30 +99,10 @@ export const CbitCoEReport = () => {
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            {/* Cohort Switcher */}
-            <div className="flex items-center bg-slate-100 p-1 rounded-xl text-xs font-bold font-mono">
-              <button
-                type="button"
-                onClick={() => { sounds.playTick(); toggleCohort('current'); }}
-                className={`px-2.5 py-1.5 rounded-lg transition-all cursor-pointer ${
-                  selectedCohort === 'current'
-                    ? 'bg-amber-400 text-slate-950 font-black shadow-sm'
-                    : 'text-slate-600 hover:text-slate-900'
-                }`}
-              >
-                🌟 Current (25-27)
-              </button>
-              <button
-                type="button"
-                onClick={() => { sounds.playTick(); toggleCohort('seniors'); }}
-                className={`px-2.5 py-1.5 rounded-lg transition-all cursor-pointer ${
-                  selectedCohort === 'seniors'
-                    ? 'bg-indigo-600 text-white font-black shadow-sm'
-                    : 'text-slate-600 hover:text-slate-900'
-                }`}
-              >
-                🎓 Seniors (23-25)
-              </button>
+            {/* Active Cohort Badge: MCA 2024 Senior Batch */}
+            <div className="flex items-center bg-indigo-50 border border-indigo-200 px-3 py-1.5 rounded-xl text-xs font-bold font-mono text-indigo-900">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 mr-2"></span>
+              <span>🎓 MCA 2024 Senior Batch (60 Scholars)</span>
             </div>
 
             {/* Report Mode Switcher */}

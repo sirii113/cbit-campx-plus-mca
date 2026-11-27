@@ -124,7 +124,7 @@ export const PlacementReadinessDashboard = () => {
           <div>
             <div className="flex items-center gap-2">
               <h4 className="font-black text-white text-sm">
-                Senior MCA Batch (2023–2025) Placement Track Benchmark
+                CBIT MCA 2024 Senior Batch Placement Track Record
               </h4>
               <span className="text-[10px] bg-emerald-500/20 text-emerald-300 font-mono font-bold px-2 py-0.5 rounded-full border border-emerald-500/30">
                 55/60 Recruited (91.7%)
@@ -137,15 +137,9 @@ export const PlacementReadinessDashboard = () => {
         </div>
 
         <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={() => {
-              toggleCohort(appCohort === 'seniors' ? 'current' : 'seniors');
-            }}
-            className="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold rounded-xl transition shadow-md shadow-purple-600/30 cursor-pointer flex items-center gap-1.5"
-          >
-            <span>{appCohort === 'seniors' ? 'Switch to Current Batch (25-27)' : 'Switch to Senior Batch (23-25)'}</span>
-          </button>
+          <span className="px-3.5 py-2 bg-indigo-600/80 text-white text-xs font-bold rounded-xl border border-indigo-400/30 shadow-md font-mono">
+            🎓 MCA 2024 Senior Batch
+          </span>
         </div>
       </div>
 

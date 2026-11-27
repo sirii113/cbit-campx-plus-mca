@@ -193,37 +193,12 @@ export const MarksEntryTable = () => {
               {selectedCourse.name}
             </h2>
 
-            {/* Cohort Switcher inside Marks Entry Table */}
+            {/* Active Cohort Badge inside Marks Entry Table */}
             <div className="flex flex-wrap items-center gap-1.5 pt-2">
-              <span className="text-xs text-slate-400 font-bold mr-1">Cohort Selection:</span>
-              <button
-                type="button"
-                onClick={() => {
-                  sounds.playTick();
-                  toggleCohort('current');
-                }}
-                className={`px-3 py-1 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                  selectedCohort === 'current'
-                    ? 'bg-amber-400 text-slate-950 font-black shadow-md'
-                    : 'bg-slate-800/80 text-slate-400 hover:text-white hover:bg-slate-700'
-                }`}
-              >
-                🌟 Current Batch (2025–27 · Active CIE)
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  sounds.playTick();
-                  toggleCohort('seniors');
-                }}
-                className={`px-3 py-1 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                  selectedCohort === 'seniors'
-                    ? 'bg-indigo-600 text-white font-black shadow-md'
-                    : 'bg-slate-800/80 text-slate-400 hover:text-white hover:bg-slate-700'
-                }`}
-              >
-                🎓 Senior Batch (2023–25 · Historical & Benchmarks)
-              </button>
+              <span className="text-xs text-slate-400 font-bold mr-1">Active Batch:</span>
+              <div className="px-3 py-1 rounded-xl text-xs font-black bg-indigo-600 text-white shadow-md flex items-center gap-1.5">
+                <span>🎓 CBIT MCA 2024 Senior Batch (60 Scholars · 1601-24-862 Series)</span>
+              </div>
             </div>
 
             {/* Semester Filter Tabs inside Marks Entry Table */}
@@ -315,7 +290,7 @@ export const MarksEntryTable = () => {
           <div>
             <div className="flex items-center gap-2">
               <span className="font-black text-white text-sm">
-                Senior Batch (2023–2025) Performance Benchmark
+                CBIT MCA 2024 Senior Batch Performance Benchmark
               </span>
               <span className="text-[10px] bg-purple-900/90 text-purple-200 font-mono font-bold px-2.5 py-0.5 rounded-full border border-purple-700">
                 Course: {selectedCourse.code} ({selectedCourse.short})

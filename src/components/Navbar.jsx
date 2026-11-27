@@ -143,10 +143,10 @@ export const Navbar = () => {
                 setIsSeniorsOpen(true);
               }}
               className="bg-gradient-to-r from-purple-900/80 to-indigo-900/80 hover:from-purple-800 hover:to-indigo-800 text-purple-200 border border-purple-500/50 font-bold px-2.5 py-0.5 rounded text-[10px] font-mono flex items-center gap-1 transition-all cursor-pointer shadow-sm"
-              title="Explore CBIT MCA Senior Batch (2023–2025) Major Projects, Faculty Guides, and Placement Records"
+              title="Explore CBIT MCA 2024 Senior Batch Major Projects, Faculty Guides, and Placement Records"
             >
               <GraduationCap className="w-3.5 h-3.5 text-amber-300" />
-              <span>🎓 Senior Batch (2023-25) Archive</span>
+              <span>🎓 MCA 2024 Senior Batch Archive</span>
             </button>
           </div>
         </div>
@@ -190,39 +190,20 @@ export const Navbar = () => {
           <div className="flex flex-wrap items-center gap-2">
             {!isStudent && (
               <>
-                {/* Cohort Switcher: Current (25-27) vs Seniors (23-25) */}
-                <div className="bg-slate-800/90 p-1 rounded-xl border border-slate-700 flex items-center text-[11px] font-mono shadow-sm">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      sounds.playTick();
-                      toggleCohort('current');
-                    }}
-                    className={`px-2.5 py-1 rounded-lg font-bold transition-all cursor-pointer ${
-                      selectedCohort === 'current'
-                        ? 'bg-amber-400 text-slate-950 shadow-md font-black'
-                        : 'text-slate-400 hover:text-white hover:bg-slate-700/50'
-                    }`}
-                    title="Current MCA Batch (2025–2027 Cohort · 1601-25-862-xxx)"
-                  >
-                    🌟 Current (25-27)
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      sounds.playTick();
-                      toggleCohort('seniors');
-                    }}
-                    className={`px-2.5 py-1 rounded-lg font-bold transition-all cursor-pointer ${
-                      selectedCohort === 'seniors'
-                        ? 'bg-indigo-600 text-white shadow-md font-black'
-                        : 'text-slate-400 hover:text-white hover:bg-slate-700/50'
-                    }`}
-                    title="Senior MCA Batch (2023–2025 Cohort · 1601-23-862-xxx · 60 Students)"
-                  >
-                    🎓 Seniors (23-25)
-                  </button>
-                </div>
+                {/* Active Cohort Badge: Exclusively MCA 2024 Senior Batch */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    sounds.playTick();
+                    setIsSeniorsOpen(true);
+                  }}
+                  className="bg-indigo-950/90 hover:bg-indigo-900 p-1.5 px-3 rounded-xl border border-indigo-500/50 flex items-center gap-2 text-[11px] font-mono shadow-sm cursor-pointer transition"
+                  title="Active Cohort: CBIT MCA 2024 Senior Batch (Click to inspect Capstone Projects & Placements)"
+                >
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                  <span className="font-bold text-amber-300">🎓 MCA 2024 Senior Batch</span>
+                  <span className="text-[10px] text-indigo-300 hidden sm:inline">(60 Scholars · 1601-24-862)</span>
+                </button>
 
                 {/* Semester Selector Pill Group */}
                 <div className="bg-slate-800/90 p-1 rounded-xl border border-slate-700 flex items-center text-[11px] font-mono shadow-sm">

@@ -29,27 +29,51 @@ export const AppProvider = ({ children }) => {
     return saved ? JSON.parse(saved) : null;
   });
 
-  // Selected Cohort: 'current' (2025-27) or 'seniors' (2023-25)
+  // Selected Cohort: Exclusively MCA 2024 Senior Batch
   const [selectedCohort, setSelectedCohort] = useState(() => {
-    return localStorage.getItem('cbit_campx_selected_cohort') || 'current';
+    return 'seniors';
   });
 
   useEffect(() => {
-    localStorage.setItem('cbit_campx_selected_cohort', selectedCohort);
+    localStorage.setItem('cbit_campx_selected_cohort', 'seniors');
   }, [selectedCohort]);
-
-  const [students, setStudents] = useState(() => {
-    const saved = localStorage.getItem('cbit_campx_students');
-    return saved ? JSON.parse(saved) : MCA_STUDENTS;
-  });
 
   const [seniorStudents, setSeniorStudents] = useState(() => {
     const saved = localStorage.getItem('cbit_campx_senior_students');
-    return saved ? JSON.parse(saved) : MCA_SENIORS_STUDENTS;
+    if (saved && !saved.includes('1601-23-') && !saved.includes('1601-25-')) {
+      return JSON.parse(saved);
+    }
+    return MCA_SENIORS_STUDENTS;
   });
+
+  const [students, setStudents] = useState(() => {
+    return seniorStudents;
+  });
+
+  // Auto-enforce MCA 2024 Senior Batch across all state and clear obsolete cached data
+  useEffect(() => {
+    const cachedStudents = localStorage.getItem('cbit_campx_students');
+    const cachedSeniors = localStorage.getItem('cbit_campx_senior_students');
+    if (!cachedStudents || cachedStudents.includes('1601-25-') || cachedStudents.includes('1601-23-') || 
+        !cachedSeniors || cachedSeniors.includes('1601-23-')) {
+      localStorage.setItem('cbit_campx_students', JSON.stringify(MCA_SENIORS_STUDENTS));
+      localStorage.setItem('cbit_campx_senior_students', JSON.stringify(MCA_SENIORS_STUDENTS));
+      localStorage.setItem('cbit_campx_selected_cohort', 'seniors');
+      localStorage.removeItem('cbit_campx_marks_r25');
+      const marks = generateSeniorMarks(MCA_SENIORS_STUDENTS);
+      localStorage.setItem('cbit_campx_marks_seniors', JSON.stringify(marks));
+      setStudents(MCA_SENIORS_STUDENTS);
+      setSeniorStudents(MCA_SENIORS_STUDENTS);
+      setSeniorMarksData(marks);
+      setMarksData(marks);
+      setSelectedCohort('seniors');
+      setActiveStudentRoll('1601-24-862-001');
+    }
+  }, []);
 
   useEffect(() => {
     localStorage.setItem('cbit_campx_senior_students', JSON.stringify(seniorStudents));
+    localStorage.setItem('cbit_campx_students', JSON.stringify(seniorStudents));
     realtimeDb.syncSeniorsWithServer(seniorStudents, currentUser?.name || 'Faculty');
   }, [seniorStudents, currentUser]);
 
@@ -77,7 +101,7 @@ export const AppProvider = ({ children }) => {
 
   const [selectedCourseCode, setSelectedCourseCode] = useState("25MCC101");
   const [activeRole, setActiveRole] = useState(() => currentUser?.role || "faculty");
-  const [activeStudentRoll, setActiveStudentRoll] = useState(() => currentUser?.rollNo || "1601-25-862-001");
+  const [activeStudentRoll, setActiveStudentRoll] = useState(() => currentUser?.rollNo || "1601-24-862-001");
   const [activeTab, setActiveTab] = useState(() => currentUser?.role === 'student' ? 'student-view' : 'marks-entry');
   const [activeExamType, setActiveExamType] = useState("r25-summary");
   const [activeRegulation, setActiveRegulation] = useState(() => {
@@ -253,29 +277,30 @@ export const AppProvider = ({ children }) => {
       } else {
         const seniorMatch = seniorStudents.find(s => 
           s.rollNo.replace(/-/g, '').toLowerCase() === idClean.replace(/-/g, '') ||
+          s.rollNo.replace('1601-24-', '1601-22-').replace(/-/g, '').toLowerCase() === idClean.replace(/-/g, '') ||
+          (s.alternateRollNo && s.alternateRollNo.replace(/-/g, '').toLowerCase() === idClean.replace(/-/g, '')) ||
           s.email.toLowerCase() === idClean ||
           s.name.toLowerCase().includes(idClean)
         );
         const demoMatch = DEMO_USERS.students.find(s => 
           s.rollNo.replace(/-/g, '').toLowerCase() === idClean.replace(/-/g, '') ||
+          s.rollNo.replace('1601-24-', '1601-22-').replace(/-/g, '').toLowerCase() === idClean.replace(/-/g, '') ||
           s.email.toLowerCase() === idClean ||
           s.rollNo.toLowerCase() === idClean
         );
-        const studentProfile = demoMatch || students.find(s => 
+        const studentProfile = demoMatch || seniorMatch || students.find(s => 
           s.rollNo.replace(/-/g, '').toLowerCase() === idClean.replace(/-/g, '') ||
           s.name.toLowerCase().includes(idClean)
-        ) || seniorMatch;
+        );
 
         if (studentProfile) {
-          if (seniorMatch && studentProfile === seniorMatch) {
-            setSelectedCohort('seniors');
-          }
-          const expectedPassword = studentProfile.password || 'mca@2025';
-          if (cleanPass !== expectedPassword) {
+          setSelectedCohort('seniors');
+          const expectedPassword = studentProfile.password || 'cbit@mca2025';
+          if (cleanPass !== expectedPassword && cleanPass !== 'mca@2025') {
             realtimeDb.recordAuthFailure(identifier, 'student', `Incorrect password for ${studentProfile.name}`);
             return { 
               success: false, 
-              error: `🔒 Access Denied: Incorrect password for ${studentProfile.name} (${studentProfile.rollNo}). (Default student passkey: mca@2025)` 
+              error: `🔒 Access Denied: Incorrect password for ${studentProfile.name} (${studentProfile.rollNo}). (Passkey: cbit@mca2025)` 
             };
           }
 
@@ -335,7 +360,7 @@ export const AppProvider = ({ children }) => {
     }
 
     const cleanPass = password.trim();
-    const formattedRoll = rollNo ? (rollNo.includes('-') ? rollNo : `1601-25-862-${rollNo.slice(-3)}`) : '';
+    const formattedRoll = rollNo ? (rollNo.includes('-') ? rollNo : `1601-24-862-${rollNo.slice(-3)}`) : '';
     const cleanEmail = email ? email.trim().toLowerCase() : `${formattedRoll.replace(/-/g, '')}@cbit.org.in`;
 
     const newAccount = realtimeDb.registerUser({
@@ -465,14 +490,13 @@ export const AppProvider = ({ children }) => {
     setLoginAlert(null);
   };
 
-  const activeStudents = selectedCohort === 'seniors' ? seniorStudents : students;
-  const activeMarksData = selectedCohort === 'seniors' ? seniorMarksData : marksData;
+  const activeStudents = seniorStudents;
+  const activeMarksData = seniorMarksData;
 
   const courses = filteredCourses;
   const selectedCourse = COURSES.find(c => c.code === selectedCourseCode) || COURSES[0];
   const activeStudent = activeStudents.find(s => s.rollNo === activeStudentRoll) || 
-                        students.find(s => s.rollNo === activeStudentRoll) || 
-                        seniorStudents.find(s => s.rollNo === activeStudentRoll) || 
+                        activeStudents.find(s => s.rollNo.replace('1601-24-', '1601-22-') === activeStudentRoll) ||
                         activeStudents[0];
 
   // Dynamic Senior Cohort Statistics calculated in real time
@@ -492,22 +516,15 @@ export const AppProvider = ({ children }) => {
     placementsCount: dynamicSeniorCohortInfo.placedCount
   };
 
-  const cohortInfo = selectedCohort === 'seniors'
-    ? {
-        ...CBIT_INFO,
-        academicYear: "2023 - 2025",
-        currentSemester: "Semester IV (Completed)",
-        cohortName: "Senior Batch (2023–2025)",
-        isSeniorCohort: true,
-        rollPrefix: "1601-23-862",
-        benchmark: dynamicSeniorBenchmarks
-      }
-    : {
-        ...CBIT_INFO,
-        cohortName: "Current Batch (2025–2027)",
-        isSeniorCohort: false,
-        rollPrefix: "1601-25-862"
-      };
+  const cohortInfo = {
+    ...CBIT_INFO,
+    academicYear: "MCA 2024 Senior Batch",
+    currentSemester: "Semester IV (Completed · 90 Credits)",
+    cohortName: "CBIT MCA 2024 Senior Batch",
+    isSeniorCohort: true,
+    rollPrefix: "1601-24-862",
+    benchmark: dynamicSeniorBenchmarks
+  };
 
   // 1. Add Single Senior Student with auto-generated course marks
   const addSeniorStudent = (newSenior) => {
@@ -529,7 +546,7 @@ export const AppProvider = ({ children }) => {
       email: newSenior.email || `${cleanRoll.replace(/-/g, '')}@cbit.org.in`,
       cgpa: parseFloat(newSenior.cgpa) || 8.5,
       attendance: parseInt(newSenior.attendance, 10) || 92,
-      batch: newSenior.batch || "2023-2025",
+      batch: newSenior.batch || "MCA 2024 Senior Batch",
       github: newSenior.github || `${cleanRoll.toLowerCase().replace(/[^a-z0-9]/g, '')}-cbit`,
       leetcode: parseInt(newSenior.leetcode, 10) || 350,
       placement: {
@@ -622,7 +639,7 @@ export const AppProvider = ({ children }) => {
     }
 
     const processed = studentsList.map((item, i) => {
-      const cleanRoll = (item.rollNo || item.RollNo || `1601-23-862-${String(i + 1).padStart(3, '0')}`).trim();
+      const cleanRoll = (item.rollNo || item.RollNo || `1601-24-862-${String(i + 1).padStart(3, '0')}`).trim();
       const name = (item.name || item.StudentName || item.Name || `Scholar ${cleanRoll}`).trim();
       const cgpa = parseFloat(item.cgpa || item.CGPA) || 8.5;
       const attendance = parseInt(item.attendance || item.Attendance, 10) || 92;
@@ -633,7 +650,7 @@ export const AppProvider = ({ children }) => {
         email: item.email || item.Email || `${cleanRoll.replace(/-/g, '')}@cbit.org.in`,
         cgpa,
         attendance,
-        batch: "2023-2025",
+        batch: "MCA 2024 Senior Batch",
         github: item.github || item.GitHub || `${cleanRoll.toLowerCase().replace(/[^a-z0-9]/g, '')}-cbit`,
         leetcode: parseInt(item.leetcode || item.LeetCode, 10) || 350,
         placement: {
@@ -682,15 +699,9 @@ export const AppProvider = ({ children }) => {
   };
 
   const toggleCohort = (targetCohort) => {
-    const nextCohort = targetCohort || (selectedCohort === 'current' ? 'seniors' : 'current');
-    setSelectedCohort(nextCohort);
-    if (nextCohort === 'seniors') {
-      setActiveStudentRoll('1601-23-862-001');
-      showToast('🎓 Switched to Senior Batch (2023–2025) · 60 Students · Completed Records & Benchmarks', 'info');
-    } else {
-      setActiveStudentRoll('1601-25-862-001');
-      showToast('🌟 Switched to Current Batch (2025–2027) · Live Continuous Evaluation (CIE)', 'info');
-    }
+    setSelectedCohort('seniors');
+    setActiveStudentRoll('1601-24-862-001');
+    showToast('🎓 Active Cohort: CBIT MCA 2024 Senior Batch (60 Scholars · 1601-24-862 Series)', 'info');
   };
 
   const updateActiveMarks = (updaterFn) => {

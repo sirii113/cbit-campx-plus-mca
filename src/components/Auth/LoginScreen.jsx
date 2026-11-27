@@ -621,7 +621,7 @@ export const LoginScreen = () => {
                         required
                         value={loginIdentifier}
                         onChange={(e) => setLoginIdentifier(e.target.value)}
-                        placeholder={loginRole === 'faculty' ? 'e.g. b.indira@cbit.ac.in or newly registered email' : 'e.g. 1601-25-862-001 or newly registered roll'}
+                        placeholder={loginRole === 'faculty' ? 'e.g. b.indira@cbit.ac.in or faculty email' : 'e.g. 1601-24-862-001 or registered roll'}
                         className="w-full bg-slate-950 border border-slate-700 rounded-2xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono"
                       />
                     </div>
@@ -987,7 +987,7 @@ export const LoginScreen = () => {
                             required
                             value={regRollNumber}
                             onChange={(e) => setRegRollNumber(e.target.value)}
-                            placeholder="e.g. 1601-25-862-061"
+                            placeholder="e.g. 1601-24-862-061"
                             className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-amber-300 placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 font-mono"
                           />
                         </div>
@@ -1225,81 +1225,86 @@ export const LoginScreen = () => {
                 </div>
                 <div>
                   <h3 className="text-xs font-bold text-white uppercase tracking-wider">
-                    MCA Student Registry
+                    MCA 2024 Senior Batch Registry
                   </h3>
-                  <p className="text-[10px] text-slate-400">R-25 Autonomous Batch</p>
+                  <p className="text-[10px] text-amber-300">CBIT Autonomous Senior Scholars (1601-24-862 Series)</p>
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                <div className="p-2.5 rounded-2xl bg-slate-950 border border-slate-800 flex flex-col justify-between">
+                <div className="p-2.5 rounded-2xl bg-indigo-950/40 border border-indigo-800/60 flex flex-col justify-between">
                   <div>
-                    <div className="text-xs font-bold text-amber-300 truncate">Sai Praneeth (001)</div>
-                    <div className="text-[10px] text-slate-400 font-mono">1601-25-862-001</div>
-                    <div className="text-[9px] text-slate-500 font-sans truncate">Current 2025-27 Batch</div>
-                  </div>
-                  <div className="flex items-center gap-1.5 mt-2">
-                    <button
-                      type="button"
-                      onClick={() => handleOpenEmailReset('160125862001@cbit.org.in')}
-                      title="Generate passkey via student email"
-                      className="p-1 rounded-lg bg-slate-900 hover:bg-indigo-950 border border-slate-700 hover:border-indigo-500 text-indigo-400"
-                    >
-                      <KeyRound className="w-3 h-3 text-amber-400" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleSelectStudent({ rollNo: '1601-25-862-001', name: 'A. Sai Praneeth' })}
-                      className="flex-1 py-1 rounded-lg bg-indigo-950 hover:bg-indigo-900 text-indigo-300 border border-indigo-800 text-[10px] font-bold flex items-center justify-center gap-1"
-                    >
-                      <span>Select</span>
-                      <ArrowRight className="w-2.5 h-2.5" />
-                    </button>
-                  </div>
-                </div>
-
-                <div className="p-2.5 rounded-2xl bg-slate-950 border border-slate-800 flex flex-col justify-between">
-                  <div>
-                    <div className="text-xs font-bold text-rose-400 truncate">Vigneshwar (009)</div>
-                    <div className="text-[10px] text-slate-400 font-mono">1601-25-862-009</div>
-                    <div className="text-[9px] text-slate-500 font-sans truncate">Current 2025-27 Batch</div>
-                  </div>
-                  <div className="flex items-center gap-1.5 mt-2">
-                    <button
-                      type="button"
-                      onClick={() => handleOpenEmailReset('160125862009@cbit.org.in')}
-                      title="Generate passkey via student email"
-                      className="p-1 rounded-lg bg-slate-900 hover:bg-indigo-950 border border-slate-700 hover:border-indigo-500 text-indigo-400"
-                    >
-                      <KeyRound className="w-3 h-3 text-amber-400" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleSelectStudent({ rollNo: '1601-25-862-009', name: 'K. Vigneshwar' })}
-                      className="flex-1 py-1 rounded-lg bg-indigo-950 hover:bg-indigo-900 text-indigo-300 border border-indigo-800 text-[10px] font-bold flex items-center justify-center gap-1"
-                    >
-                      <span>Select</span>
-                      <ArrowRight className="w-2.5 h-2.5" />
-                    </button>
-                  </div>
-                </div>
-
-                <div className="p-2.5 rounded-2xl bg-purple-950/40 border border-purple-800/60 flex flex-col justify-between">
-                  <div>
-                    <div className="flex items-center gap-1">
-                      <span className="text-[9px] bg-purple-500/20 text-purple-300 font-bold px-1.5 py-0.2 rounded font-mono">Senior</span>
-                      <div className="text-xs font-bold text-amber-300 truncate">Venkata Sai (001)</div>
-                    </div>
-                    <div className="text-[10px] text-purple-300/80 font-mono">1601-23-862-001</div>
+                    <div className="text-xs font-bold text-amber-300 truncate">Venkata Sai (001)</div>
+                    <div className="text-[10px] text-indigo-300 font-mono">1601-24-862-001</div>
                     <div className="text-[9px] text-emerald-400 font-sans truncate">Oracle · ₹16.0 LPA</div>
                   </div>
                   <div className="flex items-center gap-1.5 mt-2">
                     <button
                       type="button"
-                      onClick={() => handleSelectStudent({ rollNo: '1601-23-862-001', name: 'K. Venkata Sai' })}
-                      className="flex-1 py-1 rounded-lg bg-purple-900 hover:bg-purple-800 text-purple-200 border border-purple-700 text-[10px] font-bold flex items-center justify-center gap-1 cursor-pointer"
+                      onClick={() => handleOpenEmailReset('160124862001@cbit.org.in')}
+                      title="Generate passkey via student email"
+                      className="p-1 rounded-lg bg-slate-900 hover:bg-indigo-950 border border-slate-700 hover:border-indigo-500 text-indigo-400"
                     >
-                      <span>Select Senior</span>
+                      <KeyRound className="w-3 h-3 text-amber-400" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleSelectStudent({ rollNo: '1601-24-862-001', name: 'K. Venkata Sai' })}
+                      className="flex-1 py-1 rounded-lg bg-indigo-900 hover:bg-indigo-800 text-indigo-200 border border-indigo-700 text-[10px] font-bold flex items-center justify-center gap-1 cursor-pointer"
+                    >
+                      <span>Select</span>
+                      <ArrowRight className="w-2.5 h-2.5" />
+                    </button>
+                  </div>
+                </div>
+
+                <div className="p-2.5 rounded-2xl bg-indigo-950/40 border border-indigo-800/60 flex flex-col justify-between">
+                  <div>
+                    <div className="text-xs font-bold text-amber-300 truncate">Harika Reddy (002)</div>
+                    <div className="text-[10px] text-indigo-300 font-mono">1601-24-862-002</div>
+                    <div className="text-[9px] text-emerald-400 font-sans truncate">ServiceNow · ₹14.5 LPA</div>
+                  </div>
+                  <div className="flex items-center gap-1.5 mt-2">
+                    <button
+                      type="button"
+                      onClick={() => handleOpenEmailReset('160124862002@cbit.org.in')}
+                      title="Generate passkey via student email"
+                      className="p-1 rounded-lg bg-slate-900 hover:bg-indigo-950 border border-slate-700 hover:border-indigo-500 text-indigo-400"
+                    >
+                      <KeyRound className="w-3 h-3 text-amber-400" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleSelectStudent({ rollNo: '1601-24-862-002', name: 'P. Harika Reddy' })}
+                      className="flex-1 py-1 rounded-lg bg-indigo-900 hover:bg-indigo-800 text-indigo-200 border border-indigo-700 text-[10px] font-bold flex items-center justify-center gap-1 cursor-pointer"
+                    >
+                      <span>Select</span>
+                      <ArrowRight className="w-2.5 h-2.5" />
+                    </button>
+                  </div>
+                </div>
+
+                <div className="p-2.5 rounded-2xl bg-indigo-950/40 border border-indigo-800/60 flex flex-col justify-between">
+                  <div>
+                    <div className="text-xs font-bold text-amber-300 truncate">Sai Teja (003)</div>
+                    <div className="text-[10px] text-indigo-300 font-mono">1601-24-862-003</div>
+                    <div className="text-[9px] text-emerald-400 font-sans truncate">Salesforce · ₹12.0 LPA</div>
+                  </div>
+                  <div className="flex items-center gap-1.5 mt-2">
+                    <button
+                      type="button"
+                      onClick={() => handleOpenEmailReset('160124862003@cbit.org.in')}
+                      title="Generate passkey via student email"
+                      className="p-1 rounded-lg bg-slate-900 hover:bg-indigo-950 border border-slate-700 hover:border-indigo-500 text-indigo-400"
+                    >
+                      <KeyRound className="w-3 h-3 text-amber-400" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleSelectStudent({ rollNo: '1601-24-862-003', name: 'Ch. Sai Teja' })}
+                      className="flex-1 py-1 rounded-lg bg-indigo-900 hover:bg-indigo-800 text-indigo-200 border border-indigo-700 text-[10px] font-bold flex items-center justify-center gap-1 cursor-pointer"
+                    >
+                      <span>Select</span>
                       <ArrowRight className="w-2.5 h-2.5" />
                     </button>
                   </div>
@@ -1432,7 +1437,7 @@ export const LoginScreen = () => {
                     placeholder={
                       (loginRole === 'faculty') 
                         ? "e.g. b.indira@cbit.ac.in" 
-                        : "e.g. 1601-25-862-001 or student email"
+                        : "e.g. 1601-24-862-001 or student email"
                     }
                     className="w-full bg-slate-950 border border-slate-700 rounded-2xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono"
                   />

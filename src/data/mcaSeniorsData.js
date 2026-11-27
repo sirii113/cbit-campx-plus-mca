@@ -1,14 +1,14 @@
-// CBIT Department of Computer Applications (MCA) - Senior Batch Dataset (2023–2025 Cohort)
+// CBIT Department of Computer Applications (MCA) - Senior Batch Dataset (MCA 2024 Senior Batch)
 // Chaitanya Bharathi Institute of Technology (Autonomous), Gandipet, Hyderabad
-// Roll Numbers: 1601-23-862-001 through 1601-23-862-060
+// Roll Numbers: 1601-24-862-001 through 1601-24-862-060
 // Complete 4-Semester Historical Marks, Major Project Records, Placements & Benchmarks
 
 import { ALL_COURSES } from './mcaAllCourses';
 
 export const SENIOR_COHORT_INFO = {
-  batchName: "2023 - 2025 Senior MCA Cohort",
-  batchCode: "MCA-2023-25",
-  rollPrefix: "1601-23-862",
+  batchName: "CBIT MCA 2024 Senior Batch",
+  batchCode: "MCA-2024",
+  rollPrefix: "1601-24-862",
   department: "Department of Computer Applications (MCA)",
   college: "Chaitanya Bharathi Institute of Technology (Autonomous)",
   totalStudents: 60,
@@ -21,16 +21,16 @@ export const SENIOR_COHORT_INFO = {
   totalCreditsCompleted: 90
 };
 
-// 60 Authentic CBIT MCA Seniors (1601-23-862-001 to 060)
+// 60 Authentic CBIT MCA Seniors (1601-24-862-001 to 060)
 export const MCA_SENIORS_STUDENTS = [
   {
-    rollNo: "1601-23-862-001",
+    rollNo: "1601-24-862-001",
     name: "K. Venkata Sai",
     gender: "M",
-    email: "160123862001@cbit.org.in",
+    email: "160124862001@cbit.org.in",
     cgpa: 9.42,
     attendance: 94,
-    batch: "2023-2025",
+    batch: "MCA 2024 Senior Batch",
     github: "venkatasai-cbit",
     leetcode: 540,
     placement: { company: "Oracle India", role: "Associate Software Engineer", package: "₹16.0 LPA", status: "Placed" },
@@ -46,13 +46,13 @@ export const MCA_SENIORS_STUDENTS = [
     rank: 3
   },
   {
-    rollNo: "1601-23-862-002",
+    rollNo: "1601-24-862-002",
     name: "P. Harika Reddy",
     gender: "F",
-    email: "160123862002@cbit.org.in",
+    email: "160124862002@cbit.org.in",
     cgpa: 9.68,
     attendance: 98,
-    batch: "2023-2025",
+    batch: "MCA 2024 Senior Batch",
     github: "harika-reddy-p",
     leetcode: 610,
     placement: { company: "ServiceNow", role: "Software Engineer - Core Platform", package: "₹14.5 LPA", status: "Placed" },
@@ -68,13 +68,13 @@ export const MCA_SENIORS_STUDENTS = [
     rank: 2
   },
   {
-    rollNo: "1601-23-862-003",
+    rollNo: "1601-24-862-003",
     name: "Ch. Sai Teja",
     gender: "M",
-    email: "160123862003@cbit.org.in",
+    email: "160124862003@cbit.org.in",
     cgpa: 8.85,
     attendance: 88,
-    batch: "2023-2025",
+    batch: "MCA 2024 Senior Batch",
     github: "saiteja-ch",
     leetcode: 420,
     placement: { company: "Salesforce", role: "Member of Technical Staff", package: "₹12.0 LPA", status: "Placed" },
@@ -90,13 +90,13 @@ export const MCA_SENIORS_STUDENTS = [
     rank: 15
   },
   {
-    rollNo: "1601-23-862-004",
+    rollNo: "1601-24-862-004",
     name: "V. Lavanya",
     gender: "F",
-    email: "160123862004@cbit.org.in",
+    email: "160124862004@cbit.org.in",
     cgpa: 9.15,
     attendance: 92,
-    batch: "2023-2025",
+    batch: "MCA 2024 Senior Batch",
     github: "lavanya-v-dev",
     leetcode: 490,
     placement: { company: "JPMorgan Chase", role: "Software Analyst", package: "₹13.5 LPA", status: "Placed" },
@@ -112,13 +112,13 @@ export const MCA_SENIORS_STUDENTS = [
     rank: 8
   },
   {
-    rollNo: "1601-23-862-005",
+    rollNo: "1601-24-862-005",
     name: "M. Srikanth Varma",
     gender: "M",
-    email: "160123862005@cbit.org.in",
+    email: "160124862005@cbit.org.in",
     cgpa: 8.60,
     attendance: 86,
-    batch: "2023-2025",
+    batch: "MCA 2024 Senior Batch",
     github: "srikanth-varma",
     leetcode: 380,
     placement: { company: "TCS Digital", role: "Systems Engineer (Digital)", package: "₹7.5 LPA", status: "Placed" },
@@ -134,13 +134,13 @@ export const MCA_SENIORS_STUDENTS = [
     rank: 21
   },
   {
-    rollNo: "1601-23-862-006",
+    rollNo: "1601-24-862-006",
     name: "B. Akhil Kumar",
     gender: "M",
-    email: "160123862006@cbit.org.in",
+    email: "160124862006@cbit.org.in",
     cgpa: 8.40,
     attendance: 84,
-    batch: "2023-2025",
+    batch: "MCA 2024 Senior Batch",
     github: "akhil-kumar-b",
     leetcode: 340,
     placement: { company: "Cognizant GenC Next", role: "Programmer Analyst", package: "₹6.75 LPA", status: "Placed" },
@@ -156,13 +156,13 @@ export const MCA_SENIORS_STUDENTS = [
     rank: 28
   },
   {
-    rollNo: "1601-23-862-007",
+    rollNo: "1601-24-862-007",
     name: "D. Sneha Reddy",
     gender: "F",
-    email: "160123862007@cbit.org.in",
+    email: "160124862007@cbit.org.in",
     cgpa: 9.82,
     attendance: 99,
-    batch: "2023-2025",
+    batch: "MCA 2024 Senior Batch",
     github: "snehareddy-d",
     leetcode: 680,
     placement: { company: "Google India", role: "Software Engineer - Cloud AI", package: "₹24.0 LPA", status: "Placed" },
@@ -178,13 +178,13 @@ export const MCA_SENIORS_STUDENTS = [
     rank: 1
   },
   {
-    rollNo: "1601-23-862-008",
+    rollNo: "1601-24-862-008",
     name: "G. Rakesh Goud",
     gender: "M",
-    email: "160123862008@cbit.org.in",
+    email: "160124862008@cbit.org.in",
     cgpa: 7.95,
     attendance: 82,
-    batch: "2023-2025",
+    batch: "MCA 2024 Senior Batch",
     github: "rakesh-goud",
     leetcode: 260,
     placement: { company: "Accenture", role: "Advanced App Engineering Analyst", package: "₹4.5 LPA", status: "Placed" },
@@ -200,13 +200,13 @@ export const MCA_SENIORS_STUDENTS = [
     rank: 39
   },
   {
-    rollNo: "1601-23-862-009",
+    rollNo: "1601-24-862-009",
     name: "N. Mounika",
     gender: "F",
-    email: "160123862009@cbit.org.in",
+    email: "160124862009@cbit.org.in",
     cgpa: 8.95,
     attendance: 91,
-    batch: "2023-2025",
+    batch: "MCA 2024 Senior Batch",
     github: "mounika-n-dev",
     leetcode: 450,
     placement: { company: "NCR Voyix", role: "Software Engineer", package: "₹10.5 LPA", status: "Placed" },
@@ -222,13 +222,13 @@ export const MCA_SENIORS_STUDENTS = [
     rank: 12
   },
   {
-    rollNo: "1601-23-862-010",
+    rollNo: "1601-24-862-010",
     name: "T. Kalyan Krishna",
     gender: "M",
-    email: "160123862010@cbit.org.in",
+    email: "160124862010@cbit.org.in",
     cgpa: 8.70,
     attendance: 87,
-    batch: "2023-2025",
+    batch: "MCA 2024 Senior Batch",
     github: "kalyan-krishna-t",
     leetcode: 390,
     placement: { company: "Deloitte India", role: "Consultant - Cloud Architecture", package: "₹8.5 LPA", status: "Placed" },
@@ -244,13 +244,13 @@ export const MCA_SENIORS_STUDENTS = [
     rank: 18
   },
   {
-    rollNo: "1601-23-862-011",
+    rollNo: "1601-24-862-011",
     name: "A. Swathi",
     gender: "F",
-    email: "160123862011@cbit.org.in",
+    email: "160124862011@cbit.org.in",
     cgpa: 9.30,
     attendance: 95,
-    batch: "2023-2025",
+    batch: "MCA 2024 Senior Batch",
     github: "swathi-a",
     leetcode: 510,
     placement: { company: "ServiceNow", role: "Associate Software Engineer", package: "₹14.5 LPA", status: "Placed" },
@@ -266,13 +266,13 @@ export const MCA_SENIORS_STUDENTS = [
     rank: 5
   },
   {
-    rollNo: "1601-23-862-012",
+    rollNo: "1601-24-862-012",
     name: "C. Tarun Kumar",
     gender: "M",
-    email: "160123862012@cbit.org.in",
+    email: "160124862012@cbit.org.in",
     cgpa: 8.25,
     attendance: 83,
-    batch: "2023-2025",
+    batch: "MCA 2024 Senior Batch",
     github: "tarun-c-code",
     leetcode: 310,
     placement: { company: "Infosys", role: "Specialist Programmer", package: "₹6.0 LPA", status: "Placed" },
@@ -288,13 +288,13 @@ export const MCA_SENIORS_STUDENTS = [
     rank: 32
   },
   {
-    rollNo: "1601-23-862-013",
+    rollNo: "1601-24-862-013",
     name: "E. Bhavya Sri",
     gender: "F",
-    email: "160123862013@cbit.org.in",
+    email: "160124862013@cbit.org.in",
     cgpa: 9.05,
     attendance: 93,
-    batch: "2023-2025",
+    batch: "MCA 2024 Senior Batch",
     github: "bhavya-sri-e",
     leetcode: 470,
     placement: { company: "Virtusa", role: "Senior Consultant Engineer", package: "₹8.0 LPA", status: "Placed" },
@@ -310,13 +310,13 @@ export const MCA_SENIORS_STUDENTS = [
     rank: 10
   },
   {
-    rollNo: "1601-23-862-014",
+    rollNo: "1601-24-862-014",
     name: "K. Naveen Reddy",
     gender: "M",
-    email: "160123862014@cbit.org.in",
+    email: "160124862014@cbit.org.in",
     cgpa: 8.50,
     attendance: 85,
-    batch: "2023-2025",
+    batch: "MCA 2024 Senior Batch",
     github: "naveen-k-reddy",
     leetcode: 360,
     placement: { company: "Tech Mahindra", role: "Associate Software Engineer", package: "₹5.5 LPA", status: "Placed" },
@@ -332,13 +332,13 @@ export const MCA_SENIORS_STUDENTS = [
     rank: 25
   },
   {
-    rollNo: "1601-23-862-015",
+    rollNo: "1601-24-862-015",
     name: "L. Deepa Rani",
     gender: "F",
-    email: "160123862015@cbit.org.in",
+    email: "160124862015@cbit.org.in",
     cgpa: 8.90,
     attendance: 90,
-    batch: "2023-2025",
+    batch: "MCA 2024 Senior Batch",
     github: "deepa-rani-l",
     leetcode: 430,
     placement: { company: "EPAM Systems", role: "Junior Software Engineer", package: "₹8.0 LPA", status: "Placed" },
@@ -354,13 +354,13 @@ export const MCA_SENIORS_STUDENTS = [
     rank: 14
   },
   {
-    rollNo: "1601-23-862-016",
+    rollNo: "1601-24-862-016",
     name: "M. Aditya Varma",
     gender: "M",
-    email: "160123862016@cbit.org.in",
+    email: "160124862016@cbit.org.in",
     cgpa: 9.38,
     attendance: 94,
-    batch: "2023-2025",
+    batch: "MCA 2024 Senior Batch",
     github: "aditya-varma-m",
     leetcode: 530,
     placement: { company: "Oracle India", role: "Associate Software Engineer", package: "₹16.0 LPA", status: "Placed" },
@@ -376,13 +376,13 @@ export const MCA_SENIORS_STUDENTS = [
     rank: 4
   },
   {
-    rollNo: "1601-23-862-017",
+    rollNo: "1601-24-862-017",
     name: "P. Meghana",
     gender: "F",
-    email: "160123862017@cbit.org.in",
+    email: "160124862017@cbit.org.in",
     cgpa: 8.75,
     attendance: 88,
-    batch: "2023-2025",
+    batch: "MCA 2024 Senior Batch",
     github: "meghana-p-dev",
     leetcode: 400,
     placement: { company: "Cognizant GenC Next", role: "Programmer Analyst", package: "₹6.75 LPA", status: "Placed" },
@@ -398,13 +398,13 @@ export const MCA_SENIORS_STUDENTS = [
     rank: 17
   },
   {
-    rollNo: "1601-23-862-018",
+    rollNo: "1601-24-862-018",
     name: "R. Pranav Chary",
     gender: "M",
-    email: "160123862018@cbit.org.in",
+    email: "160124862018@cbit.org.in",
     cgpa: 8.10,
     attendance: 81,
-    batch: "2023-2025",
+    batch: "MCA 2024 Senior Batch",
     github: "pranav-chary",
     leetcode: 290,
     placement: { company: "Hexaware", role: "Software Engineer Trainee", package: "₹5.0 LPA", status: "Placed" },
@@ -420,13 +420,13 @@ export const MCA_SENIORS_STUDENTS = [
     rank: 35
   },
   {
-    rollNo: "1601-23-862-019",
+    rollNo: "1601-24-862-019",
     name: "S. Yamini",
     gender: "F",
-    email: "160123862019@cbit.org.in",
+    email: "160124862019@cbit.org.in",
     cgpa: 9.20,
     attendance: 94,
-    batch: "2023-2025",
+    batch: "MCA 2024 Senior Batch",
     github: "yamini-s",
     leetcode: 500,
     placement: { company: "Salesforce", role: "Software Engineer", package: "₹12.0 LPA", status: "Placed" },
@@ -442,13 +442,13 @@ export const MCA_SENIORS_STUDENTS = [
     rank: 7
   },
   {
-    rollNo: "1601-23-862-020",
+    rollNo: "1601-24-862-020",
     name: "V. Sandeep Reddy",
     gender: "M",
-    email: "160123862020@cbit.org.in",
+    email: "160124862020@cbit.org.in",
     cgpa: 8.65,
     attendance: 86,
-    batch: "2023-2025",
+    batch: "MCA 2024 Senior Batch",
     github: "sandeep-v-reddy",
     leetcode: 375,
     placement: { company: "TCS Digital", role: "Digital Innovator Engineer", package: "₹7.5 LPA", status: "Placed" },
@@ -505,7 +505,7 @@ const SENIOR_PROJECT_DOMAINS = [
 // Populate 021 through 060
 for (let i = 21; i <= 60; i++) {
   const numStr = i < 10 ? `00${i}` : `0${i}`;
-  const rollNo = `1601-23-862-${numStr}`;
+  const rollNo = `1601-24-862-${numStr}`;
   const nameIdx = (i - 21) % SENIOR_FIRST_NAMES.length;
   const surnameIdx = i % SENIOR_SURNAMES.length;
   const fullName = `${SENIOR_SURNAMES[surnameIdx]} ${SENIOR_FIRST_NAMES[nameIdx]}`;
@@ -525,10 +525,10 @@ for (let i = 21; i <= 60; i++) {
     rollNo,
     name: fullName,
     gender: isFemale ? "F" : "M",
-    email: `160123862${numStr}@cbit.org.in`,
+    email: `160124862${numStr}@cbit.org.in`,
     cgpa,
     attendance,
-    batch: "2023-2025",
+    batch: "MCA 2024 Senior Batch",
     github: `${SENIOR_FIRST_NAMES[nameIdx].toLowerCase().replace(/\s+/g, '')}-cbit`,
     leetcode: 180 + Math.round((cgpa - 7.0) * 120),
     placement: {

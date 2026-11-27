@@ -111,10 +111,10 @@ export const SeniorProjectsModal = ({ isOpen, onClose }) => {
     setEditingStudent(null);
     const nextNum = (seniorStudents.length + 1).toString().padStart(3, '0');
     setFormData({
-      rollNo: `1601-23-862-${nextNum}`,
+      rollNo: `1601-24-862-${nextNum}`,
       name: '',
       gender: 'M',
-      email: `160123862${nextNum}@cbit.org.in`,
+      email: `160124862${nextNum}@cbit.org.in`,
       cgpa: '8.80',
       attendance: '95',
       placementCompany: 'ServiceNow',
@@ -179,8 +179,8 @@ export const SeniorProjectsModal = ({ isOpen, onClose }) => {
   const handleDownloadTemplate = () => {
     sounds.playTick();
     const template = `RollNo,StudentName,CGPA,PlacementCompany,Role,Package,MajorProjectTitle,Domain,FacultyGuide,CIEScore,SEEScore,Attendance,Email,GitHub,LeetCode
-1601-23-862-061,M. Rithvik Sharma,9.25,Google Cloud,Cloud Solutions Engineer,₹22.0 LPA,High-Throughput Kubernetes Microservices Observability Engine,Cloud & DevOps,Dr. B. Indira (HoD),97,98,96,160123862061@cbit.org.in,rithvik-cbit,520
-1601-23-862-062,B. Ananya Rao,9.10,Microsoft India,Software Development Engineer,₹18.0 LPA,Deep Learning Multi-Modal Biomedical Diagnosis System,AI/ML & Deep Learning,Dr. K. Radhika,95,96,95,160123862062@cbit.org.in,ananya-rao,480`;
+1601-24-862-061,M. Rithvik Sharma,9.25,Google Cloud,Cloud Solutions Engineer,₹22.0 LPA,High-Throughput Kubernetes Microservices Observability Engine,Cloud & DevOps,Dr. B. Indira (HoD),97,98,96,160124862061@cbit.org.in,rithvik-cbit,520
+1601-24-862-062,B. Ananya Rao,9.10,Microsoft India,Software Development Engineer,₹18.0 LPA,Deep Learning Multi-Modal Biomedical Diagnosis System,AI/ML & Deep Learning,Dr. K. Radhika,95,96,95,160124862062@cbit.org.in,ananya-rao,480`;
 
     const blob = new Blob([template], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
@@ -234,7 +234,7 @@ export const SeniorProjectsModal = ({ isOpen, onClose }) => {
 
     const parsedStudents = dataLines.map((line, idx) => {
       const parts = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(p => p.trim().replace(/^"|"$/g, ''));
-      const roll = parts[0] || `1601-23-862-${String(seniorStudents.length + idx + 1).padStart(3, '0')}`;
+      const roll = parts[0] || `1601-24-862-${String(seniorStudents.length + idx + 1).padStart(3, '0')}`;
       return {
         rollNo: roll,
         name: parts[1] || `Scholar ${roll}`,
@@ -270,7 +270,7 @@ export const SeniorProjectsModal = ({ isOpen, onClose }) => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `CBIT_MCA_Senior_Batch_2023_2025_Projects_Placements.csv`;
+    a.download = `CBIT_MCA_Senior_Batch_2024_Projects_Placements.csv`;
     a.click();
     showToast('Exported Senior Batch Projects & Placements dossier to CSV!', 'success');
   };
@@ -288,7 +288,7 @@ export const SeniorProjectsModal = ({ isOpen, onClose }) => {
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-lg sm:text-xl font-black text-white">
-                  CBIT MCA Senior Batch (2023–2025) Project & Placements Archive
+                  CBIT MCA 2024 Senior Batch Project & Placements Archive
                 </h2>
                 <span className="text-[10px] bg-emerald-500/20 text-emerald-300 font-mono font-bold px-2.5 py-0.5 rounded-full border border-emerald-500/30">
                   {totalCount} Scholars · 90 Cr
@@ -353,7 +353,7 @@ export const SeniorProjectsModal = ({ isOpen, onClose }) => {
           <div className="bg-slate-900/80 p-2.5 rounded-2xl border border-slate-800">
             <span className="text-[10px] text-slate-400 block font-sans">Batch Size</span>
             <span className="text-base font-bold text-white">{totalCount} Seniors</span>
-            <span className="text-[9px] text-slate-500 block">1601-23-862 Series</span>
+            <span className="text-[9px] text-slate-500 block">1601-24-862 Series</span>
           </div>
           <div className="bg-slate-900/80 p-2.5 rounded-2xl border border-slate-800">
             <span className="text-[10px] text-slate-400 block font-sans">Placement Rate</span>
@@ -627,7 +627,7 @@ export const SeniorProjectsModal = ({ isOpen, onClose }) => {
                     value={formData.rollNo}
                     disabled={!!editingStudent}
                     onChange={(e) => setFormData({ ...formData, rollNo: e.target.value })}
-                    placeholder="1601-23-862-061"
+                    placeholder="1601-24-862-061"
                     className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-mono focus:ring-2 focus:ring-indigo-500 disabled:opacity-50"
                   />
                 </div>
@@ -895,7 +895,7 @@ export const SeniorProjectsModal = ({ isOpen, onClose }) => {
                 value={importText}
                 onChange={(e) => setImportText(e.target.value)}
                 placeholder="RollNo,StudentName,CGPA,PlacementCompany,Role,Package,MajorProjectTitle,Domain,FacultyGuide,CIEScore,SEEScore
-1601-23-862-061,M. Rithvik Sharma,9.25,Google Cloud,Cloud Solutions Engineer,₹22.0 LPA,High-Throughput Kubernetes Microservices Observability Engine,Cloud & DevOps,Dr. B. Indira (HoD),97,98"
+1601-24-862-061,M. Rithvik Sharma,9.25,Google Cloud,Cloud Solutions Engineer,₹22.0 LPA,High-Throughput Kubernetes Microservices Observability Engine,Cloud & DevOps,Dr. B. Indira (HoD),97,98"
                 className="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-white font-mono text-[11px] placeholder-slate-600 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
               />
             </div>

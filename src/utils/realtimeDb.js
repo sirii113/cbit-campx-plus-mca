@@ -34,8 +34,8 @@ class RealtimeDatabase {
           {
             id: "log_init_02",
             timestamp: new Date(Date.now() - 3600000).toISOString(),
-            userName: "A. Sai Praneeth",
-            identifier: "1601-25-862-001",
+            userName: "K. Venkata Sai",
+            identifier: "1601-24-862-001",
             role: "student",
             department: "MCA (Computer Applications)",
             ip: "10.12.86.182 (CBIT Student Wi-Fi)",

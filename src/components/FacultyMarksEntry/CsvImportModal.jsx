@@ -323,7 +323,7 @@ export const CsvImportModal = ({ isOpen, onClose, examType }) => {
                   setPasteData(e.target.value);
                   handlePasteParse(e.target.value);
                 }}
-                placeholder={`RollNo\tQ1\tQ2\tTotal\n1601-25-862-001\t4\t4\t18\n1601-25-862-002\t4\t4\t19`}
+                placeholder={`RollNo\tQ1\tQ2\tTotal\n1601-24-862-001\t4\t4\t18\n1601-24-862-002\t4\t4\t19`}
                 className="w-full p-3 font-mono text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-slate-50"
               />
             </div>

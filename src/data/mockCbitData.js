@@ -4,17 +4,20 @@
 // All Courses Start with 25MCC & All Authentic CBIT MCA Faculty (Sirs and Mams)
 
 import { ALL_COURSES, CBIT_SEMESTERS } from './mcaAllCourses';
+import { MCA_SENIORS_STUDENTS } from './mcaSeniorsData';
 
 export const CBIT_INFO = {
   collegeName: "Chaitanya Bharathi Institute of Technology (Autonomous)",
   subHeader: "Affiliated to Osmania University | Accredited by NBA & NAAC (A++)",
   location: "Kokapet (V), Gandipet, Hyderabad, Telangana - 500075",
   department: "Department of Computer Applications (MCA)",
-  academicYear: "2025 - 2027",
-  currentSemester: "Semester II",
+  academicYear: "MCA 2024 Senior Batch",
+  currentSemester: "Semester IV (Completed · 90 Credits)",
+  cohortName: "CBIT MCA 2024 Senior Batch",
+  rollPrefix: "1601-24-862",
   regulation: "R-25 Autonomous Syllabus",
   cieSchemeDescription: "R25 Scheme: Mid Average (20M) + 3 Slip Tests (5M each = 15M) + Assignment Average (10M) = 45M Total CIE",
-  coeHeader: "CONTROLLER OF EXAMINATIONS - CONTINUOUS INTERNAL EVALUATION (CIE) REPORT (R-25 REGULATION)"
+  coeHeader: "CONTROLLER OF EXAMINATIONS - CONTINUOUS INTERNAL EVALUATION (CIE) REPORT (MCA 2024 BATCH)"
 };
 
 // All Authentic CBIT MCA Faculty Members (Sirs and Mams)
@@ -136,26 +139,34 @@ export const DEMO_USERS = {
   students: [
     {
       id: "std_01",
-      rollNo: "1601-25-862-001",
-      email: "160125862001@cbit.org.in",
-      password: "mca@2025",
-      name: "A. Sai Praneeth",
+      rollNo: "1601-24-862-001",
+      email: "160124862001@cbit.org.in",
+      password: "cbit@mca2025",
+      name: "K. Venkata Sai (Oracle India · ₹16 LPA)",
       role: "student"
     },
     {
       id: "std_02",
-      rollNo: "1601-25-862-002",
-      email: "160125862002@cbit.org.in",
-      password: "mca@2025",
-      name: "B. Ananya Rao",
+      rollNo: "1601-24-862-002",
+      email: "160124862002@cbit.org.in",
+      password: "cbit@mca2025",
+      name: "P. Harika Reddy (ServiceNow · ₹14.5 LPA)",
       role: "student"
     },
     {
-      id: "std_09",
-      rollNo: "1601-25-862-009",
-      email: "160125862009@cbit.org.in",
-      password: "mca@2025",
-      name: "K. Vigneshwar",
+      id: "std_03",
+      rollNo: "1601-24-862-003",
+      email: "160124862003@cbit.org.in",
+      password: "cbit@mca2025",
+      name: "Ch. Sai Teja (Salesforce · ₹12 LPA)",
+      role: "student"
+    },
+    {
+      id: "std_31",
+      rollNo: "1601-24-862-031",
+      email: "160124862031@cbit.org.in",
+      password: "cbit@mca2025",
+      name: "K. Ananya (Google Cloud AI · ₹24 LPA)",
       role: "student"
     }
   ]
@@ -193,69 +204,8 @@ export { ALL_COURSES, CBIT_SEMESTERS };
 export const COURSES = ALL_COURSES;
 
 
-// 60 Authentic CBIT MCA Students roster (Updated to 1601-25-862-xxx)
-export const MCA_STUDENTS = [
-  { rollNo: "1601-25-862-001", name: "A. Sai Praneeth", gender: "M", cgpa: 9.24, attendance: 92, github: "saipraneeth-dev", leetcode: 480, tierReady: "Tier-1 Product", primarySkill: "Full Stack (React/Node)" },
-  { rollNo: "1601-25-862-002", name: "B. Ananya Rao", gender: "F", cgpa: 9.48, attendance: 96, github: "ananya-rao", leetcode: 520, tierReady: "Tier-1 Product", primarySkill: "AI & Algorithms" },
-  { rollNo: "1601-25-862-003", name: "Ch. Akhil Varma", gender: "M", cgpa: 7.82, attendance: 81, github: "akhil-varma7", leetcode: 210, tierReady: "Core Product", primarySkill: "Cloud & DevOps" },
-  { rollNo: "1601-25-862-004", name: "D. Divya Bharathi", gender: "F", cgpa: 8.65, attendance: 89, github: "divya-bharathi", leetcode: 340, tierReady: "Core Product", primarySkill: "Frontend / React" },
-  { rollNo: "1601-25-862-005", name: "E. Mohammed Farhan", gender: "M", cgpa: 8.91, attendance: 90, github: "farhan-cse", leetcode: 410, tierReady: "Tier-1 Product", primarySkill: "Backend & Systems" },
-  { rollNo: "1601-25-862-006", name: "G. Keerthana", gender: "F", cgpa: 7.42, attendance: 78, github: "keerthana-g", leetcode: 160, tierReady: "Service / Tech", primarySkill: "Java / Spring Boot" },
-  { rollNo: "1601-25-862-007", name: "H. Karthik Reddy", gender: "M", cgpa: 6.95, attendance: 71, github: "karthik-reddy", leetcode: 95, tierReady: "Needs Up-skilling", primarySkill: "Database / SQL" },
-  { rollNo: "1601-25-862-008", name: "J. Sravani", gender: "F", cgpa: 8.84, attendance: 88, github: "sravani-j", leetcode: 380, tierReady: "Core Product", primarySkill: "MERN Stack" },
-  { rollNo: "1601-25-862-009", name: "K. Vigneshwar", gender: "M", cgpa: 6.40, attendance: 64, github: "vignesh-k", leetcode: 45, tierReady: "Critical Attention", primarySkill: "Basic Web" },
-  { rollNo: "1601-25-862-010", name: "L. Sneha Latha", gender: "F", cgpa: 8.15, attendance: 84, github: "sneha-latha", leetcode: 260, tierReady: "Core Product", primarySkill: "Python / Data Eng" },
-  { rollNo: "1601-25-862-011", name: "M. Rahul Naidu", gender: "M", cgpa: 8.70, attendance: 91, github: "rahul-naidu", leetcode: 350, tierReady: "Core Product", primarySkill: "Go & Microservices" },
-  { rollNo: "1601-25-862-012", name: "N. Pooja Sri", gender: "F", cgpa: 7.95, attendance: 83, github: "poojasri-n", leetcode: 220, tierReady: "Core Product", primarySkill: "React / Next.js" },
-  { rollNo: "1601-25-862-013", name: "P. Rakesh Kumar", gender: "M", cgpa: 7.10, attendance: 74, github: "rakesh-p", leetcode: 120, tierReady: "Service / Tech", primarySkill: "QA & Testing" },
-  { rollNo: "1601-25-862-014", name: "R. Mounika", gender: "F", cgpa: 8.45, attendance: 86, github: "mounika-r", leetcode: 290, tierReady: "Core Product", primarySkill: "Data Analytics" },
-  { rollNo: "1601-25-862-015", name: "S. Vamsi Krishna", gender: "M", cgpa: 9.12, attendance: 94, github: "vamsi-krishna", leetcode: 490, tierReady: "Tier-1 Product", primarySkill: "Algorithms & Systems" },
-  { rollNo: "1601-25-862-016", name: "T. Bhavana", gender: "F", cgpa: 8.30, attendance: 85, github: "bhavana-t", leetcode: 275, tierReady: "Core Product", primarySkill: "UI/UX & Frontend" },
-  { rollNo: "1601-25-862-017", name: "U. Tarun Tej", gender: "M", cgpa: 6.20, attendance: 61, github: "tarun-u", leetcode: 40, tierReady: "Critical Attention", primarySkill: "Core Java" },
-  { rollNo: "1601-25-862-018", name: "V. Haritha", gender: "F", cgpa: 7.60, attendance: 79, github: "haritha-v", leetcode: 180, tierReady: "Service / Tech", primarySkill: "Database Admin" },
-  { rollNo: "1601-25-862-019", name: "W. Rohith Sharma", gender: "M", cgpa: 8.55, attendance: 88, github: "rohith-sharma", leetcode: 320, tierReady: "Core Product", primarySkill: "Cloud & Docker" },
-  { rollNo: "1601-25-862-020", name: "Y. Sushmitha", gender: "F", cgpa: 8.98, attendance: 93, github: "sushmitha-y", leetcode: 430, tierReady: "Tier-1 Product", primarySkill: "Machine Learning" },
-  { rollNo: "1601-25-862-021", name: "A. Srikanth", gender: "M", cgpa: 7.30, attendance: 76, github: "srikanth-a", leetcode: 140, tierReady: "Service / Tech", primarySkill: "Web Dev" },
-  { rollNo: "1601-25-862-022", name: "B. Manasa", gender: "F", cgpa: 8.40, attendance: 87, github: "manasa-b", leetcode: 280, tierReady: "Core Product", primarySkill: "Full Stack" },
-  { rollNo: "1601-25-862-023", name: "C. Sandeep Goud", gender: "M", cgpa: 6.80, attendance: 68, github: "sandeep-c", leetcode: 80, tierReady: "Needs Up-skilling", primarySkill: "Networking" },
-  { rollNo: "1601-25-862-024", name: "D. Pavani", gender: "F", cgpa: 9.35, attendance: 95, github: "pavani-d", leetcode: 470, tierReady: "Tier-1 Product", primarySkill: "Data Engineering" },
-  { rollNo: "1601-25-862-025", name: "E. Naveen Kumar", gender: "M", cgpa: 7.50, attendance: 80, github: "naveen-e", leetcode: 190, tierReady: "Service / Tech", primarySkill: "DevOps" },
-  { rollNo: "1601-25-862-026", name: "G. Swetha", gender: "F", cgpa: 8.25, attendance: 84, github: "swetha-g", leetcode: 250, tierReady: "Core Product", primarySkill: "Full Stack" },
-  { rollNo: "1601-25-862-027", name: "H. Jagadeesh", gender: "M", cgpa: 7.75, attendance: 82, github: "jagadeesh-h", leetcode: 200, tierReady: "Core Product", primarySkill: "React / Node" },
-  { rollNo: "1601-25-862-028", name: "K. Deepthi", gender: "F", cgpa: 8.60, attendance: 88, github: "deepthi-k", leetcode: 330, tierReady: "Core Product", primarySkill: "AI / Python" },
-  { rollNo: "1601-25-862-029", name: "M. Chetan Varma", gender: "M", cgpa: 6.10, attendance: 59, github: "chetan-m", leetcode: 30, tierReady: "Critical Attention", primarySkill: "Python Basics" },
-  { rollNo: "1601-25-862-030", name: "N. Meghana", gender: "F", cgpa: 9.05, attendance: 92, github: "meghana-n", leetcode: 440, tierReady: "Tier-1 Product", primarySkill: "Full Stack & Cloud" },
-  { rollNo: "1601-25-862-031", name: "P. Dinesh Reddy", gender: "M", cgpa: 8.10, attendance: 85, github: "dinesh-p", leetcode: 240, tierReady: "Core Product", primarySkill: "Spring Boot" },
-  { rollNo: "1601-25-862-032", name: "R. Kavya", gender: "F", cgpa: 8.75, attendance: 89, github: "kavya-r", leetcode: 360, tierReady: "Core Product", primarySkill: "React & Cloud" },
-  { rollNo: "1601-25-862-033", name: "S. Bhanu Prasad", gender: "M", cgpa: 7.20, attendance: 75, github: "bhanu-s", leetcode: 130, tierReady: "Service / Tech", primarySkill: "SQL & ETL" },
-  { rollNo: "1601-25-862-034", name: "T. Sindhuja", gender: "F", cgpa: 8.35, attendance: 86, github: "sindhuja-t", leetcode: 270, tierReady: "Core Product", primarySkill: "Frontend Dev" },
-  { rollNo: "1601-25-862-035", name: "V. Praveen Kumar", gender: "M", cgpa: 6.70, attendance: 67, github: "praveen-v", leetcode: 75, tierReady: "Needs Up-skilling", primarySkill: "Java Basics" },
-  { rollNo: "1601-25-862-036", name: "Y. Niharika", gender: "F", cgpa: 9.15, attendance: 94, github: "niharika-y", leetcode: 460, tierReady: "Tier-1 Product", primarySkill: "Algorithms & ML" },
-  { rollNo: "1601-25-862-037", name: "A. Harshith", gender: "M", cgpa: 7.90, attendance: 81, github: "harshith-a", leetcode: 215, tierReady: "Core Product", primarySkill: "Node & Express" },
-  { rollNo: "1601-25-862-038", name: "B. Tejaswini", gender: "F", cgpa: 8.50, attendance: 87, github: "tejaswini-b", leetcode: 310, tierReady: "Core Product", primarySkill: "Full Stack" },
-  { rollNo: "1601-25-862-039", name: "C. Ajay Krishna", gender: "M", cgpa: 8.80, attendance: 90, github: "ajay-c", leetcode: 370, tierReady: "Core Product", primarySkill: "Cloud DevOps" },
-  { rollNo: "1601-25-862-040", name: "D. Sireesha", gender: "F", cgpa: 7.05, attendance: 72, github: "sireesha-d", leetcode: 110, tierReady: "Service / Tech", primarySkill: "Web Design" },
-  { rollNo: "1601-25-862-041", name: "E. Vineeth", gender: "M", cgpa: 6.30, attendance: 63, github: "vineeth-e", leetcode: 50, tierReady: "Critical Attention", primarySkill: "C++ Programming" },
-  { rollNo: "1601-25-862-042", name: "G. Priyanka", gender: "F", cgpa: 8.90, attendance: 91, github: "priyanka-g", leetcode: 400, tierReady: "Tier-1 Product", primarySkill: "Data Science" },
-  { rollNo: "1601-25-862-043", name: "K. Manoj", gender: "M", cgpa: 7.45, attendance: 77, github: "manoj-k", leetcode: 170, tierReady: "Service / Tech", primarySkill: "Database Admin" },
-  { rollNo: "1601-25-862-044", name: "L. Vaishnavi", gender: "F", cgpa: 9.40, attendance: 95, github: "vaishnavi-l", leetcode: 510, tierReady: "Tier-1 Product", primarySkill: "Systems & DSA" },
-  { rollNo: "1601-25-862-045", name: "M. Sai Charan", gender: "M", cgpa: 8.05, attendance: 83, github: "saicharan-m", leetcode: 235, tierReady: "Core Product", primarySkill: "Full Stack" },
-  { rollNo: "1601-25-862-046", name: "N. Anitha", gender: "F", cgpa: 7.85, attendance: 82, github: "anitha-n", leetcode: 205, tierReady: "Core Product", primarySkill: "React / JS" },
-  { rollNo: "1601-25-862-047", name: "P. Rithvik", gender: "M", cgpa: 8.65, attendance: 88, github: "rithvik-p", leetcode: 345, tierReady: "Core Product", primarySkill: "Cloud & Microservices" },
-  { rollNo: "1601-25-862-048", name: "R. Supriya", gender: "F", cgpa: 8.20, attendance: 85, github: "supriya-r", leetcode: 255, tierReady: "Core Product", primarySkill: "Python / Django" },
-  { rollNo: "1601-25-862-049", name: "S. Kalyan", gender: "M", cgpa: 6.85, attendance: 70, github: "kalyan-s", leetcode: 85, tierReady: "Needs Up-skilling", primarySkill: "Testing & QA" },
-  { rollNo: "1601-25-862-050", name: "T. Lavanya", gender: "F", cgpa: 8.70, attendance: 89, github: "lavanya-t", leetcode: 355, tierReady: "Core Product", primarySkill: "Full Stack MERN" },
-  { rollNo: "1601-25-862-051", name: "V. Abhishek", gender: "M", cgpa: 9.20, attendance: 93, github: "abhishek-v", leetcode: 475, tierReady: "Tier-1 Product", primarySkill: "Algorithms & C++" },
-  { rollNo: "1601-25-862-052", name: "Y. Madhuri", gender: "F", cgpa: 7.65, attendance: 80, github: "madhuri-y", leetcode: 185, tierReady: "Service / Tech", primarySkill: "SQL / Analytics" },
-  { rollNo: "1601-25-862-053", name: "A. Tharun", gender: "M", cgpa: 7.15, attendance: 73, github: "tharun-a", leetcode: 125, tierReady: "Service / Tech", primarySkill: "Java Dev" },
-  { rollNo: "1601-25-862-054", name: "B. Shravya", gender: "F", cgpa: 8.85, attendance: 90, github: "shravya-b", leetcode: 385, tierReady: "Core Product", primarySkill: "Machine Learning" },
-  { rollNo: "1601-25-862-055", name: "C. Sandeep", gender: "M", cgpa: 6.15, attendance: 60, github: "sandeep-c2", leetcode: 35, tierReady: "Critical Attention", primarySkill: "Basic Web" },
-  { rollNo: "1601-25-862-056", name: "D. Pranavi", gender: "F", cgpa: 9.00, attendance: 92, github: "pranavi-d", leetcode: 420, tierReady: "Tier-1 Product", primarySkill: "DevOps & Cloud" },
-  { rollNo: "1601-25-862-057", name: "E. Hemanth", gender: "M", cgpa: 8.35, attendance: 86, github: "hemanth-e", leetcode: 265, tierReady: "Core Product", primarySkill: "React / Node" },
-  { rollNo: "1601-25-862-058", name: "G. Varshitha", gender: "F", cgpa: 8.55, attendance: 87, github: "varshitha-g", leetcode: 315, tierReady: "Core Product", primarySkill: "Data Science" },
-  { rollNo: "1601-25-862-059", name: "K. Rohith", gender: "M", cgpa: 7.35, attendance: 76, github: "rohith-k", leetcode: 155, tierReady: "Service / Tech", primarySkill: "Full Stack" },
-  { rollNo: "1601-25-862-060", name: "M. Sowmya", gender: "F", cgpa: 9.55, attendance: 97, github: "sowmya-m", leetcode: 540, tierReady: "Tier-1 Product", primarySkill: "Full Stack & Cloud AI" }
-];
+// Authentic CBIT MCA 2024 Senior Batch Scholars (1601-24-862-001 through 060)
+export const MCA_STUDENTS = MCA_SENIORS_STUDENTS;
 
 // Helper to calculate R25 CIE:
 // Mid Average (20) + Slip Tests (15: 3 x 5M) + Assignment Average (10: (A1 + A2) / 2) = 45 Max CIE

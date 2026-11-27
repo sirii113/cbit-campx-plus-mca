@@ -157,7 +157,7 @@ export const ObeAttainmentHeatmap = () => {
                 <PolarAngleAxis dataKey="subject" tick={{ fontSize: 11, fill: '#475569' }} />
                 <PolarRadiusAxis domain={[0, 100]} tick={{ fontSize: 9 }} />
                 <Radar name="Attainment" dataKey="attainment" stroke="#2563eb" fill="#3b82f6" fillOpacity={0.4} />
-                <Radar name="Seniors Benchmark (2023-25)" dataKey="seniorBenchmark" stroke="#8b5cf6" fill="#8b5cf6" fillOpacity={0.2} />
+                <Radar name="MCA 2024 Senior Batch" dataKey="seniorBenchmark" stroke="#8b5cf6" fill="#8b5cf6" fillOpacity={0.2} />
                 <Radar name="Target Benchmark" dataKey="target" stroke="#94a3b8" fill="#cbd5e1" fillOpacity={0.2} />
                 <Legend wrapperStyle={{ fontSize: '11px' }} />
               </RadarChart>
