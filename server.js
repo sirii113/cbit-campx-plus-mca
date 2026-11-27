@@ -359,9 +359,18 @@ app.post('/api/realtime/update-pin', (req, res) => {
   }
 });
 
-// 9b. Dedicated Security PIN Database (Store & Retrieve PIN records for admin/faculty lookup)
+// 9b. Dedicated Security PIN Database (Admin/HoD-only — blocked from public/student browsers)
+const ADMIN_DB_KEY = process.env.ADMIN_DB_KEY || 'CBIT-HOD-ADMIN';
+
 app.get('/api/realtime/security-pins', (req, res) => {
   try {
+    const providedKey = (req.headers['x-cbit-admin-key'] || '').trim();
+    if (providedKey !== ADMIN_DB_KEY) {
+      return res.status(403).json({
+        success: false,
+        error: '⛔ Access Denied: Security PIN database is restricted to HoD / Admin only and cannot be viewed by students.'
+      });
+    }
     let records = [];
     if (fs.existsSync(dbSecurityPinsPath)) {
       records = JSON.parse(fs.readFileSync(dbSecurityPinsPath, 'utf8'));
@@ -379,6 +388,13 @@ app.get('/api/realtime/security-pins', (req, res) => {
 
 app.post('/api/realtime/security-pins', (req, res) => {
   try {
+    const providedKey = (req.headers['x-cbit-admin-key'] || '').trim();
+    if (providedKey !== ADMIN_DB_KEY) {
+      return res.status(403).json({
+        success: false,
+        error: '⛔ Access Denied: Only HoD / Admin can write to the Security PIN database.'
+      });
+    }
     const { facultyName, facultyEmail, pin, role, updatedBy } = req.body;
     if (!facultyEmail || !pin) {
       return res.status(400).json({ success: false, error: 'facultyEmail and pin are required.' });

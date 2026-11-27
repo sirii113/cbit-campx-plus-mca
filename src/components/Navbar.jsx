@@ -106,15 +106,17 @@ export const Navbar = () => {
               <span>Campus: {timeStr}</span>
             </div>
 
-            {/* Real-Time Database Status Badge */}
-            <button
-              onClick={() => setIsNotifOpen(true)}
-              className="flex items-center gap-1.5 text-[10px] bg-emerald-950/80 text-emerald-300 px-2.5 py-0.5 rounded-full border border-emerald-600/40 hover:bg-emerald-900/80 transition-colors font-mono cursor-pointer"
-            >
-              <Database className="w-3 h-3 text-emerald-400" />
-              <span>Real-Time DB: Live (Free)</span>
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-            </button>
+            {/* Real-Time Database Status Badge (Faculty Only — hidden from students) */}
+            {!isStudent && (
+              <button
+                onClick={() => setIsNotifOpen(true)}
+                className="flex items-center gap-1.5 text-[10px] bg-emerald-950/80 text-emerald-300 px-2.5 py-0.5 rounded-full border border-emerald-600/40 hover:bg-emerald-900/80 transition-colors font-mono cursor-pointer"
+              >
+                <Database className="w-3 h-3 text-emerald-400" />
+                <span>Real-Time DB: Live (Free)</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              </button>
+            )}
 
             {/* Regulation & Syllabus Explorer Trigger */}
             <button
