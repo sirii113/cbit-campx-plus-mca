@@ -491,7 +491,7 @@ export const LoginScreen = () => {
                     className="text-[10px] text-amber-300 hover:text-amber-200 font-bold underline flex items-center gap-1 cursor-pointer"
                   >
                     <BookOpen className="w-3 h-3 text-amber-400" />
-                    <span>📚 Browse MCA Regulations & Syllabi (R-25, R-22, R-20, R-16 All Years)</span>
+                    <span>📚 Browse MCA Regulations & Syllabi (R-25, R-23, R-20, R-16 All Years)</span>
                   </button>
                   <span className="text-slate-600 hidden sm:inline">·</span>
                   <button
