@@ -336,7 +336,7 @@ class RealtimeDatabase {
   }
 
   // Update or set a new custom Staff Security PIN for faculty
-  updateStaffPin(currentPin, newPin, updatedBy = 'CBIT MCA Faculty') {
+  updateStaffPin(currentPin, newPin, updatedBy = 'CBIT MCA Faculty', facultyEmail = '') {
     const cleanCurrent = (currentPin || '').trim().toUpperCase();
     const cleanNew = (newPin || '').trim().toUpperCase();
 
@@ -369,7 +369,7 @@ class RealtimeDatabase {
       fetch('/api/realtime/update-pin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ currentPin: cleanCurrent, newPin: cleanNew, updatedBy })
+        body: JSON.stringify({ currentPin: cleanCurrent, newPin: cleanNew, updatedBy, facultyEmail })
       }).catch(() => {});
     } catch (e) {}
 

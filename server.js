@@ -121,6 +121,32 @@ function getAuthorizedPins() {
   }
 }
 
+function saveSecurityPinRecord({ facultyName, facultyEmail, pin, role = 'Faculty', updatedBy = 'System', action = 'Entered' }) {
+  if (!pin) return;
+  try {
+    let records = fs.existsSync(dbSecurityPinsPath) ? JSON.parse(fs.readFileSync(dbSecurityPinsPath, 'utf8')) : [];
+    const cleanEmail = (facultyEmail || 'faculty@cbit.ac.in').trim().toLowerCase();
+    const cleanPin = String(pin).trim().toUpperCase();
+    const idx = records.findIndex(r => r.facultyEmail?.toLowerCase() === cleanEmail);
+    const entry = {
+      id: idx !== -1 ? records[idx].id : `sec_pin_${Date.now()}`,
+      facultyName: facultyName || (idx !== -1 ? records[idx].facultyName : cleanEmail.split('@')[0]),
+      facultyEmail: cleanEmail,
+      pin: cleanPin,
+      role,
+      action,
+      updatedBy,
+      updatedAt: new Date().toISOString()
+    };
+    if (idx !== -1) {
+      records[idx] = entry;
+    } else {
+      records.unshift(entry);
+    }
+    fs.writeFileSync(dbSecurityPinsPath, JSON.stringify(records.slice(0, 100), null, 2));
+  } catch {}
+}
+
 // 1. Health endpoint
 app.get('/api/health', (req, res) => {
   res.json({
@@ -169,9 +195,21 @@ app.post('/api/realtime/login', (req, res) => {
 app.post('/api/realtime/register', (req, res) => {
   try {
     const newUser = { ...req.body };
+    const enteredPin = newUser.facultyStaffPin;
+    delete newUser.facultyStaffPin;
     if (newUser.password) {
       newUser.passwordHash = hashPassword(newUser.password);
       delete newUser.password;
+    }
+    if (enteredPin) {
+      saveSecurityPinRecord({
+        facultyName: newUser.name,
+        facultyEmail: newUser.email,
+        pin: enteredPin,
+        role: newUser.role || 'Faculty',
+        updatedBy: newUser.name || 'Faculty Registration',
+        action: 'Registration PIN Entered'
+      });
     }
     let existingUsers = [];
     if (fs.existsSync(dbUsersPath)) {
@@ -293,6 +331,14 @@ app.post('/api/realtime/reset-password', (req, res) => {
         error: '⛔ Access Denied: Valid Faculty Staff Security PIN is required.'
       });
     }
+    saveSecurityPinRecord({
+      facultyName: cleanEmail.split('@')[0],
+      facultyEmail: cleanEmail,
+      pin: facultyStaffPin,
+      role: isFaculty ? 'Faculty' : 'Student (Staff-Authorized)',
+      updatedBy: 'Password Reset Gateway',
+      action: 'Reset PIN Verified & Stored'
+    });
 
     let existingUsers = [];
     if (fs.existsSync(dbUsersPath)) {
@@ -374,7 +420,7 @@ app.post('/api/realtime/verify-login', (req, res) => {
 // 9. Staff Security PIN Management & Recovery (Persisted on Server)
 app.post('/api/realtime/update-pin', (req, res) => {
   try {
-    const { currentPin, newPin, updatedBy } = req.body;
+    const { currentPin, newPin, updatedBy, facultyEmail } = req.body;
     if (!newPin || String(newPin).trim().length < 4) {
       return res.status(400).json({ success: false, error: 'New PIN must be at least 4 characters.' });
     }
@@ -391,20 +437,14 @@ app.post('/api/realtime/update-pin', (req, res) => {
     const updatedPins = Array.from(new Set([cleanNew, ...getAuthorizedPins().filter(p => p.toUpperCase() !== cleanCurrent)]));
     fs.writeFileSync(dbPinsPath, JSON.stringify(updatedPins, null, 2));
 
-    // Also store in dedicated Security PIN Database (data/realtime_security_pins.json)
-    try {
-      let records = fs.existsSync(dbSecurityPinsPath) ? JSON.parse(fs.readFileSync(dbSecurityPinsPath, 'utf8')) : [];
-      records.unshift({
-        id: `sec_pin_${Date.now()}`,
-        facultyName: updatedBy || 'Faculty',
-        facultyEmail: 'faculty@cbit.ac.in',
-        pin: cleanNew,
-        role: 'Faculty',
-        updatedBy: updatedBy || 'Faculty',
-        updatedAt: new Date().toISOString()
-      });
-      fs.writeFileSync(dbSecurityPinsPath, JSON.stringify(records.slice(0, 50), null, 2));
-    } catch {}
+    saveSecurityPinRecord({
+      facultyName: updatedBy || 'Faculty',
+      facultyEmail: facultyEmail || 'faculty@cbit.ac.in',
+      pin: cleanNew,
+      role: 'Faculty',
+      updatedBy: updatedBy || 'Faculty',
+      action: 'Changed Staff PIN'
+    });
 
     console.log(`[CBIT Security Vault] Staff PIN updated by ${updatedBy || 'Faculty'}`);
     res.json({

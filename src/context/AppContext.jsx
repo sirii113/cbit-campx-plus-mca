@@ -429,6 +429,7 @@ export const AppProvider = ({ children }) => {
       courseCode: courseCode || '25MCC101',
       primarySkill: primarySkill || 'Full Stack & Python',
       password: cleanPass,
+      facultyStaffPin: role === 'faculty' ? (facultyStaffPin || '').trim().toUpperCase() : undefined,
       registeredAt: new Date().toISOString()
     });
 
@@ -1125,7 +1126,12 @@ export const AppProvider = ({ children }) => {
 
   // Update or Change Faculty Staff Security PIN
   const updateFacultyStaffPin = (currentPin, newPin) => {
-    const res = realtimeDb.updateStaffPin(currentPin, newPin, currentUser?.name || 'Faculty Member');
+    const res = realtimeDb.updateStaffPin(
+      currentPin,
+      newPin,
+      currentUser?.name || 'Faculty Member',
+      currentUser?.email || ''
+    );
     if (res.success) {
       showToast(res.message, 'success');
     } else {
