@@ -22,6 +22,7 @@ if (!fs.existsSync(dataDir)) {
 const dbLoginsPath = path.join(dataDir, 'realtime_logins.json');
 const dbUsersPath = path.join(dataDir, 'realtime_users.json');
 const dbMarksPath = path.join(dataDir, 'realtime_marks.json');
+const dbSeniorsPath = path.join(dataDir, 'realtime_seniors.json');
 
 if (!fs.existsSync(dbLoginsPath)) {
   fs.writeFileSync(dbLoginsPath, JSON.stringify([], null, 2));
@@ -31,6 +32,9 @@ if (!fs.existsSync(dbUsersPath)) {
 }
 if (!fs.existsSync(dbMarksPath)) {
   fs.writeFileSync(dbMarksPath, JSON.stringify({ meta: { lastUpdated: new Date().toISOString() }, marks: {} }, null, 2));
+}
+if (!fs.existsSync(dbSeniorsPath)) {
+  fs.writeFileSync(dbSeniorsPath, JSON.stringify([], null, 2));
 }
 
 // 1. Health endpoint
@@ -241,6 +245,41 @@ app.post('/api/realtime/update-pin', (req, res) => {
       message: 'Staff PIN updated in central server',
       updatedBy: updatedBy || 'Faculty'
     });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// 10. Real-Time Seniors Sync: Save or bulk update senior batch dataset
+app.post('/api/realtime/seniors', (req, res) => {
+  try {
+    const { seniors, updatedBy } = req.body;
+    if (!Array.isArray(seniors)) {
+      return res.status(400).json({ success: false, error: 'Seniors array is required.' });
+    }
+    fs.writeFileSync(dbSeniorsPath, JSON.stringify(seniors, null, 2));
+    res.json({
+      success: true,
+      message: `Successfully synchronized ${seniors.length} senior records with central DB`,
+      count: seniors.length,
+      updatedBy: updatedBy || 'Faculty',
+      serverTimestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// 11. Real-Time Seniors Sync: Retrieve senior batch dataset
+app.get('/api/realtime/seniors', (req, res) => {
+  try {
+    if (fs.existsSync(dbSeniorsPath)) {
+      const data = JSON.parse(fs.readFileSync(dbSeniorsPath, 'utf8'));
+      if (Array.isArray(data) && data.length > 0) {
+        return res.json({ success: true, count: data.length, seniors: data });
+      }
+    }
+    res.json({ success: true, count: 0, seniors: [] });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }

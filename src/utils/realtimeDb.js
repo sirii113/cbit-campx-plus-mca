@@ -424,6 +424,30 @@ class RealtimeDatabase {
       message: `Staff PIN recovered successfully! You can now use your new PIN: ${cleanNew}`
     };
   }
+
+  // Synchronize Senior Students dataset with server
+  async syncSeniorsWithServer(seniors, updatedBy = 'Faculty') {
+    try {
+      const response = await fetch('/api/realtime/seniors', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ seniors, updatedBy })
+      });
+      return await response.json();
+    } catch (e) {
+      return { success: false, error: e.message };
+    }
+  }
+
+  // Fetch Senior Students dataset from server
+  async fetchSeniorsFromServer() {
+    try {
+      const response = await fetch('/api/realtime/seniors');
+      return await response.json();
+    } catch (e) {
+      return { success: false, error: e.message };
+    }
+  }
 }
 
 export const realtimeDb = new RealtimeDatabase();

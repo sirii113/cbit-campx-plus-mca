@@ -550,62 +550,78 @@ for (let i = 21; i <= 60; i++) {
   });
 }
 
+// Generate Realistic 4-Semester Historical Marks for a single Senior Student
+export function generateMarksForSeniorStudent(student) {
+  const studentMarks = {};
+  const cgpa = parseFloat(student.cgpa) || 8.5;
+  const attendance = parseInt(student.attendance, 10) || 90;
+  const cgpaRatio = (cgpa - 6.5) / 3.5; // 0.2 to 1.0
+
+  ALL_COURSES.forEach(course => {
+    if (course.type === "Theory") {
+      const m1 = Math.min(20, Math.max(12, Math.round(14 + cgpaRatio * 5.8)));
+      const m2 = Math.min(20, Math.max(13, Math.round(15 + cgpaRatio * 4.8)));
+      const midAvg = Number(((m1 + m2) / 2).toFixed(1));
+
+      const s1 = Math.min(5, Math.max(3, Math.round(3.5 + cgpaRatio * 1.5)));
+      const s2 = Math.min(5, Math.max(3, Math.round(3.8 + cgpaRatio * 1.2)));
+      const s3 = Math.min(5, Math.max(4, Math.round(4.0 + cgpaRatio * 1.0)));
+      const slipTotal = s1 + s2 + s3; // out of 15
+
+      const a1 = Math.min(10, Math.max(7, Math.round(7.5 + cgpaRatio * 2.4)));
+      const a2 = Math.min(10, Math.max(8, Math.round(8.0 + cgpaRatio * 2.0)));
+      const assignAvg = Number(((a1 + a2) / 2).toFixed(1));
+
+      const finalCie = Math.min(45, Math.round(midAvg + slipTotal + assignAvg));
+
+      studentMarks[course.code] = {
+        mid1: { Q1: 4, Q2: 4, Q3: 4, Q4: 3, Q5: Math.max(0, m1 - 15), total: m1 },
+        mid2: { Q1: 4, Q2: 4, Q3: 4, Q4: 4, Q5: Math.max(0, m2 - 16), total: m2 },
+        midAverage: midAvg,
+        slipTests: { slip1: s1, slip2: s2, slip3: s3, total: slipTotal },
+        assignments: { assign1: a1, assign2: a2, average: assignAvg },
+        finalCie,
+        maxCie: 45,
+        attendancePercentage: attendance,
+        status: "Pass (Completed)"
+      };
+    } else {
+      // Practical Labs / Projects
+      const l1 = Math.min(20, Math.max(15, Math.round(16 + cgpaRatio * 3.8)));
+      const l2 = Math.min(20, Math.max(16, Math.round(17 + cgpaRatio * 3.0)));
+      const labAvg = Number(((l1 + l2) / 2).toFixed(1));
+      const dayToDay = Math.min(30, Math.max(22, Math.round(24 + cgpaRatio * 5.8)));
+      const finalCie = Math.min(50, Math.round(labAvg + dayToDay));
+
+      studentMarks[course.code] = {
+        labInternal1: { writeup: 5, execution: Math.max(5, l1 - 9), viva: 4, total: l1 },
+        labInternal2: { writeup: 5, execution: Math.max(6, l2 - 9), viva: 4, total: l2 },
+        labInternalAverage: labAvg,
+        dayToDayRecord: dayToDay,
+        finalCie,
+        maxCie: 50,
+        attendancePercentage: attendance,
+        gitRepoUrl: `https://github.com/${student.github || 'cbit-student'}/${course.code.toLowerCase()}`,
+        status: "Pass (Completed)"
+      };
+    }
+  });
+
+  return studentMarks;
+}
+
 // Generate Realistic 4-Semester Historical Marks for Seniors
-export function generateSeniorMarks() {
+export function generateSeniorMarks(studentsList = MCA_SENIORS_STUDENTS) {
   const marks = {};
 
   ALL_COURSES.forEach(course => {
     marks[course.code] = {};
-    MCA_SENIORS_STUDENTS.forEach(student => {
-      const cgpaRatio = (student.cgpa - 6.5) / 3.5; // 0.2 to 1.0
+  });
 
-      if (course.type === "Theory") {
-        const m1 = Math.min(20, Math.max(12, Math.round(14 + cgpaRatio * 5.8)));
-        const m2 = Math.min(20, Math.max(13, Math.round(15 + cgpaRatio * 4.8)));
-        const midAvg = Number(((m1 + m2) / 2).toFixed(1));
-
-        const s1 = Math.min(5, Math.max(3, Math.round(3.5 + cgpaRatio * 1.5)));
-        const s2 = Math.min(5, Math.max(3, Math.round(3.8 + cgpaRatio * 1.2)));
-        const s3 = Math.min(5, Math.max(4, Math.round(4.0 + cgpaRatio * 1.0)));
-        const slipTotal = s1 + s2 + s3; // out of 15
-
-        const a1 = Math.min(10, Math.max(7, Math.round(7.5 + cgpaRatio * 2.4)));
-        const a2 = Math.min(10, Math.max(8, Math.round(8.0 + cgpaRatio * 2.0)));
-        const assignAvg = Number(((a1 + a2) / 2).toFixed(1));
-
-        const finalCie = Math.min(45, Math.round(midAvg + slipTotal + assignAvg));
-
-        marks[course.code][student.rollNo] = {
-          mid1: { Q1: 4, Q2: 4, Q3: 4, Q4: 3, Q5: Math.max(0, m1 - 15), total: m1 },
-          mid2: { Q1: 4, Q2: 4, Q3: 4, Q4: 4, Q5: Math.max(0, m2 - 16), total: m2 },
-          midAverage: midAvg,
-          slipTests: { slip1: s1, slip2: s2, slip3: s3, total: slipTotal },
-          assignments: { assign1: a1, assign2: a2, average: assignAvg },
-          finalCie,
-          maxCie: 45,
-          attendancePercentage: student.attendance,
-          status: "Pass (Completed)"
-        };
-      } else {
-        // Practical Labs / Projects
-        const l1 = Math.min(20, Math.max(15, Math.round(16 + cgpaRatio * 3.8)));
-        const l2 = Math.min(20, Math.max(16, Math.round(17 + cgpaRatio * 3.0)));
-        const labAvg = Number(((l1 + l2) / 2).toFixed(1));
-        const dayToDay = Math.min(30, Math.max(22, Math.round(24 + cgpaRatio * 5.8)));
-        const finalCie = Math.min(50, Math.round(labAvg + dayToDay));
-
-        marks[course.code][student.rollNo] = {
-          labInternal1: { writeup: 5, execution: Math.max(5, l1 - 9), viva: 4, total: l1 },
-          labInternal2: { writeup: 5, execution: Math.max(6, l2 - 9), viva: 4, total: l2 },
-          labInternalAverage: labAvg,
-          dayToDayRecord: dayToDay,
-          finalCie,
-          maxCie: 50,
-          attendancePercentage: student.attendance,
-          gitRepoUrl: `https://github.com/${student.github}/${course.code.toLowerCase()}`,
-          status: "Pass (Completed)"
-        };
-      }
+  studentsList.forEach(student => {
+    const studentCourseMarks = generateMarksForSeniorStudent(student);
+    ALL_COURSES.forEach(course => {
+      marks[course.code][student.rollNo] = studentCourseMarks[course.code];
     });
   });
 

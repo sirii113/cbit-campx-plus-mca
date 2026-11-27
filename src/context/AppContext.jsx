@@ -15,7 +15,8 @@ import {
   MCA_SENIORS_STUDENTS, 
   SENIOR_COHORT_INFO, 
   SENIOR_BENCHMARKS, 
-  generateSeniorMarks 
+  generateSeniorMarks,
+  generateMarksForSeniorStudent
 } from '../data/mcaSeniorsData';
 import { MCA_REGULATIONS } from '../data/mcaSyllabusCatalog';
 import { realtimeDb } from '../utils/realtimeDb';
@@ -42,9 +43,19 @@ export const AppProvider = ({ children }) => {
     return saved ? JSON.parse(saved) : MCA_STUDENTS;
   });
 
+  const [seniorStudents, setSeniorStudents] = useState(() => {
+    const saved = localStorage.getItem('cbit_campx_senior_students');
+    return saved ? JSON.parse(saved) : MCA_SENIORS_STUDENTS;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('cbit_campx_senior_students', JSON.stringify(seniorStudents));
+    realtimeDb.syncSeniorsWithServer(seniorStudents, currentUser?.name || 'Faculty');
+  }, [seniorStudents, currentUser]);
+
   const [seniorMarksData, setSeniorMarksData] = useState(() => {
     const saved = localStorage.getItem('cbit_campx_marks_seniors');
-    return saved ? JSON.parse(saved) : generateSeniorMarks();
+    return saved ? JSON.parse(saved) : generateSeniorMarks(seniorStudents);
   });
 
   useEffect(() => {
@@ -240,7 +251,7 @@ export const AppProvider = ({ children }) => {
         }
         authenticatedUser = regMatch;
       } else {
-        const seniorMatch = MCA_SENIORS_STUDENTS.find(s => 
+        const seniorMatch = seniorStudents.find(s => 
           s.rollNo.replace(/-/g, '').toLowerCase() === idClean.replace(/-/g, '') ||
           s.email.toLowerCase() === idClean ||
           s.name.toLowerCase().includes(idClean)
@@ -454,15 +465,32 @@ export const AppProvider = ({ children }) => {
     setLoginAlert(null);
   };
 
-  const activeStudents = selectedCohort === 'seniors' ? MCA_SENIORS_STUDENTS : students;
+  const activeStudents = selectedCohort === 'seniors' ? seniorStudents : students;
   const activeMarksData = selectedCohort === 'seniors' ? seniorMarksData : marksData;
 
   const courses = filteredCourses;
   const selectedCourse = COURSES.find(c => c.code === selectedCourseCode) || COURSES[0];
   const activeStudent = activeStudents.find(s => s.rollNo === activeStudentRoll) || 
                         students.find(s => s.rollNo === activeStudentRoll) || 
-                        MCA_SENIORS_STUDENTS.find(s => s.rollNo === activeStudentRoll) || 
+                        seniorStudents.find(s => s.rollNo === activeStudentRoll) || 
                         activeStudents[0];
+
+  // Dynamic Senior Cohort Statistics calculated in real time
+  const dynamicSeniorCohortInfo = {
+    ...SENIOR_COHORT_INFO,
+    totalStudents: seniorStudents.length,
+    averageCgpa: seniorStudents.length 
+      ? Number((seniorStudents.reduce((acc, s) => acc + (parseFloat(s.cgpa) || 0), 0) / seniorStudents.length).toFixed(2)) 
+      : 8.78,
+    placementRate: `${Math.round(((seniorStudents.filter(s => s.placement?.status === 'Placed' || s.placement?.company).length) / (seniorStudents.length || 1)) * 100)}%`,
+    placedCount: seniorStudents.filter(s => s.placement?.status === 'Placed' || s.placement?.company).length
+  };
+
+  const dynamicSeniorBenchmarks = {
+    ...SENIOR_BENCHMARKS,
+    averageCgpa: dynamicSeniorCohortInfo.averageCgpa,
+    placementsCount: dynamicSeniorCohortInfo.placedCount
+  };
 
   const cohortInfo = selectedCohort === 'seniors'
     ? {
@@ -472,7 +500,7 @@ export const AppProvider = ({ children }) => {
         cohortName: "Senior Batch (2023–2025)",
         isSeniorCohort: true,
         rollPrefix: "1601-23-862",
-        benchmark: SENIOR_BENCHMARKS
+        benchmark: dynamicSeniorBenchmarks
       }
     : {
         ...CBIT_INFO,
@@ -480,6 +508,178 @@ export const AppProvider = ({ children }) => {
         isSeniorCohort: false,
         rollPrefix: "1601-25-862"
       };
+
+  // 1. Add Single Senior Student with auto-generated course marks
+  const addSeniorStudent = (newSenior) => {
+    if (!newSenior || !newSenior.rollNo || !newSenior.name) {
+      showToast('Roll number and Student Name are required.', 'error');
+      return { success: false, error: 'Roll number and Student Name are required.' };
+    }
+
+    const cleanRoll = newSenior.rollNo.trim();
+    if (seniorStudents.some(s => s.rollNo.toLowerCase() === cleanRoll.toLowerCase())) {
+      showToast(`Senior with roll number ${cleanRoll} already exists.`, 'error');
+      return { success: false, error: `Roll number ${cleanRoll} already exists.` };
+    }
+
+    const completeSenior = {
+      rollNo: cleanRoll,
+      name: newSenior.name.trim(),
+      gender: newSenior.gender || 'M',
+      email: newSenior.email || `${cleanRoll.replace(/-/g, '')}@cbit.org.in`,
+      cgpa: parseFloat(newSenior.cgpa) || 8.5,
+      attendance: parseInt(newSenior.attendance, 10) || 92,
+      batch: newSenior.batch || "2023-2025",
+      github: newSenior.github || `${cleanRoll.toLowerCase().replace(/[^a-z0-9]/g, '')}-cbit`,
+      leetcode: parseInt(newSenior.leetcode, 10) || 350,
+      placement: {
+        company: newSenior.placementCompany || newSenior.placement?.company || 'Placed',
+        role: newSenior.placementRole || newSenior.placement?.role || 'Associate Software Engineer',
+        package: newSenior.placementPackage || newSenior.placement?.package || '₹7.5 LPA',
+        status: newSenior.placementStatus || newSenior.placement?.status || 'Placed'
+      },
+      majorProject: {
+        title: newSenior.projectTitle || newSenior.majorProject?.title || 'Distributed Cloud Platform & Intelligence Engine',
+        domain: newSenior.projectDomain || newSenior.majorProject?.domain || 'Cloud & Distributed Systems',
+        guide: newSenior.projectGuide || newSenior.majorProject?.guide || 'Dr. B. Indira (HoD)',
+        cieScore: parseInt(newSenior.cieScore || newSenior.majorProject?.cieScore, 10) || 95,
+        seeScore: parseInt(newSenior.seeScore || newSenior.majorProject?.seeScore, 10) || 96,
+        status: newSenior.projectStatus || newSenior.majorProject?.status || 'Exemplary Distinction'
+      },
+      primarySkill: newSenior.primarySkill || 'Full-Stack & Cloud',
+      rank: seniorStudents.length + 1
+    };
+
+    // Generate marks for all courses for this new student
+    const studentCourseMarks = generateMarksForSeniorStudent(completeSenior);
+    setSeniorMarksData(prev => {
+      const nextMarks = { ...prev };
+      Object.keys(studentCourseMarks).forEach(courseCode => {
+        if (!nextMarks[courseCode]) nextMarks[courseCode] = {};
+        nextMarks[courseCode][completeSenior.rollNo] = studentCourseMarks[courseCode];
+      });
+      return nextMarks;
+    });
+
+    const updatedSeniors = [completeSenior, ...seniorStudents];
+    setSeniorStudents(updatedSeniors);
+    showToast(`✅ Senior Scholar ${completeSenior.name} (${completeSenior.rollNo}) successfully added to batch!`, 'success');
+    return { success: true, student: completeSenior };
+  };
+
+  // 2. Update Senior Student
+  const updateSeniorStudent = (rollNo, updatedData) => {
+    const idx = seniorStudents.findIndex(s => s.rollNo === rollNo);
+    if (idx === -1) {
+      showToast('Senior student not found.', 'error');
+      return { success: false, error: 'Senior student not found' };
+    }
+
+    const current = seniorStudents[idx];
+    const updated = {
+      ...current,
+      ...updatedData,
+      placement: {
+        ...current.placement,
+        ...(updatedData.placement || {}),
+        company: updatedData.placementCompany ?? updatedData.placement?.company ?? current.placement?.company,
+        role: updatedData.placementRole ?? updatedData.placement?.role ?? current.placement?.role,
+        package: updatedData.placementPackage ?? updatedData.placement?.package ?? current.placement?.package,
+        status: updatedData.placementStatus ?? updatedData.placement?.status ?? current.placement?.status,
+      },
+      majorProject: {
+        ...current.majorProject,
+        ...(updatedData.majorProject || {}),
+        title: updatedData.projectTitle ?? updatedData.majorProject?.title ?? current.majorProject?.title,
+        domain: updatedData.projectDomain ?? updatedData.majorProject?.domain ?? current.majorProject?.domain,
+        guide: updatedData.projectGuide ?? updatedData.majorProject?.guide ?? current.majorProject?.guide,
+        cieScore: updatedData.cieScore ? parseInt(updatedData.cieScore, 10) : current.majorProject?.cieScore,
+        seeScore: updatedData.seeScore ? parseInt(updatedData.seeScore, 10) : current.majorProject?.seeScore,
+      }
+    };
+
+    const nextList = [...seniorStudents];
+    nextList[idx] = updated;
+    setSeniorStudents(nextList);
+    showToast(`✏️ Updated records for ${updated.name} (${updated.rollNo})`, 'success');
+    return { success: true, student: updated };
+  };
+
+  // 3. Delete Senior Student
+  const deleteSeniorStudent = (rollNo) => {
+    const student = seniorStudents.find(s => s.rollNo === rollNo);
+    const filtered = seniorStudents.filter(s => s.rollNo !== rollNo);
+    setSeniorStudents(filtered);
+    showToast(`🗑️ Removed senior record ${student?.name || rollNo}`, 'info');
+    return { success: true };
+  };
+
+  // 4. Bulk Import Senior Students (from CSV or JSON)
+  const bulkImportSeniorStudents = (studentsList, replaceExisting = false) => {
+    if (!Array.isArray(studentsList) || studentsList.length === 0) {
+      showToast('No valid student records found to import.', 'error');
+      return { success: false, error: 'Empty student list' };
+    }
+
+    const processed = studentsList.map((item, i) => {
+      const cleanRoll = (item.rollNo || item.RollNo || `1601-23-862-${String(i + 1).padStart(3, '0')}`).trim();
+      const name = (item.name || item.StudentName || item.Name || `Scholar ${cleanRoll}`).trim();
+      const cgpa = parseFloat(item.cgpa || item.CGPA) || 8.5;
+      const attendance = parseInt(item.attendance || item.Attendance, 10) || 92;
+      return {
+        rollNo: cleanRoll,
+        name,
+        gender: item.gender || item.Gender || 'M',
+        email: item.email || item.Email || `${cleanRoll.replace(/-/g, '')}@cbit.org.in`,
+        cgpa,
+        attendance,
+        batch: "2023-2025",
+        github: item.github || item.GitHub || `${cleanRoll.toLowerCase().replace(/[^a-z0-9]/g, '')}-cbit`,
+        leetcode: parseInt(item.leetcode || item.LeetCode, 10) || 350,
+        placement: {
+          company: item.placementCompany || item.PlacementCompany || item.company || item.Company || item.placement?.company || 'Placed',
+          role: item.placementRole || item.Role || item.role || item.placement?.role || 'Software Engineer',
+          package: item.placementPackage || item.Package || item.package || item.placement?.package || '₹7.5 LPA',
+          status: 'Placed'
+        },
+        majorProject: {
+          title: item.projectTitle || item.MajorProjectTitle || item.project || item.majorProject?.title || 'Distributed Systems & AI Capstone',
+          domain: item.projectDomain || item.Domain || item.domain || item.majorProject?.domain || 'Cloud & Distributed Systems',
+          guide: item.projectGuide || item.FacultyGuide || item.guide || item.majorProject?.guide || 'Dr. B. Indira (HoD)',
+          cieScore: parseInt(item.cieScore || item.CIEScore || item.majorProject?.cieScore, 10) || 94,
+          seeScore: parseInt(item.seeScore || item.SEEScore || item.majorProject?.seeScore, 10) || 95,
+          status: 'Exemplary Distinction'
+        },
+        primarySkill: item.primarySkill || item.Skill || 'Full-Stack & Cloud',
+        rank: i + 1
+      };
+    });
+
+    let finalList;
+    if (replaceExisting) {
+      finalList = processed;
+    } else {
+      const existingRolls = new Set(seniorStudents.map(s => s.rollNo.toLowerCase()));
+      const newOnly = processed.filter(s => !existingRolls.has(s.rollNo.toLowerCase()));
+      finalList = [...newOnly, ...seniorStudents];
+    }
+
+    // Generate complete marks for all courses
+    const allSeniorMarks = generateSeniorMarks(finalList);
+    setSeniorMarksData(allSeniorMarks);
+    setSeniorStudents(finalList);
+    showToast(`🎉 Successfully imported ${processed.length} senior student records!`, 'success');
+    return { success: true, count: processed.length };
+  };
+
+  // 5. Reset to default 60 seniors
+  const resetSeniorStudentsToDefault = () => {
+    setSeniorStudents(MCA_SENIORS_STUDENTS);
+    setSeniorMarksData(generateSeniorMarks(MCA_SENIORS_STUDENTS));
+    localStorage.removeItem('cbit_campx_senior_students');
+    localStorage.removeItem('cbit_campx_marks_seniors');
+    showToast('🔄 Senior batch dataset reset to CBIT Autonomous 60 scholars standard.', 'info');
+  };
 
   const toggleCohort = (targetCohort) => {
     const nextCohort = targetCohort || (selectedCohort === 'current' ? 'seniors' : 'current');
@@ -1051,12 +1251,17 @@ export const AppProvider = ({ children }) => {
         dismissLoginAlert,
         students: activeStudents,
         currentCohortStudents: students,
-        seniorStudents: MCA_SENIORS_STUDENTS,
+        seniorStudents,
+        addSeniorStudent,
+        updateSeniorStudent,
+        deleteSeniorStudent,
+        bulkImportSeniorStudents,
+        resetSeniorStudentsToDefault,
         selectedCohort,
         setSelectedCohort,
         toggleCohort,
-        seniorCohortInfo: SENIOR_COHORT_INFO,
-        seniorBenchmarks: SENIOR_BENCHMARKS,
+        seniorCohortInfo: dynamicSeniorCohortInfo,
+        seniorBenchmarks: dynamicSeniorBenchmarks,
         courses,
         allCourses: COURSES,
         selectedSemester,
