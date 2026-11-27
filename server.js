@@ -45,6 +45,7 @@ const dbUsersPath = path.join(dataDir, 'realtime_users.json');
 const dbMarksPath = path.join(dataDir, 'realtime_marks.json');
 const dbSeniorsPath = path.join(dataDir, 'realtime_seniors.json');
 const dbPinsPath = path.join(dataDir, 'realtime_pins.json');
+const dbSecurityPinsPath = path.join(dataDir, 'realtime_security_pins.json');
 
 if (!fs.existsSync(dbLoginsPath)) {
   fs.writeFileSync(dbLoginsPath, JSON.stringify([], null, 2));
@@ -60,6 +61,28 @@ if (!fs.existsSync(dbSeniorsPath)) {
 }
 if (!fs.existsSync(dbPinsPath)) {
   fs.writeFileSync(dbPinsPath, JSON.stringify(['CBIT-FAC-2025', '1601-FAC', 'MCA-FAC-2025'], null, 2));
+}
+if (!fs.existsSync(dbSecurityPinsPath)) {
+  fs.writeFileSync(dbSecurityPinsPath, JSON.stringify([
+    {
+      id: 'sec_pin_01',
+      facultyName: 'Dr. B. Indira (HoD)',
+      facultyEmail: 'b.indira@cbit.ac.in',
+      pin: 'CBIT-FAC-2025',
+      role: 'HoD / Admin',
+      updatedBy: 'System Init',
+      updatedAt: new Date().toISOString()
+    },
+    {
+      id: 'sec_pin_02',
+      facultyName: 'CBIT MCA Department Staff',
+      facultyEmail: 'mca_dept@cbit.ac.in',
+      pin: '1601-FAC',
+      role: 'Faculty',
+      updatedBy: 'System Init',
+      updatedAt: new Date().toISOString()
+    }
+  ], null, 2));
 }
 
 function getAuthorizedPins() {
@@ -330,6 +353,67 @@ app.post('/api/realtime/update-pin', (req, res) => {
       success: true,
       message: 'Staff PIN securely updated in central server',
       updatedBy: updatedBy || 'Faculty'
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// 9b. Dedicated Security PIN Database (Store & Retrieve PIN records for admin/faculty lookup)
+app.get('/api/realtime/security-pins', (req, res) => {
+  try {
+    let records = [];
+    if (fs.existsSync(dbSecurityPinsPath)) {
+      records = JSON.parse(fs.readFileSync(dbSecurityPinsPath, 'utf8'));
+    }
+    res.json({
+      success: true,
+      count: records.length,
+      databaseFile: 'data/realtime_security_pins.json',
+      pins: records
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+app.post('/api/realtime/security-pins', (req, res) => {
+  try {
+    const { facultyName, facultyEmail, pin, role, updatedBy } = req.body;
+    if (!facultyEmail || !pin) {
+      return res.status(400).json({ success: false, error: 'facultyEmail and pin are required.' });
+    }
+    let records = [];
+    if (fs.existsSync(dbSecurityPinsPath)) {
+      try {
+        records = JSON.parse(fs.readFileSync(dbSecurityPinsPath, 'utf8'));
+      } catch {
+        records = [];
+      }
+    }
+    const cleanEmail = facultyEmail.trim().toLowerCase();
+    const cleanPin = String(pin).trim();
+    const idx = records.findIndex(r => r.facultyEmail?.toLowerCase() === cleanEmail);
+    const entry = {
+      id: idx !== -1 ? records[idx].id : `sec_pin_${Date.now()}`,
+      facultyName: facultyName || cleanEmail.split('@')[0],
+      facultyEmail: cleanEmail,
+      pin: cleanPin,
+      role: role || 'Faculty',
+      updatedBy: updatedBy || 'Admin',
+      updatedAt: new Date().toISOString()
+    };
+    if (idx !== -1) {
+      records[idx] = entry;
+    } else {
+      records.unshift(entry);
+    }
+    fs.writeFileSync(dbSecurityPinsPath, JSON.stringify(records, null, 2));
+    res.json({
+      success: true,
+      message: `Security PIN stored in database for ${cleanEmail}`,
+      record: entry,
+      totalRecords: records.length
     });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
