@@ -1,0 +1,3 @@
+id,facultyName,facultyEmail,pin,role,action,updatedBy,updatedAt
+"sec_pin_01","Dr. B. Indira (HoD)","b.indira@cbit.ac.in","CBIT-FAC-2025","HoD / Admin","","System Init","2026-11-27T15:19:11.450Z"
+"sec_pin_02","CBIT MCA Department Staff","mca_dept@cbit.ac.in","1601-FAC","Faculty","","System Init","2026-11-27T15:19:11.451Z"

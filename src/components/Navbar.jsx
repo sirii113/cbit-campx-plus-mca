@@ -130,8 +130,8 @@ export const Navbar = () => {
               <span>{activeRegulation || 'R-25'} Syllabus (All Years)</span>
             </button>
 
-            {/* Faculty Change Staff PIN Trigger (Authenticated Faculty Only) */}
-            {!isStudent && (
+            {/* Faculty Change Staff PIN Trigger (Only visible after Faculty Login) */}
+            {currentUser?.role === 'faculty' && (
               <button
                 onClick={() => setIsPinModalOpen(true)}
                 className="bg-indigo-900/70 hover:bg-indigo-800 text-indigo-200 border border-indigo-600/50 font-bold px-2.5 py-0.5 rounded text-[10px] font-mono flex items-center gap-1 transition-all cursor-pointer"
