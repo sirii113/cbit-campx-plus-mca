@@ -172,34 +172,36 @@ export const FacultyPinManagementModal = ({ isOpen, onClose }) => {
         {/* Body */}
         <div className="p-6 space-y-5 overflow-y-auto max-h-[75vh]">
           
-          {/* Active Authorized PINs Reference Box */}
-          <div className="bg-slate-950 border border-slate-800 rounded-2xl p-3.5">
-            <div className="flex items-center justify-between text-xs font-bold text-slate-300 mb-2">
-              <span className="flex items-center gap-1.5 text-amber-300">
-                <ShieldCheck className="w-4 h-4 text-amber-400" />
-                <span>Authorized Active Staff PINs:</span>
-              </span>
-              <button
-                type="button"
-                onClick={() => copyToClipboard(currentPins[0])}
-                className="text-[10px] text-amber-400 hover:text-amber-300 flex items-center gap-1 font-mono"
-              >
-                {copiedPin ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
-                <span>{copiedPin ? 'Copied!' : 'Copy Master PIN'}</span>
-              </button>
-            </div>
-            
-            <div className="flex flex-wrap gap-2">
-              {currentPins.map(pin => (
-                <span 
-                  key={pin}
-                  className="bg-amber-950/60 border border-amber-600/40 text-amber-300 font-mono text-xs font-bold px-2.5 py-1 rounded-xl"
-                >
-                  {pin}
+          {/* Active Authorized PINs Reference Box (ONLY visible to already-authenticated Faculty) */}
+          {currentUser?.role === 'faculty' && (
+            <div className="bg-slate-950 border border-slate-800 rounded-2xl p-3.5">
+              <div className="flex items-center justify-between text-xs font-bold text-slate-300 mb-2">
+                <span className="flex items-center gap-1.5 text-amber-300">
+                  <ShieldCheck className="w-4 h-4 text-amber-400" />
+                  <span>Authorized Active Staff PINs (Faculty Session Only):</span>
                 </span>
-              ))}
+                <button
+                  type="button"
+                  onClick={() => copyToClipboard(currentPins[0])}
+                  className="text-[10px] text-amber-400 hover:text-amber-300 flex items-center gap-1 font-mono"
+                >
+                  {copiedPin ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
+                  <span>{copiedPin ? 'Copied!' : 'Copy PIN'}</span>
+                </button>
+              </div>
+              
+              <div className="flex flex-wrap gap-2">
+                {currentPins.map(pin => (
+                  <span 
+                    key={pin}
+                    className="bg-amber-950/60 border border-amber-600/40 text-amber-300 font-mono text-xs font-bold px-2.5 py-1 rounded-xl"
+                  >
+                    {pin}
+                  </span>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* TAB 1: UPDATE PIN */}
           {activeTab === 'update' && (
@@ -220,7 +222,7 @@ export const FacultyPinManagementModal = ({ isOpen, onClose }) => {
                     required
                     value={currentPin}
                     onChange={(e) => setCurrentPin(e.target.value)}
-                    placeholder="Enter current PIN (e.g. CBIT-FAC-2025)..."
+                    placeholder="Enter current PIN..."
                     className="w-full bg-slate-950 border border-slate-700 rounded-xl pl-10 pr-10 py-2.5 text-xs text-amber-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 font-mono"
                   />
                   <button
@@ -303,28 +305,21 @@ export const FacultyPinManagementModal = ({ isOpen, onClose }) => {
                   <span>Forgot your Staff PIN? Emergency Recovery:</span>
                 </div>
                 <p className="text-[11px] leading-relaxed text-slate-300">
-                  If a faculty member forgets their security PIN, they can unlock and reset it using the <strong>Master HoD Recovery Key</strong>: <code className="bg-rose-950 text-rose-300 px-1 py-0.5 rounded font-mono font-bold">CBIT-HOD-RECOVERY</code> or Department Code <code className="bg-rose-950 text-rose-300 px-1 py-0.5 rounded font-mono font-bold">CBIT-MCA</code> with their registered email.
+                  If a faculty member forgets their security PIN, they must obtain the confidential <strong>Master HoD Recovery Key</strong> directly from the Head of Department / Exam Cell to authorize a reset.
                 </p>
               </div>
 
               {/* Master Recovery Key */}
               <div>
-                <label className="text-xs font-bold text-slate-300 block mb-1 flex items-center justify-between">
-                  <span>Emergency HoD Recovery Key:</span>
-                  <button
-                    type="button"
-                    onClick={() => setRecoveryKey('CBIT-HOD-RECOVERY')}
-                    className="text-[10px] text-rose-400 hover:text-rose-300 underline font-semibold font-mono"
-                  >
-                    ⚡ Fill HoD Key
-                  </button>
+                <label className="text-xs font-bold text-slate-300 block mb-1">
+                  Emergency HoD Recovery Key:
                 </label>
                 <input
-                  type="text"
+                  type="password"
                   required
                   value={recoveryKey}
                   onChange={(e) => setRecoveryKey(e.target.value)}
-                  placeholder="Enter Master Recovery Key (e.g. CBIT-HOD-RECOVERY)..."
+                  placeholder="Enter confidential Master HoD Recovery Key..."
                   className="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-rose-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-rose-500 font-mono"
                 />
               </div>
@@ -356,7 +351,7 @@ export const FacultyPinManagementModal = ({ isOpen, onClose }) => {
                     required
                     value={recoveredNewPin}
                     onChange={(e) => setRecoveredNewPin(e.target.value)}
-                    placeholder="Enter new PIN (e.g. CBIT-FAC-2025)..."
+                    placeholder="Enter new Staff PIN..."
                     className="w-full bg-slate-950 border border-slate-700 rounded-xl pl-10 pr-10 py-2.5 text-xs text-amber-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500 font-mono"
                   />
                   <button

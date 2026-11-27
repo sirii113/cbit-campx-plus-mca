@@ -382,15 +382,12 @@ class RealtimeDatabase {
     const cleanNew = (newPin || '').trim().toUpperCase();
 
     const MASTER_RECOVERY_KEYS = ['CBIT-HOD-RECOVERY', 'CBIT-MCA-CHAIR', 'CBIT-DEAN-ACADEMICS', 'HOD-INDIRA-2025'];
-    
-    // Check if recovery key matches master emergency keys or verified faculty identification
     const isMasterAuthorized = MASTER_RECOVERY_KEYS.includes(cleanKey);
-    const isEmailVerified = facultyEmail && facultyEmail.toLowerCase().includes('cbit.ac.in');
 
-    if (!isMasterAuthorized && !(cleanKey === 'CBIT-MCA' && isEmailVerified)) {
+    if (!isMasterAuthorized) {
       return {
         success: false,
-        error: 'Invalid Emergency Recovery Key. Contact Head of Department (Dr. B. Indira) or use Master HoD Key: CBIT-HOD-RECOVERY'
+        error: '⛔ Access Denied: Invalid Emergency Recovery Key. Contact Head of Department (Dr. B. Indira) or Exam Cell.'
       };
     }
 
