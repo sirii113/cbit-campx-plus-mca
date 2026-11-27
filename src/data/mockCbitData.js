@@ -16,7 +16,7 @@ export const CBIT_INFO = {
   cohortName: "CBIT MCA 2024 Senior Batch",
   rollPrefix: "1601-24-862",
   regulation: "R-25 Autonomous Syllabus",
-  cieSchemeDescription: "R25 Scheme: Mid Average (20M) + 3 Slip Tests (5M each = 15M) + Assignment Average (10M) = 45M Total CIE",
+  cieSchemeDescription: "CBIT Official CIE: Mid Avg (20M) + Assign Avg (10M) + Best-2 Slip Tests Avg (5M) + Attendance (5M) = 40M Total CIE (SEE: 60M)",
   coeHeader: "CONTROLLER OF EXAMINATIONS - CONTINUOUS INTERNAL EVALUATION (CIE) REPORT (MCA 2024 BATCH)"
 };
 
@@ -207,9 +207,19 @@ export const COURSES = ALL_COURSES;
 // Authentic CBIT MCA 2024 Senior Batch Scholars (1601-24-862-001 through 060)
 export const MCA_STUDENTS = MCA_SENIORS_STUDENTS;
 
-// Helper to calculate R25 CIE:
-// Mid Average (20) + Slip Tests (15: 3 x 5M) + Assignment Average (10: (A1 + A2) / 2) = 45 Max CIE
-export function calculateR25Cie(mid1Total, mid2Total, slip1, slip2, slip3, assign1, assign2) {
+// Helper to calculate Official CBIT CIE (40 Marks Theory):
+// Mid Average (20M) + Assignment Average (10M) + Best-2 Slip Tests Avg (5M) + Attendance (5M) = 40M Max CIE
+export function getCbitAttendanceMarks(attendancePct = 90) {
+  const pct = Number(attendancePct) || 0;
+  if (pct >= 85) return 5;
+  if (pct >= 80) return 4;
+  if (pct >= 75) return 3;
+  if (pct >= 70) return 2;
+  if (pct >= 65) return 1;
+  return 0;
+}
+
+export function calculateR25Cie(mid1Total, mid2Total, slip1, slip2, slip3, assign1, assign2, attendancePct = 90) {
   const m1 = Number(mid1Total) || 0;
   const m2 = Number(mid2Total) || 0;
   const midAvg = Number(((m1 + m2) / 2).toFixed(1)); // max 20
@@ -217,20 +227,24 @@ export function calculateR25Cie(mid1Total, mid2Total, slip1, slip2, slip3, assig
   const s1 = Number(slip1) || 0; // max 5
   const s2 = Number(slip2) || 0; // max 5
   const s3 = Number(slip3) || 0; // max 5
-  const slipTotal = s1 + s2 + s3; // max 15
+  const best2 = [s1, s2, s3].sort((a, b) => b - a).slice(0, 2);
+  const slipTotal = Number(((best2[0] + best2[1]) / 2).toFixed(1)); // Best-2 Slip Avg (max 5)
 
   const a1 = Number(assign1) || 0; // max 10
   const a2 = Number(assign2) || 0; // max 10
   const assignAvg = Number(((a1 + a2) / 2).toFixed(1)); // max 10
 
-  const finalCie = Math.round(midAvg + slipTotal + assignAvg); // max 45
-  const maxCie = 45;
-  const status = finalCie >= 18 ? "Pass" : "Remedial Needed";
+  const attendanceMarks = getCbitAttendanceMarks(attendancePct); // max 5
+
+  const finalCie = Math.min(40, Math.round(midAvg + slipTotal + assignAvg + attendanceMarks)); // max 40
+  const maxCie = 40;
+  const status = finalCie >= 16 ? "Pass" : "Remedial Needed";
 
   return {
     midAvg,
     slipTotal,
     assignAvg,
+    attendanceMarks,
     finalCie,
     maxCie,
     status
@@ -378,7 +392,7 @@ export function calculateSemesterSgpa(rollNo, semId = 'sem_1', marksData = {}, c
   semCourses.forEach(course => {
     const mark = marksData?.[course.code]?.[rollNo];
     const cie = mark?.finalCie ?? (course.type === 'Theory' ? 38 : 45);
-    const maxCie = course.type === 'Theory' ? 45 : 50;
+    const maxCie = course.type === 'Theory' ? 40 : 50;
     const percentage = (cie / maxCie) * 100;
 
     let gp = 0;

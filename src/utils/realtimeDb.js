@@ -303,7 +303,7 @@ class RealtimeDatabase {
         messages: [
           `Logged into CBIT Real-Time Database at ${time} via Gandipet Campus Gateway.`,
           `R-25 Autonomous Syllabus: All courses assigned to 25MCC series (25MCC101 - 25MCC115).`,
-          `R-25 Scheme: Mid Average (20M) + 3 Slip Tests (15M) + Assignment Average (10M) = 45M Total CIE.`
+          `CBIT Scheme: Mid Avg (20M) + Assign Avg (10M) + Best-2 Slip Avg (5M) + Attendance (5M) = 40M Total CIE.`
         ]
       };
     } else {

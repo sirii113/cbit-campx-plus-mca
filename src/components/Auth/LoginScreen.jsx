@@ -482,7 +482,7 @@ export const LoginScreen = () => {
                   </span>
                 </div>
                 <span className="text-slate-300 leading-relaxed block">
-                  3 Slip Tests (5M each = <strong>15M</strong>) + 2 Mid Exams (Average = <strong>20M</strong>) + 2 Assignments (Average = <strong>10M</strong>) → <strong className="text-emerald-400">Total CIE = 45 Marks</strong> (Min. Pass: 18M).
+                  Mid Exams Avg (<strong>20M</strong>) + Assignments Avg (<strong>10M</strong>) + Best-2 Slip Tests Avg (<strong>5M</strong>) + Attendance (<strong>5M</strong>) → <strong className="text-emerald-400">Total CIE = 40 Marks</strong> (Min. Pass: 16M).
                 </span>
                 <div className="flex flex-wrap items-center gap-3 mt-2 pt-2 border-t border-indigo-800/40">
                   <button

@@ -79,7 +79,12 @@ export const AppProvider = ({ children }) => {
 
   const [seniorMarksData, setSeniorMarksData] = useState(() => {
     const saved = localStorage.getItem('cbit_campx_marks_seniors');
-    return saved ? JSON.parse(saved) : generateSeniorMarks(seniorStudents);
+    if (saved && !saved.includes('"maxCie":45')) {
+      return JSON.parse(saved);
+    }
+    const fresh = generateSeniorMarks(seniorStudents);
+    localStorage.setItem('cbit_campx_marks_seniors', JSON.stringify(fresh));
+    return fresh;
   });
 
   useEffect(() => {
@@ -111,7 +116,7 @@ export const AppProvider = ({ children }) => {
           semesterName: sem.semester,
           year: sem.year,
           faculty: CBIT_MCA_FACULTY[(sIdx * 5 + cIdx) % CBIT_MCA_FACULTY.length].name,
-          maxCie: c.type === 'Theory' ? 45 : 50,
+          maxCie: c.type === 'Theory' ? 40 : 50,
           regulation: activeRegulationObj.id
         }))
       );
@@ -457,7 +462,7 @@ export const AppProvider = ({ children }) => {
               slipTests: { slip1: 4, slip2: 5, slip3: 4, total: r25.slipTotal },
               assignments: { assign1: 8, assign2: 9, average: r25.assignAvg },
               finalCie: r25.finalCie,
-              maxCie: 45,
+              maxCie: 40,
               attendancePercentage: 88,
               status: "Pass"
             };
@@ -771,8 +776,9 @@ export const AppProvider = ({ children }) => {
     const s3 = studentMark.slipTests?.slip3 ?? 5;
     const a1 = studentMark.assignments?.assign1 ?? 8;
     const a2 = studentMark.assignments?.assign2 ?? 9;
+    const attPct = studentMark.attendancePercentage ?? 90;
 
-    const r25 = calculateR25Cie(mid1Total, mid2Total, s1, s2, s3, a1, a2);
+    const r25 = calculateR25Cie(mid1Total, mid2Total, s1, s2, s3, a1, a2, attPct);
 
     studentMark.midAverage = r25.midAvg;
     studentMark.slipTests = {
@@ -786,6 +792,7 @@ export const AppProvider = ({ children }) => {
       assign2: a2,
       average: r25.assignAvg
     };
+    studentMark.attendanceMarks = r25.attendanceMarks;
     studentMark.finalCie = r25.finalCie;
     studentMark.maxCie = r25.maxCie;
     studentMark.status = r25.status;

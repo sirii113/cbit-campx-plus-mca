@@ -370,7 +370,7 @@ export const StudentDashboard = () => {
               <div>
                 <span className="font-bold text-slate-900 block">R25 Continuous Evaluation Scheme:</span>
                 <span className="text-slate-600">
-                  Theory CIE: Mid Avg (20M) + Slip Tests (15M) + Assign (10M) = <strong className="text-blue-900">45M</strong> · Lab CIE: <strong className="text-emerald-900">50M</strong>
+                  Theory CIE: Mid Avg (20M) + Assign (10M) + Best-2 Slip (5M) + Att (5M) = <strong className="text-blue-900">40M</strong> · Lab CIE: <strong className="text-emerald-900">50M</strong>
                 </span>
               </div>
             </div>
@@ -405,7 +405,7 @@ export const StudentDashboard = () => {
 
           <div className="flex items-center gap-2 font-mono text-xs">
             <span className="px-3 py-1 rounded-xl bg-blue-950 text-blue-300 border border-blue-700/50">
-              Theory CIE Avg: <strong>{avgTheoryCie}/45M</strong>
+              Theory CIE Avg: <strong>{avgTheoryCie}/40M</strong>
             </span>
             <span className="px-3 py-1 rounded-xl bg-emerald-950 text-emerald-300 border border-emerald-700/50">
               Lab CIE Avg: <strong>{avgLabCie}/50M</strong>
@@ -709,7 +709,7 @@ export const StudentDashboard = () => {
                           <td className="p-3 text-center font-bold text-purple-700 bg-purple-50/50">{aAvg}</td>
 
                           <td className="p-3 text-center font-black text-amber-900 bg-amber-50 text-sm">
-                            {finalCie} <span className="text-[10px] text-slate-500 font-normal">/45</span>
+                            {finalCie} <span className="text-[10px] text-slate-500 font-normal">/40</span>
                           </td>
                         </>
                       ) : (

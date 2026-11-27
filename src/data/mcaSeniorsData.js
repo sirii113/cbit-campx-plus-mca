@@ -566,13 +566,15 @@ export function generateMarksForSeniorStudent(student, coursesList = ALL_COURSES
       const s1 = Math.min(5, Math.max(3, Math.round(3.5 + cgpaRatio * 1.5)));
       const s2 = Math.min(5, Math.max(3, Math.round(3.8 + cgpaRatio * 1.2)));
       const s3 = Math.min(5, Math.max(4, Math.round(4.0 + cgpaRatio * 1.0)));
-      const slipTotal = s1 + s2 + s3; // out of 15
+      const best2 = [s1, s2, s3].sort((a, b) => b - a).slice(0, 2);
+      const slipTotal = Number(((best2[0] + best2[1]) / 2).toFixed(1)); // Best-2 Avg (max 5)
 
       const a1 = Math.min(10, Math.max(7, Math.round(7.5 + cgpaRatio * 2.4)));
       const a2 = Math.min(10, Math.max(8, Math.round(8.0 + cgpaRatio * 2.0)));
       const assignAvg = Number(((a1 + a2) / 2).toFixed(1));
 
-      const finalCie = Math.min(45, Math.round(midAvg + slipTotal + assignAvg));
+      const attMarks = attendance >= 85 ? 5 : attendance >= 80 ? 4 : attendance >= 75 ? 3 : attendance >= 70 ? 2 : attendance >= 65 ? 1 : 0;
+      const finalCie = Math.min(40, Math.round(midAvg + slipTotal + assignAvg + attMarks));
 
       studentMarks[course.code] = {
         mid1: { Q1: 4, Q2: 4, Q3: 4, Q4: 3, Q5: Math.max(0, m1 - 15), total: m1 },
@@ -580,8 +582,9 @@ export function generateMarksForSeniorStudent(student, coursesList = ALL_COURSES
         midAverage: midAvg,
         slipTests: { slip1: s1, slip2: s2, slip3: s3, total: slipTotal },
         assignments: { assign1: a1, assign2: a2, average: assignAvg },
+        attendanceMarks: attMarks,
         finalCie,
-        maxCie: 45,
+        maxCie: 40,
         attendancePercentage: attendance,
         status: "Pass (Completed)"
       };
@@ -630,7 +633,7 @@ export function generateSeniorMarks(studentsList = MCA_SENIORS_STUDENTS, courses
 
 // Senior Cohort Benchmark Statistics for Faculty Performance Analytics
 export const SENIOR_BENCHMARKS = {
-  batchAverageCieTheory: 38.4,
+  batchAverageCieTheory: 34.6,
   batchAverageCieLab: 46.2,
   averageCgpa: 8.78,
   passPercentage: 98.3,

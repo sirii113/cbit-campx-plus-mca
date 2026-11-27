@@ -94,7 +94,7 @@ export const MarksEntryTable = () => {
 
     if (filterRiskOnly) {
       const isLowAttendance = student.attendance < 75;
-      const isLowCie = (sMark?.finalCie || 25) < 18;
+      const isLowCie = (sMark?.finalCie || 25) < 16;
       return isLowAttendance || isLowCie;
     }
     return true;
@@ -116,7 +116,7 @@ export const MarksEntryTable = () => {
   });
 
   const classAvgCie = evaluatedCount > 0 ? (cieSum / evaluatedCount).toFixed(1) : 0;
-  const passRate = evaluatedCount > 0 ? Math.round(((students.filter(s => (courseMarks[s.rollNo]?.finalCie || 0) >= 18).length) / totalCount) * 100) : 92;
+  const passRate = evaluatedCount > 0 ? Math.round(((students.filter(s => (courseMarks[s.rollNo]?.finalCie || 0) >= 16).length) / totalCount) * 100) : 92;
 
   // Senior batch benchmark calculation for this course
   const seniorCourseMarks = seniorMarksData?.[selectedCourse.code] || {};
@@ -146,7 +146,7 @@ export const MarksEntryTable = () => {
 
   const handleExportCsv = () => {
     sounds.playSuccessChime();
-    let csv = `RollNo,StudentName,Attendance%,Mid1_20M,Mid2_20M,MidAvg_20M,Slip1_5M,Slip2_5M,Slip3_5M,SlipTotal_15M,Assign1_10M,Assign2_10M,AssignAvg_10M,FinalCIE_45M,Status\n`;
+    let csv = `RollNo,StudentName,Attendance%,Mid1_20M,Mid2_20M,MidAvg_20M,Slip1_5M,Slip2_5M,Slip3_5M,SlipBest2Avg_5M,Assign1_10M,Assign2_10M,AssignAvg_10M,FinalCIE_40M,Status\n`;
     students.forEach(s => {
       const m = courseMarks[s.rollNo] || {};
       const m1 = m.mid1?.total || 14;
@@ -257,7 +257,7 @@ export const MarksEntryTable = () => {
             <div className="inline-flex items-center gap-2 p-2 rounded-xl bg-slate-800/80 border border-slate-700 text-xs text-slate-200 font-mono">
               <Calculator className="w-4 h-4 text-amber-400" />
               <span>
-                R25 CIE = <strong className="text-blue-300">Avg(Mid 1, Mid 2) [20M]</strong> + <strong className="text-emerald-300">3 Slip Tests [5M+5M+5M = 15M]</strong> + <strong className="text-purple-300">Avg(Assign 1, Assign 2) [10M]</strong> = <strong className="text-amber-400">45M Total</strong>
+                CBIT CIE = <strong className="text-blue-300">Avg(Mid 1, Mid 2) [20M]</strong> + <strong className="text-purple-300">Avg(Assign 1, Assign 2) [10M]</strong> + <strong className="text-emerald-300">Best-2 Slip Avg [5M]</strong> + <strong className="text-cyan-300">Attendance [5M]</strong> = <strong className="text-amber-400">40M Total</strong>
               </span>
             </div>
           </div>
@@ -267,17 +267,17 @@ export const MarksEntryTable = () => {
             <div className="bg-slate-800/80 backdrop-blur-md p-3 rounded-2xl border border-slate-700 text-center">
               <span className="text-[10px] text-slate-400 uppercase tracking-widest block font-sans">CIE Avg</span>
               <span className="text-2xl font-black text-amber-400">{classAvgCie}</span>
-              <span className="text-[10px] text-slate-400 block font-sans">/ 45 Marks</span>
+              <span className="text-[10px] text-slate-400 block font-sans">/ 40 Marks</span>
             </div>
             <div className="bg-slate-800/80 backdrop-blur-md p-3 rounded-2xl border border-slate-700 text-center">
               <span className="text-[10px] text-slate-400 uppercase tracking-widest block font-sans">Top Score</span>
               <span className="text-2xl font-black text-emerald-400">{maxCieScore}</span>
-              <span className="text-[10px] text-slate-400 block font-sans">/ 45 Marks</span>
+              <span className="text-[10px] text-slate-400 block font-sans">/ 40 Marks</span>
             </div>
             <div className="bg-slate-800/80 backdrop-blur-md p-3 rounded-2xl border border-slate-700 text-center">
               <span className="text-[10px] text-slate-400 uppercase tracking-widest block font-sans">Pass %</span>
               <span className="text-2xl font-black text-indigo-400">{passRate}%</span>
-              <span className="text-[10px] text-slate-400 block font-sans">&ge; 18/45 (40%)</span>
+              <span className="text-[10px] text-slate-400 block font-sans">&ge; 16/40 (40%)</span>
             </div>
             <div className="bg-slate-800/80 backdrop-blur-md p-3 rounded-2xl border border-slate-700 text-center">
               <span className="text-[10px] text-slate-400 uppercase tracking-widest block font-sans">Enrolled</span>
@@ -324,7 +324,7 @@ export const MarksEntryTable = () => {
               </span>
             </div>
             <p className="text-slate-300 mt-1 text-xs">
-              Seniors Benchmark CIE Avg: <strong className="text-amber-300 font-mono font-bold">{seniorAvgCie} / {selectedCourse.type === 'Theory' ? '45M' : '50M'}</strong> · Pass Rate: <strong className="text-emerald-400 font-mono font-bold">98.3%</strong> · High Scorer: <strong className="text-indigo-300">D. Sneha Reddy (Google Cloud · 100%)</strong>
+              Seniors Benchmark CIE Avg: <strong className="text-amber-300 font-mono font-bold">{seniorAvgCie} / {selectedCourse.type === 'Theory' ? '40M' : '50M'}</strong> · Pass Rate: <strong className="text-emerald-400 font-mono font-bold">98.3%</strong> · High Scorer: <strong className="text-indigo-300">D. Sneha Reddy (Google Cloud · 100%)</strong>
             </p>
           </div>
         </div>
@@ -621,7 +621,7 @@ export const MarksEntryTable = () => {
 
                     {/* Final CIE */}
                     <th className="p-2.5 text-center w-24 bg-amber-950 font-black text-amber-300">
-                      Total CIE (/45)
+                      Total CIE (/40)
                     </th>
                     <th className="p-2.5 text-center w-20">Status</th>
                   </tr>
@@ -658,7 +658,7 @@ export const MarksEntryTable = () => {
                     Internal 1 Total (/20)
                   </th>
                   <th className="p-3 text-center w-28 bg-slate-800 border-l border-slate-800 text-emerald-400 font-black">
-                    Overall CIE (/45)
+                    Overall CIE (/40)
                   </th>
                   <th className="p-3 text-center w-24">Status</th>
                 </tr>
@@ -694,7 +694,7 @@ export const MarksEntryTable = () => {
                     Internal 2 Total (/20)
                   </th>
                   <th className="p-3 text-center w-28 bg-slate-800 border-l border-slate-800 text-emerald-400 font-black">
-                    Overall CIE (/45)
+                    Overall CIE (/40)
                   </th>
                   <th className="p-3 text-center w-24">Status</th>
                 </tr>
@@ -722,7 +722,7 @@ export const MarksEntryTable = () => {
                     Slip Total (/15)
                   </th>
                   <th className="p-3 text-center w-28 bg-slate-800 border-l border-slate-800 text-amber-300 font-black">
-                    Overall CIE (/45)
+                    Overall CIE (/40)
                   </th>
                   <th className="p-3 text-center w-24">Status</th>
                 </tr>
@@ -746,7 +746,7 @@ export const MarksEntryTable = () => {
                     Mid Average (/20)
                   </th>
                   <th className="p-3 text-center w-28 bg-slate-800 border-l border-slate-800 text-amber-300 font-black">
-                    Overall CIE (/45)
+                    Overall CIE (/40)
                   </th>
                   <th className="p-3 text-center w-24">Status</th>
                 </tr>
@@ -770,7 +770,7 @@ export const MarksEntryTable = () => {
                     Assign Avg (/10)
                   </th>
                   <th className="p-3 text-center w-28 bg-slate-800 border-l border-slate-800 text-amber-300 font-black">
-                    Overall CIE (/45)
+                    Overall CIE (/40)
                   </th>
                   <th className="p-3 text-center w-24">Status</th>
                 </tr>
@@ -795,7 +795,7 @@ export const MarksEntryTable = () => {
                 const aAvg = sMark.assignments?.average ?? 8.5;
 
                 const finalCie = sMark.finalCie ?? 36;
-                const isRisk = student.attendance < 75 || finalCie < 18;
+                const isRisk = student.attendance < 75 || finalCie < 16;
 
                 return (
                   <tr key={student.rollNo} className={`hover:bg-indigo-50/40 transition-colors ${isRisk ? 'bg-rose-50/30' : ''}`}>
@@ -924,13 +924,13 @@ export const MarksEntryTable = () => {
 
                         {/* Final CIE */}
                         <td className="p-2 text-center font-mono font-black text-sm text-amber-900 bg-amber-50">
-                          {finalCie} <span className="text-[10px] text-slate-500 font-normal">/45</span>
+                          {finalCie} <span className="text-[10px] text-slate-500 font-normal">/40</span>
                         </td>
                         <td className="p-2 text-center">
                           <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                            finalCie >= 18 ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'
+                            finalCie >= 16 ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'
                           }`}>
-                            {finalCie >= 18 ? 'Pass' : 'Remedial'}
+                            {finalCie >= 16 ? 'Pass' : 'Remedial'}
                           </span>
                         </td>
                       </>
@@ -973,13 +973,13 @@ export const MarksEntryTable = () => {
                           {sTot} / 15
                         </td>
                         <td className="p-2 text-center font-mono font-black text-amber-900 bg-amber-50 border-l border-slate-200">
-                          {finalCie} / 45
+                          {finalCie} / 40
                         </td>
                         <td className="p-2 text-center">
                           <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                            finalCie >= 18 ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'
+                            finalCie >= 16 ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'
                           }`}>
-                            {finalCie >= 18 ? 'Pass' : 'Remedial'}
+                            {finalCie >= 16 ? 'Pass' : 'Remedial'}
                           </span>
                         </td>
                       </>
@@ -1011,13 +1011,13 @@ export const MarksEntryTable = () => {
                           />
                         </td>
                         <td className="p-2 text-center font-mono font-black text-amber-900 bg-amber-50 border-l border-slate-200">
-                          {finalCie} / 45
+                          {finalCie} / 40
                         </td>
                         <td className="p-2 text-center">
                           <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                            finalCie >= 18 ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'
+                            finalCie >= 16 ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'
                           }`}>
-                            {finalCie >= 18 ? 'Pass' : 'Remedial'}
+                            {finalCie >= 16 ? 'Pass' : 'Remedial'}
                           </span>
                         </td>
                       </>
@@ -1049,13 +1049,13 @@ export const MarksEntryTable = () => {
                           />
                         </td>
                         <td className="p-2 text-center font-mono font-black text-amber-900 bg-amber-50 border-l border-slate-200">
-                          {finalCie} / 45
+                          {finalCie} / 40
                         </td>
                         <td className="p-2 text-center">
                           <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                            finalCie >= 18 ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'
+                            finalCie >= 16 ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'
                           }`}>
-                            {finalCie >= 18 ? 'Pass' : 'Remedial'}
+                            {finalCie >= 16 ? 'Pass' : 'Remedial'}
                           </span>
                         </td>
                       </>
@@ -1088,13 +1088,13 @@ export const MarksEntryTable = () => {
                           {mAvg} / 20
                         </td>
                         <td className="p-2 text-center font-mono font-black text-amber-900 bg-amber-50 border-l border-slate-200">
-                          {finalCie} / 45
+                          {finalCie} / 40
                         </td>
                         <td className="p-2 text-center">
                           <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                            finalCie >= 18 ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'
+                            finalCie >= 16 ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'
                           }`}>
-                            {finalCie >= 18 ? 'Pass' : 'Remedial'}
+                            {finalCie >= 16 ? 'Pass' : 'Remedial'}
                           </span>
                         </td>
                       </>
@@ -1127,13 +1127,13 @@ export const MarksEntryTable = () => {
                           {aAvg} / 10
                         </td>
                         <td className="p-2 text-center font-mono font-black text-amber-900 bg-amber-50 border-l border-slate-200">
-                          {finalCie} / 45
+                          {finalCie} / 40
                         </td>
                         <td className="p-2 text-center">
                           <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                            finalCie >= 18 ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'
+                            finalCie >= 16 ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'
                           }`}>
-                            {finalCie >= 18 ? 'Pass' : 'Remedial'}
+                            {finalCie >= 16 ? 'Pass' : 'Remedial'}
                           </span>
                         </td>
                       </>

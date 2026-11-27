@@ -323,7 +323,7 @@ export const CbitCoEReport = () => {
                       <th className="p-1.5 border-r border-slate-400 text-center w-10">A2 (10)</th>
                       <th className="p-1.5 border-r border-slate-400 text-center w-14 bg-slate-200">A.Avg (10)</th>
                       <th className="p-2 border-r border-slate-400 text-center w-16 font-extrabold bg-slate-300">
-                        CIE (45)
+                        CIE (40)
                       </th>
                     </>
                   ) : (
@@ -532,7 +532,7 @@ export const CbitCoEReport = () => {
                     {sec.courses.map((course, cIdx) => {
                       const m = marksData?.[course.code]?.[activeStudent.rollNo] || {};
                       const isTheory = course.type === 'Theory';
-                      const maxCie = isTheory ? 45 : 50;
+                      const maxCie = isTheory ? 40 : 50;
                       const cie = m.finalCie ?? (isTheory ? 38 : 44);
                       const pct = Math.round((cie / maxCie) * 100);
                       const gradeInfo = getGradeLetter(pct);

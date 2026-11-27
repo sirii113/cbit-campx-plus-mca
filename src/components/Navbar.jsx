@@ -439,7 +439,7 @@ export const Navbar = () => {
               }`}
             >
               <FileSpreadsheet className="w-4 h-4 text-blue-400" />
-              <span>⚡ Theory Internals (45M)</span>
+              <span>⚡ Theory Internals (40M)</span>
             </button>
 
             <button
