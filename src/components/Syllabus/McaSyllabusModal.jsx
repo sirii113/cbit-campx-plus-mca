@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
 import { sounds } from '../../utils/soundEffects';
 import { 
@@ -25,6 +25,13 @@ export const McaSyllabusModal = ({ isOpen, onClose }) => {
 
   const [selectedRegId, setSelectedRegId] = useState(activeRegulation || 'R-25');
   const [selectedSemIdx, setSelectedSemIdx] = useState(0);
+
+  useEffect(() => {
+    if (isOpen) {
+      setSelectedRegId(activeRegulation || 'R-25');
+      setSelectedSemIdx(0);
+    }
+  }, [isOpen, activeRegulation]);
 
   if (!isOpen) return null;
 

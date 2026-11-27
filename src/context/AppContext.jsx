@@ -87,7 +87,9 @@ export const AppProvider = ({ children }) => {
   }, [seniorMarksData]);
 
   const [activeRegulation, setActiveRegulation] = useState(() => {
-    return localStorage.getItem('cbit_campx_active_regulation') || 'R-25';
+    const saved = localStorage.getItem('cbit_campx_active_regulation');
+    if (saved === 'R-22') return 'R-23';
+    return saved || 'R-25';
   });
 
   useEffect(() => {

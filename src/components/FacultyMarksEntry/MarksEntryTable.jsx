@@ -182,7 +182,7 @@ export const MarksEntryTable = () => {
           <div className="space-y-2">
             <div className="flex flex-wrap items-center gap-2">
               <span className="bg-amber-400 text-slate-950 text-xs px-3 py-1 rounded-full font-black font-mono shadow-sm">
-                R-25 Autonomous Syllabus
+                {activeRegulation || 'R-25'} Autonomous Syllabus
               </span>
               <span className="bg-indigo-600/40 text-indigo-200 text-xs px-3 py-1 rounded-full font-mono font-bold border border-indigo-400/30">
                 {selectedCourse.code} · {selectedCourse.semesterName || 'Semester'} ({selectedCourse.credits || 3} Credits)

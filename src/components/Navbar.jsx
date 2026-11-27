@@ -169,9 +169,17 @@ export const Navbar = () => {
                 <span className="text-xl font-black tracking-tight text-white font-sans">
                   CampX<span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400">+</span>
                 </span>
-                <span className="bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 text-[10px] font-black uppercase px-2 py-0.5 rounded-md tracking-wider shadow-sm">
+                <button
+                  type="button"
+                  onClick={() => {
+                    sounds.playTick();
+                    setIsSyllabusOpen(true);
+                  }}
+                  className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 text-[10px] font-black uppercase px-2 py-0.5 rounded-md tracking-wider shadow-sm cursor-pointer transition"
+                  title="Open MCA R-Syllabus Catalog (R-25, R-22, R-20, R-16)"
+                >
                   {activeRegulation || 'R-25'} Syllabus
-                </span>
+                </button>
               </div>
               <p className="text-[11px] text-slate-400">Department of Computer Applications · MCA Continuous Evaluation Cockpit</p>
             </div>
